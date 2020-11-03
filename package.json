@@ -6,6 +6,10 @@
     "directories": {
         "test": "test"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/polkastarter/polkastarter-js.git"
+    },
     "dependencies": {
         "@openzeppelin/contracts": "^3.2.0",
         "abi-decoder": "^1.2.0",
