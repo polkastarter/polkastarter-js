@@ -211,6 +211,17 @@ class FixedSwapContract {
 		}
 	}
 
+	async individualMaximumAmount() {
+		try {
+			return Numbers.fromDecimals((await this.params.contract
+				.getContract()
+				.methods.individualMaximumAmount()
+				.call(), this.getDecimals()));
+		} catch (err) {
+			return "N/A";
+		}
+	}
+
 	async minimumRaise() {
 		try {
 			return Numbers.fromDecimals((await this.params.contract
@@ -244,6 +255,17 @@ class FixedSwapContract {
 		}
 	}
 
+	async tokensLeft() {
+		try {
+			return Numbers.fromDecimals((await this.params.contract
+				.getContract()
+				.methods.tokensLeft()
+				.call(), this.getDecimals()));
+		} catch (err) {
+			return "N/A";
+		}
+	}
+
 	async isTokenSwapAtomic() {
 		try {
 			return (await this.params.contract
@@ -266,7 +288,18 @@ class FixedSwapContract {
 		}
 	}
 
-	async hasStarted() {
+	async isOpen() {
+		try {
+			return (await this.params.contract
+				.getContract()
+				.methods.isOpen()
+				.call());
+		} catch (err) {
+			return "N/A";
+		}
+	}
+
+	async isPreStart() {
 		try {
 			return (await this.params.contract
 				.getContract()
@@ -299,9 +332,9 @@ class FixedSwapContract {
 
 	getPurchaseIds = async () => (await this.params.contract.getContract().methods.purchaseIds().call()).map( id => Numbers.fromExponential(id));
 
-	getMyPurchaseIds = async () => (
+	getAddressPurchaseIds = async ({address}) => (
 		(await this.__sendTx(
-			this.params.contract.getContract().methods.myPurchases(), 
+			this.params.contract.getContract().methods.myPurchases(address), 
 			true)
 		).map( id => Numbers.fromExponential(id))
 	);
@@ -436,8 +469,9 @@ class FixedSwapContract {
 
     deploy = async({
         tradeValue, tokensForSale, startDate, endDate, 
-        individualMinimumAmount=0, isTokenSwapAtomic=true, minimumRaise=0
+        individualMinimumAmount=0, individualMaximumAmount=0, isTokenSwapAtomic=true, minimumRaise=0
 	}) => {
+
         try{             
             if(_.isEmpty(this.getTokenAddress())){
                 throw new Error('Token Address not provided');
@@ -453,7 +487,10 @@ class FixedSwapContract {
             }  
             if(_.isEmpty(endDate)){
                 throw new Error('End Date not provided');
-            }     
+			}  
+			if(individualMaximumAmount < individualMinimumAmount){
+                throw new Error('Maximum Amount is smaller than minimum Amount per User');
+			}
 
             let params = [
                 this.getTokenAddress(),
@@ -487,6 +524,28 @@ class FixedSwapContract {
 
 	getTokenContract(){
 		return this.params.erc20TokenContract;
+	}
+
+	getOwner = async () => {
+		try {
+			return (await this.params.contract
+				.getContract()
+				.methods.owner()
+				.call());
+		} catch (err) {
+			return "N/A";
+		} 
+	}
+
+	getTokenAddress = async () => {
+		try {
+			return (await this.params.contract
+				.getContract()
+				.methods.tokenAddress()
+				.call());
+		} catch (err) {
+			return "N/A";
+		}
 	}
 
 	/* Backend API */
