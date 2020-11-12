@@ -22,8 +22,9 @@ class ERC20TokenContract {
 			contract: new contract(web3, ierc20, contractAddress)
 		};
 	}
-
+	
 	__sendTx = async (f, call=false, value) => {
+		var res;
 		if(!this.acc){
 			const accounts = await this.params.web3.eth.getAccounts();
 			res = await f.send({
@@ -35,6 +36,8 @@ class ERC20TokenContract {
 			res = await this.params.contract.send(this.acc.getAccount(), data, value);
 		}else if(this.acc && call){
 			res = await f.call({from : this.acc.getAddress()});
+		}else{
+			res = await f.call();
 		}
 		return res;
 	}
@@ -102,9 +105,15 @@ class ERC20TokenContract {
 
 	async approve({ address, amount }) {
 		try {
-			return await this.getContract()
-				.methods.approve(address, amount)
-				.send();
+			let amountWithDecimals = Numbers.toSmartContractDecimals(
+				amount,
+				this.getDecimals()
+			);
+			return await this.__sendTx( 
+				this.params.contract
+				.getContract()
+				.methods.approve(address, amountWithDecimals)
+			);
 		} catch (err) {
 			throw err;
 		}

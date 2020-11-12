@@ -67,7 +67,7 @@ class numbers {
   }
 
   toSmartContractDecimals(value, decimals) {
-    let numberWithNoExponents = new Number(value * 10 ** decimals).noExponents()
+    let numberWithNoExponents = new Number(value * 10 ** decimals).noExponents();
     return numberWithNoExponents
   }
 
@@ -76,7 +76,7 @@ class numbers {
   }
 
   fromDecimals(value, decimals) {
-    return value / 10 ** decimals
+    return parseInt(value) / 10 ** decimals
   }
 
   fromExponential(x) {

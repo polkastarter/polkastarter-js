@@ -7,7 +7,7 @@ const ETH_URL_MAINNET =
 const ETH_URL_TESTNET =
 	"https://kovan.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const TEST_PRIVATE_KEY = 
-	"0x0b65e4d1db96eef7fad9ec98abcdfb410c6dd1a9f6210f3ab7ddf02b4c5c7393";
+	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
 const networksEnum = Object.freeze({
 	1: "Main",
@@ -37,6 +37,10 @@ class Application {
 		return false;
 	};
 
+	__getUserAccount = ({privateKey}) => {
+		return new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(privateKey));
+	}
+
 	/* Login with Metamask */
 	/**
 	 * @ERROR if metamask is not available, but application should work normally
@@ -59,13 +63,17 @@ class Application {
 
 	/* Initialize the system */
 	getFixedSwapContract = ({tokenAddress, decimals, contractAddress=null}) => {
-		return new FixedSwapContract({
-			web3: this.web3,
-			tokenAddress: tokenAddress,
-			decimals : decimals,
-			contractAddress: contractAddress,
-			acc : this.test ? this.account : null
-		});
+		try{
+			return new FixedSwapContract({
+				web3: this.web3,
+				tokenAddress: tokenAddress,
+				decimals : decimals,
+				contractAddress: contractAddress,
+				acc : this.test ? this.account : null
+			});
+		}catch(err){
+			throw err;
+		}
 	};
 
 	/* Get Network of Platform Web3 */

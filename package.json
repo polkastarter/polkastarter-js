@@ -23,6 +23,7 @@
         "chai": "^4.2.0",
         "crypto-js": "^3.1.9-1",
         "dayjs": "^1.9.4",
+        "delay": "^4.4.0",
         "dotenv": "^8.2.0",
         "execution-time": "^1.4.1",
         "express": "^4.17.1",

@@ -53,7 +53,7 @@ class Contract {
             from  : account.address,
             to : this.address,
             gas : 4430000,
-            gasPrice : 800000000,
+            gasPrice : 20000000000,
             value: value ? value : '0x0'
         }
 

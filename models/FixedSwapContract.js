@@ -10,6 +10,7 @@ class FixedSwapContract {
 			if(!tokenAddress && !decimals){
 				throw new Error("Please provide a Token Address and the decimals of this Tokens");
 			};
+			
 			if(!web3){
 				throw new Error("Please provide a valid web3 provider");
 			}
@@ -27,7 +28,8 @@ class FixedSwapContract {
 				erc20TokenContract: new ERC20TokenContract({
 					web3: web3,
 					decimals : decimals,
-					contractAddress: tokenAddress
+					contractAddress: tokenAddress,
+					acc
 				}),
 			};
 
@@ -41,7 +43,7 @@ class FixedSwapContract {
 	 * @constructor Starting Function
 	 */
 
-	async __init__() {
+	__init__() {
 		try {
 			if(!this.getAddress()){
 				throw new Error("Please add a Contract Address")
@@ -55,6 +57,7 @@ class FixedSwapContract {
 	__sendTx = async (f, call=false, value) => {
 		var res;
 		if(!this.acc){
+			console.log("a")
 			const accounts = await this.params.web3.eth.getAccounts();
 			res = await f.send({
 				from : accounts[0],
@@ -64,7 +67,7 @@ class FixedSwapContract {
 			let data = f.encodeABI();
 			res = await this.params.contract.send(this.acc.getAccount(), data, value);
 		}else if(this.acc && call){
-			res = await f.call({from : acc.getAddress()});
+			res = await f.call({from : this.acc.getAddress()});
 		}else{
 			res = await f.call();
 		}
@@ -205,7 +208,7 @@ class FixedSwapContract {
 			return Numbers.fromDecimals((await this.params.contract
 				.getContract()
 				.methods.individualMinimumAmount()
-				.call(), this.getDecimals()));
+				.call()),this.getDecimals());
 		} catch (err) {
 			return "N/A";
 		}
@@ -216,7 +219,7 @@ class FixedSwapContract {
 			return Numbers.fromDecimals((await this.params.contract
 				.getContract()
 				.methods.individualMaximumAmount()
-				.call(), this.getDecimals()));
+				.call()), this.getDecimals());
 		} catch (err) {
 			return "N/A";
 		}
@@ -227,7 +230,7 @@ class FixedSwapContract {
 			return Numbers.fromDecimals((await this.params.contract
 				.getContract()
 				.methods.minimumRaise()
-				.call(), this.getDecimals()));
+				.call()), this.getDecimals());
 		} catch (err) {
 			return "N/A";
 		}
@@ -238,7 +241,7 @@ class FixedSwapContract {
 			return Numbers.fromDecimals((await this.params.contract
 				.getContract()
 				.methods.tokensAllocated()
-				.call(), this.getDecimals()));
+				.call()), this.getDecimals());
 		} catch (err) {
 			return "N/A";
 		}
@@ -249,7 +252,18 @@ class FixedSwapContract {
 			return Numbers.fromDecimals((await this.params.contract
 				.getContract()
 				.methods.tokensForSale()
-				.call(), this.getDecimals()));
+				.call()), this.getDecimals());
+		} catch (err) {
+			return "N/A";
+		}
+	}
+
+	async tokensAvailable() {
+		try {
+			return Numbers.fromDecimals((await this.params.contract
+				.getContract()
+				.methods.availableTokens()
+				.call()), this.getDecimals());
 		} catch (err) {
 			return "N/A";
 		}
@@ -260,7 +274,7 @@ class FixedSwapContract {
 			return Numbers.fromDecimals((await this.params.contract
 				.getContract()
 				.methods.tokensLeft()
-				.call(), this.getDecimals()));
+				.call()), this.getDecimals());
 		} catch (err) {
 			return "N/A";
 		}
@@ -293,6 +307,17 @@ class FixedSwapContract {
 			return (await this.params.contract
 				.getContract()
 				.methods.isOpen()
+				.call());
+		} catch (err) {
+			return "N/A";
+		}
+	}
+
+	async hasStarted() {
+		try {
+			return (await this.params.contract
+				.getContract()
+				.methods.hasStarted()
 				.call());
 		} catch (err) {
 			return "N/A";
@@ -339,24 +364,38 @@ class FixedSwapContract {
 		).map( id => Numbers.fromExponential(id))
 	);
 
+		
+	getETHCostFromTokens = async ({tokenAmount}) => {
+		try {
+			return Numbers.fromDecimals((await this.params.contract
+				.getContract()
+				.methods.cost(tokenAmount)
+				.call()), 18);
+		} catch (err) {
+			return "N/A";
+		}
+	}
 	/* POST User Functions */
 
-	swap = async ({tokenAmount, ethAmount}) => {
+
+ 
+	swap = async ({tokenAmount}) => {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
 			this.getDecimals()
 		);
 
-		let ethToWei = Numbers.toSmartContractDecimals(
-			ethAmount,
+		let ETHCost = await this.getETHCostFromTokens({tokenAmount : tokenAmount});
+		let ETHToWei = Numbers.toSmartContractDecimals(
+			ETHCost,
 			18
 		);
-
+		console.log("eth cost", ETHToWei, tokenAmount) 
 		return await this.__sendTx( 
 			this.params.contract
 			.getContract()
 			.methods.swap(amountWithDecimals)
-		, false, ethToWei)
+		, false, ETHToWei)
 	}
 
 	redeemTokens = async ({purchase_id}) => {
@@ -427,6 +466,8 @@ class FixedSwapContract {
 				this.getDecimals()
 			);
 	
+			/* Approve tx */
+			await this.params.erc20TokenContract.approve({address : this.getAddress(), amount : tokenAmount});
 			return await this.__sendTx( 
 				this.params.contract
 				.getContract()
@@ -488,7 +529,7 @@ class FixedSwapContract {
             if(_.isEmpty(endDate)){
                 throw new Error('End Date not provided');
 			}  
-			if(individualMaximumAmount < individualMinimumAmount){
+			if(individualMaximumAmount <= individualMinimumAmount){
                 throw new Error('Maximum Amount is smaller than minimum Amount per User');
 			}
 
@@ -498,12 +539,13 @@ class FixedSwapContract {
                 Numbers.toSmartContractDecimals(tokensForSale, this.getDecimals()),
                 Numbers.timeToSmartContractTime(startDate),
                 Numbers.timeToSmartContractTime(endDate),
-                Numbers.toSmartContractDecimals(individualMinimumAmount, this.getDecimals()),
+				Numbers.toSmartContractDecimals(individualMinimumAmount, this.getDecimals()),
+				Numbers.toSmartContractDecimals(individualMaximumAmount, this.getDecimals()),
                 isTokenSwapAtomic,
                 Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()), 
 			];
-			
-			let res = await this.__deploy(params)
+			let res = await this.__deploy(params);
+			console.log("done")
 			this.params.contractAddress = res.contractAddress;
 			/* Call to Backend API */
 
@@ -536,18 +578,6 @@ class FixedSwapContract {
 			return "N/A";
 		} 
 	}
-
-	getTokenAddress = async () => {
-		try {
-			return (await this.params.contract
-				.getContract()
-				.methods.tokenAddress()
-				.call());
-		} catch (err) {
-			return "N/A";
-		}
-	}
-
 	/* Backend API */
 	
 }
