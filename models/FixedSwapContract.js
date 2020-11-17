@@ -355,7 +355,11 @@ class FixedSwapContract {
 
 	getBuyers = async () => await this.params.contract.getContract().methods.buyers().call();
 
-	getPurchaseIds = async () => (await this.params.contract.getContract().methods.purchaseIds().call()).map( id => Numbers.fromExponential(id));
+	getPurchaseIds = async () => {
+		let res = await this.params.contract.getContract().methods.purchaseIds().call();
+		console.log("res", res);
+		return res.map( id => Numbers.fromExponential(id));
+	}
 
 	getAddressPurchaseIds = async ({address}) => (
 		(await this.__sendTx(
@@ -385,12 +389,12 @@ class FixedSwapContract {
 			this.getDecimals()
 		);
 
-		let ETHCost = await this.getETHCostFromTokens({tokenAmount : tokenAmount});
+		let ETHCost = await this.getETHCostFromTokens({tokenAmount : amountWithDecimals});
+		
 		let ETHToWei = Numbers.toSmartContractDecimals(
 			ETHCost,
 			18
 		);
-		console.log("eth cost", ETHToWei, tokenAmount) 
 		return await this.__sendTx( 
 			this.params.contract
 			.getContract()
@@ -459,15 +463,17 @@ class FixedSwapContract {
 		}
 	};
 
+	approveFundERC20 = async ({tokenAmount}) => {
+		return await this.params.erc20TokenContract.approve({address : this.getAddress(), amount : tokenAmount});
+	}
+
 	fund = async ({tokenAmount}) => {
 		try {
 			let amountWithDecimals = Numbers.toSmartContractDecimals(
 				tokenAmount,
 				this.getDecimals()
 			);
-	
-			/* Approve tx */
-			await this.params.erc20TokenContract.approve({address : this.getAddress(), amount : tokenAmount});
+
 			return await this.__sendTx( 
 				this.params.contract
 				.getContract()
@@ -545,7 +551,6 @@ class FixedSwapContract {
                 Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()), 
 			];
 			let res = await this.__deploy(params);
-			console.log("done")
 			this.params.contractAddress = res.contractAddress;
 			/* Call to Backend API */
 

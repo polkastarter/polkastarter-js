@@ -26,15 +26,14 @@ context('Tests', async () => {
         /* Create Contract */
         swapContract = app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
         /* Deploy */
-        console.log("a")
         let res = await swapContract.deploy({
             tradeValue : 0.0000001, 
             tokensForSale : 100, 
+            isTokenSwapAtomic : true,
             individualMaximumAmount : 100,
-            startDate : moment().add(2, 'minutes'),
+            startDate : moment().add(6, 'minutes'),
             endDate : moment().add(16, 'hours')
         });
-        console.log("bn")
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
     }));
@@ -73,8 +72,11 @@ context('Tests', async () => {
     }));
 
     it('should fund a Swap Contract and confirm balances', mochaAsync(async () => {
-        /* Create Contract */
-        let res = await swapContract.fund({tokenAmount : 100});
+        /* Approve ERC20 Fund */
+        let res = await swapContract.approveFundERC20({tokenAmount : 100});
+        expect(res).to.not.equal(false);
+        /* Fund */
+        res = await swapContract.fund({tokenAmount : 100});
         expect(res).to.not.equal(false);
     }));
 
