@@ -39,6 +39,10 @@ class numbers {
     return time
   }
 
+  fromHex(hex){
+    return hex.toString();
+  }
+
   toFloat(number) {
     return parseFloat(parseFloat(number).toFixed(2))
   }

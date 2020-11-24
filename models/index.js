@@ -44,7 +44,8 @@ class Application {
 	/* Login with Metamask */
 	/**
 	 * @ERROR if metamask is not available, but application should work normally
-	 */
+	*/
+	
 	login = async () => {
 		if (!this.__ethEnabled()) {
 			this.web3 = new Web3(
