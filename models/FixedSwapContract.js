@@ -511,7 +511,7 @@ class FixedSwapContract {
 
     deploy = async({
         tradeValue, tokensForSale, startDate, endDate, 
-        individualMinimumAmount=0, individualMaximumAmount=0, isTokenSwapAtomic=true, minimumRaise=0
+        individualMinimumAmount=0, individualMaximumAmount=0, isTokenSwapAtomic=true, minimumRaise=0, feeAmount=1
 	}) => {
 
         try{             
@@ -523,7 +523,10 @@ class FixedSwapContract {
             }  
             if(tokensForSale <= 0){
                 throw new Error('Tokens for Sale has to be > 0');
-            }  
+			}  
+			if(feeAmount<1){
+                throw new Error('Fee Amount has to be >= 1');
+			}
             if(_.isEmpty(startDate)){
                 throw new Error('Start Date not provided');
             }  
@@ -543,7 +546,8 @@ class FixedSwapContract {
 				Numbers.toSmartContractDecimals(individualMinimumAmount, this.getDecimals()),
 				Numbers.toSmartContractDecimals(individualMaximumAmount, this.getDecimals()),
                 isTokenSwapAtomic,
-                Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()), 
+				Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()), 
+				parseInt(feeAmount)
 			];
 			console.log("params", params);
 			let res = await this.__deploy(params);
