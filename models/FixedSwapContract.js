@@ -568,17 +568,6 @@ class FixedSwapContract {
 			if (feeAmount < 1) {
 				throw new Error("Fee Amount has to be >= 1");
 			}
-			if (_.isEmpty(startDate)) {
-				throw new Error("Start Date not provided");
-			}
-			if (_.isEmpty(endDate)) {
-				throw new Error("End Date not provided");
-			}
-			if (individualMaximumAmount <= individualMinimumAmount) {
-				throw new Error(
-					"Maximum Amount is smaller than minimum Amount per User"
-				);
-			}
 
 			let params = [
 				this.getTokenAddress(),
