@@ -22,7 +22,6 @@ context('Tests', async () => {
         app = new Application({test : true});
     });
 
-
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
 
         app = new Application({test : true});
@@ -49,11 +48,12 @@ context('Tests', async () => {
         expect(swapContract).to.not.equal(false);
     }));
 
+
+
     it('GET - isPreFunded', mochaAsync(async () => {        
         let res = await swapContract.isPreStart();
         expect(res).to.equal(true);
     }));
-
     it('GET - tokensAllocated', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAllocated();
         expect(tokens).to.equal(0);
@@ -76,8 +76,11 @@ context('Tests', async () => {
 
     it('should fund a Swap Contract and confirm balances', mochaAsync(async () => {
         /* Approve ERC20 Fund */
-        let res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
+        res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
+
+        res = await swapContract.isApproved({address : app.account.getAddress(), tokenAmount : tokenFundAmount});
+        expect(res).to.equal(true);
         /* Fund */
         res = await swapContract.fund({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
