@@ -27,14 +27,30 @@ class Contract {
 			)).rawTransaction);
 		}else{
 			const accounts = await this.web3.eth.getAccounts();
-			res = await this.getContract()
-			.deploy({
-				data: byteCode,
-				arguments: args,
-			}).send({from : accounts[0]});
+			res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0]});
 		}
 		this.address = res.contractAddress;
 		return res;
+	}
+
+	__metamaskDeploy = async ({byteCode, args, acc}) => {
+		return new Promise ((resolve, reject) => {
+			try{
+				this.getContract()
+				.deploy({
+					data: byteCode,
+					arguments: args,
+				}).send({from : acc})
+				.on('confirmation', (confirmationNumber, receipt) => { 
+					if(confirmationNumber > 8){
+						resolve(receipt);
+					}
+				})
+				.on('error', err => {throw err});
+			}catch(err){
+				reject(err);
+			}
+		})
 	}
 
 	async use(contract_json, address) {
