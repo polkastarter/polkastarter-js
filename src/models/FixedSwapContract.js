@@ -64,14 +64,27 @@ class FixedSwapContract {
 		}
 	}
 
+	__metamaskCall = async ({f, acc, value}) => {
+		return new Promise( (resolve, reject) => {
+			f.send({
+				from: acc,
+				value: value,
+			})
+			.on('confirmation', (confirmationNumber, receipt) => { 
+				console.log("confirmations", confirmationNumber)
+				if(confirmationNumber > 8){
+					resolve(receipt);
+				}
+			})
+			.on('error', err => {reject(err)});
+		})
+	}
+
 	__sendTx = async (f, call = false, value) => {
 		var res;
 		if (!this.acc) {
 			const accounts = await this.params.web3.eth.getAccounts();
-			res = await f.send({
-				from: accounts[0],
-				value: value,
-			});
+			res = await __metamaskCall({f, acc : accounts[0], value});
 		} else if (this.acc && !call) {
 			let data = f.encodeABI();
 			res = await this.params.contract.send(
