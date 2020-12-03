@@ -84,7 +84,7 @@ class FixedSwapContract {
 		var res;
 		if (!this.acc) {
 			const accounts = await this.params.web3.eth.getAccounts();
-			res = await __metamaskCall({ f, acc: accounts[0], value });
+			res = await this.__metamaskCall({ f, acc: accounts[0], value });
 		} else if (this.acc && !call) {
 			let data = f.encodeABI();
 			res = await this.params.contract.send(
