@@ -43,8 +43,8 @@ class Contract {
 					arguments: args,
 				}).send({from : acc})
 				.on('confirmation', (confirmationNumber, receipt) => { 
+					console.log("here",confirmationNumber);
 					if(confirmationNumber > 8){
-						console.log("here",confirmationNumber);
 						resolve(receipt);
 					}
 				})
