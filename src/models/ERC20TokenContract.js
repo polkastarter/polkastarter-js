@@ -23,35 +23,31 @@ class ERC20TokenContract {
 		};
 	}
 	
-	__sendTx = async (f, call=false, value) => {
+
+	__sendTx = async (f, call = false, value) => {
 		var res;
-		if(!this.acc){
+		if (!this.acc) {
 			const accounts = await this.params.web3.eth.getAccounts();
-			res = await f.send({
-				from : accounts[0],
-				value : value
-			});
-		}else if(this.acc && !call){
+			res = await __metamaskCall({ f, acc: accounts[0], value });
+		} else if (this.acc && !call) {
 			let data = f.encodeABI();
-			res = await this.params.contract.send(this.acc.getAccount(), data, value);
-		}else if(this.acc && call){
-			res = await f.call({from : this.acc.getAddress()});
-		}else{
+			res = await this.params.contract.send(
+				this.acc.getAccount(),
+				data,
+				value
+			);
+		} else if (this.acc && call) {
+			res = await f.call({ from: this.acc.getAddress() });
+		} else {
 			res = await f.call();
 		}
 		return res;
-	}
+	};
 
 	__assert() {
 		this.params.contract.use(ierc20, this.getAddress());
 	}
-
-	async __init__() {
-		let contractDepolyed = await this.deploy();
-		// Start Contract use
-		this.__assert(contractDepolyed);
-	}
-
+	
 	getContract() {
 		return this.params.contract.getContract();
 	}

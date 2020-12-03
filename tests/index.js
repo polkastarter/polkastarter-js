@@ -33,8 +33,8 @@ context('Tests', async () => {
             tokensForSale : tokenFundAmount, 
             isTokenSwapAtomic : true,
             individualMaximumAmount : tokenFundAmount,
-            startDate : moment().add(4, 'minutes'),
-            endDate : moment().add(15, 'minutes')
+            startDate : moment().add(3, 'minutes'),
+            endDate : moment().add(8, 'minutes')
         });
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
@@ -98,7 +98,7 @@ context('Tests', async () => {
     }));
 
     it('GET - hasStarted', mochaAsync(async () => {  
-        await delay(6*1000);      
+        await delay(5*1000);      
         let res = await swapContract.hasStarted();
         expect(res).to.equal(true);
     }));

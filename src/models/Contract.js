@@ -65,27 +65,23 @@ class Contract {
 
 	async send(account, byteCode, value='0x0'){
 		return new Promise( async (resolve, reject) => {
-			try{
-				let tx = {
-					data : byteCode,
-					from  : account.address,
-					to : this.address,
-					gas : 4430000,
-					gasPrice : 20000000000,
-					value: value ? value : '0x0'
-				}
-		
-				let result = await account.signTransaction(tx);
-				this.web3.eth.sendSignedTransaction(result.rawTransaction)
-				.on('confirmation', (confirmationNumber, receipt) => { 
-					if(confirmationNumber > 8){
-						resolve(receipt);
-					}
-				})
-				.on('error', err => {throw err});
-			}catch(err){
-				reject(err);
+			let tx = {
+				data : byteCode,
+				from  : account.address,
+				to : this.address,
+				gas : 4430000,
+				gasPrice : 20000000000,
+				value: value ? value : '0x0'
 			}
+	
+			let result = await account.signTransaction(tx);
+			this.web3.eth.sendSignedTransaction(result.rawTransaction)
+			.on('confirmation', (confirmationNumber, receipt) => { 
+				if(confirmationNumber > 8){
+					resolve(receipt);
+				}
+			})
+			.on('error', err => {reject(err)});
 		})
        
 	}
