@@ -3,7 +3,7 @@
 import chai from 'chai';
 import { mochaAsync } from './utils';
 import moment from 'moment';
-import Application from '../models';
+import Application from '../src/models';
 import delay from 'delay';
 const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 var contractAddress = '0xeCB7b5AeCe719963cedF343486d7be56c7D4c113';
@@ -33,8 +33,8 @@ context('Tests', async () => {
             tokensForSale : tokenFundAmount, 
             isTokenSwapAtomic : true,
             individualMaximumAmount : tokenFundAmount,
-            startDate : moment().add(5, 'minutes'),
-            endDate : moment().add(8, 'minutes')
+            startDate : moment().add(4, 'minutes'),
+            endDate : moment().add(15, 'minutes')
         });
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
@@ -76,7 +76,7 @@ context('Tests', async () => {
 
     it('should fund a Swap Contract and confirm balances', mochaAsync(async () => {
         /* Approve ERC20 Fund */
-        res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
+        let res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
 
         res = await swapContract.isApproved({address : app.account.getAddress(), tokenAmount : tokenFundAmount});
@@ -98,7 +98,7 @@ context('Tests', async () => {
     }));
 
     it('GET - hasStarted', mochaAsync(async () => {  
-        await delay(3*1000);      
+        await delay(6*1000);      
         let res = await swapContract.hasStarted();
         expect(res).to.equal(true);
     }));
@@ -114,7 +114,6 @@ context('Tests', async () => {
     }));
 
     it('should do a non atomic swap on the Contract', mochaAsync(async () => {
-        /* Create Contract */
         let res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
         expect(res).to.not.equal(false);
     }));

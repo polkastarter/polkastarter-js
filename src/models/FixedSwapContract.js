@@ -4,10 +4,14 @@ import ERC20TokenContract from "./ERC20Contract";
 import Numbers from "../utils/Numbers";
 import _ from "lodash";
 
+
 /**
  * Fixed Swap Object
- * @type Object
  * @constructor FixedSwapContract
+ * @param {Web3} web3
+ * @param {Address} tokenAddress
+ * @param {Integer} decimals
+ * @param {Address} contractAddress ? (opt)
  */
 class FixedSwapContract {
 	constructor({
@@ -92,31 +96,10 @@ class FixedSwapContract {
 		);
 	};
 
-
-	async authorize({ address }) {
-		try {
-			return await this.__sendTx(
-				this.params.contract.getContract().methods.authorize(address)
-			);
-		} catch (err) {
-			throw err;
-		}
-	}
-
-	isAuthorized = async ({ address }) => {
-		try {
-			return await this.__sendTx(
-				this.params.contract.getContract().methods.authorized(address)
-			);
-		} catch (err) {
-			throw err;
-		}
-	};
-	
 	/**
 	 * @function setNewOwner
 	 * @description Set New Owner of the Contract
-	 * @param {string} address grwtgert
+	 * @param {string} address 
 	 */
 	setNewOwner = async ({ address }) => {
 		try {
@@ -130,6 +113,12 @@ class FixedSwapContract {
 		}
 	};
 
+	/**
+	* @function owner
+	* @description Get Owner of the Contract
+	* @returns {string} address 
+	*/
+
 	async owner() {
 		try {
 			return await this.params.contract
@@ -140,6 +129,12 @@ class FixedSwapContract {
 			return "N/A";
 		}
 	}
+
+	/**
+	* @function isPaused
+	* @description Get Owner of the Contract
+	* @returns {boolean} 
+	*/
 
 	async isPaused() {
 		try {
@@ -152,6 +147,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function pauseContract
+	* @type admin
+	* @description Pause Contract
+	*/
 	async pauseContract() {
 		try {
 			return await this.__sendTx(
@@ -162,6 +162,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function unpauseContract
+	* @type admin
+	* @description Unpause Contract
+	*/
 	async unpauseContract() {
 		try {
 			return await this.__sendTx(
@@ -173,7 +178,11 @@ class FixedSwapContract {
 	}
 
 	/* Get Functions */
-
+	/**
+	* @function tradeValue
+	* @description Get swapratio for the pool
+	* @returns {Integer} trade value against ETH 
+	*/
 	async tradeValue() {
 		try {
 			return Numbers.fromDecimals(
@@ -188,6 +197,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function startDate
+	* @description Get Start Date of Pool
+	* @returns {Date} 
+	*/
 	async startDate() {
 		try {
 			return Numbers.fromSmartContractTimeToMinutes(
@@ -201,6 +215,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function endDate
+	* @description Get End Date of Pool
+	* @returns {Date} 
+	*/
 	async endDate() {
 		try {
 			return Numbers.fromSmartContractTimeToMinutes(
@@ -214,6 +233,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function individualMinimumAmount
+	* @description Get Individual Minimum Amount for each address 
+	* @returns {Integer} 
+	*/
 	async individualMinimumAmount() {
 		try {
 			return Numbers.fromDecimals(
@@ -228,6 +252,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function individualMaximumAmount
+	* @description Get Individual Maximum Amount for each address 
+	* @returns {Integer} 
+	*/
 	async individualMaximumAmount() {
 		try {
 			return Numbers.fromDecimals(
@@ -242,6 +271,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function minimumRaise
+	* @description Get Minimum Raise amount for Token Sale
+	* @returns {Integer} Amount in Tokens
+	*/
 	async minimumRaise() {
 		try {
 			return Numbers.fromDecimals(
@@ -256,6 +290,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function tokensAllocated
+	* @description Get Total tokens Allocated already, therefore the tokens bought until now
+	* @returns {Integer} Amount in Tokens
+	*/
 	async tokensAllocated() {
 		try {
 			return Numbers.fromDecimals(
@@ -270,6 +309,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function tokensForSale
+	* @description Get Total tokens Allocated/In Sale for the Pool
+	* @returns {Integer} Amount in Tokens
+	*/
 	async tokensForSale() {
 		try {
 			return Numbers.fromDecimals(
@@ -284,6 +328,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function tokensAvailable
+	* @description Get Total tokens owned by the Pool 
+	* @returns {Integer} Amount in Tokens
+	*/
 	async tokensAvailable() {
 		try {
 			return Numbers.fromDecimals(
@@ -298,6 +347,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function tokensLeft
+	* @description Get Total tokens available to be sold in the pool
+	* @returns {Integer} Amount in Tokens
+	*/
 	async tokensLeft() {
 		try {
 			return Numbers.fromDecimals(
@@ -312,6 +366,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function isTokenSwapAtomic
+	* @description Verify if the Token Swap is atomic on this pool
+	* @returns {Boolean}
+	*/
 	async isTokenSwapAtomic() {
 		try {
 			return await this.params.contract
@@ -323,6 +382,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function isFunded
+	* @description Verify if the Token Sale is Funded with all Tokens proposed in tokensForSale
+	* @returns {Boolean}
+	*/
 	async isFunded() {
 		try {
 			return await this.params.contract
@@ -334,6 +398,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function isOpen
+	* @description Verify if the Token Sale is Open for Swap
+	* @returns {Boolean}
+	*/
 	async isOpen() {
 		try {
 			return await this.params.contract
@@ -345,6 +414,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function hasStarted
+	* @description Verify if the Token Sale has started the Swap
+	* @returns {Boolean}
+	*/
 	async hasStarted() {
 		try {
 			return await this.params.contract
@@ -356,6 +430,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function hasFinalized
+	* @description Verify if the Token Sale has finalized, if the current date is after endDate
+	* @returns {Boolean}
+	*/
 	async hasFinalized() {
 		try {
 			return await this.params.contract
@@ -367,6 +446,11 @@ class FixedSwapContract {
 		}
 	}
 
+	/**
+	* @function isPreStart
+	* @description Verify if the Token Sale in not open yet, where the admin can fund the pool
+	* @returns {Boolean}
+	*/
 	async isPreStart() {
 		try {
 			return await this.params.contract
@@ -377,6 +461,19 @@ class FixedSwapContract {
 			return "N/A";
 		}
 	}
+
+	/**
+	* @function getPurchase
+	* @description Get Purchase based on ID
+	* @param {Integer} purchase_id 
+	* @returns {Integer} _id
+	* @returns {Integer} amount
+	* @returns {Address} purchaser
+	* @returns {Integer} ethAmount
+	* @returns {Date} timestamp
+	* @returns {Boolean} wasFinalized
+	* @returns {Boolean} reverted
+	*/
 
 	getPurchase = async ({ purchase_id }) => {
 		let res = await this.params.contract
@@ -394,9 +491,20 @@ class FixedSwapContract {
 		};
 	};
 
+	/**
+	* @function getBuyers
+	* @description Get Buyers
+	* @returns {Array | Integer} _ids
+	*/
+
 	getBuyers = async () =>
 		await this.params.contract.getContract().methods.getBuyers().call();
 
+	/**
+	* @function getPurchaseIds
+	* @description Get All Purchase Ids
+	* @returns {(Array | Integer)} _ids
+	*/
 	getPurchaseIds = async () => {
 		let res = await this.params.contract
 			.getContract()
@@ -405,6 +513,12 @@ class FixedSwapContract {
 		return res.map((id) => Numbers.fromHex(id));
 	};
 
+	/**
+	* @function getPurchaseIds
+	* @description Get All Purchase Ids filter by Address/Purchaser
+	* @param {Address} address
+	* @returns {Array | Integer} _ids
+	*/
 	getAddressPurchaseIds = async ({ address }) => {
 		let res = await this.__sendTx(
 			this.params.contract.getContract().methods.getMyPurchases(address),
@@ -413,6 +527,12 @@ class FixedSwapContract {
 		return res.map((id) => Numbers.fromHex(id));
 	};
 
+	/**
+	* @function getETHCostFromTokens
+	* @description Get ETH Cost from Tokens Amount
+	* @param {Integer} tokenAmount
+	* @returns {Integer} ethAmount
+	*/
 	getETHCostFromTokens = async ({ tokenAmount }) => {
 		try {
 			return Numbers.fromDecimals(
@@ -426,25 +546,40 @@ class FixedSwapContract {
 			return "N/A";
 		}
 	};
+
 	/* POST User Functions */
+
+	/**
+	* @function swap
+	* @description Swap tokens by Ethereum
+	* @param {Integer} tokenAmount
+	*/
 
 	swap = async ({ tokenAmount }) => {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
 			this.getDecimals()
 		);
-
+		console.log("amountWithDecimals", amountWithDecimals)
 		let ETHCost = await this.getETHCostFromTokens({
 			tokenAmount: amountWithDecimals,
 		});
-
+		console.log("ETHCost", ETHCost)
 		let ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
+		console.log("ETHToWei", ETHToWei)
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals),
 			false,
 			ETHToWei
 		);
 	};
+
+	/**
+	* @function redeemTokens
+	* @variation isStandard
+	* @description Reedem tokens bought
+	* @param {Integer} purchase_id
+	*/
 
 	redeemTokens = async ({ purchase_id }) => {
 		try {
@@ -458,6 +593,12 @@ class FixedSwapContract {
 		}
 	};
 
+	/**
+	* @function redeemGivenMinimumGoalNotAchieved
+	* @variation isStandard
+	* @description Reedem Ethereum from sale that did not achieve minimum goal
+	* @param {Integer} purchase_id
+	*/
 	redeemGivenMinimumGoalNotAchieved = async ({ purchase_id }) => {
 		try {
 			return await this.__sendTx(
@@ -469,6 +610,11 @@ class FixedSwapContract {
 			throw err;
 		}
 	};
+
+	/**
+	* @function withdrawUnsoldTokens
+	* @description Withdraw unsold tokens of sale
+	*/
 
 	withdrawUnsoldTokens = async () => {
 		try {
@@ -482,6 +628,10 @@ class FixedSwapContract {
 		}
 	};
 
+	/**
+	* @function withdrawFunds
+	* @description Withdraw all funds from tokens sold
+	*/
 	withdrawFunds = async () => {
 		try {
 			return await this.__sendTx(
@@ -492,6 +642,10 @@ class FixedSwapContract {
 		}
 	};
 
+	/**
+	* @function approveFundERC20
+	* @description Approve the pool to use approved tokens for sale
+	*/
 	approveFundERC20 = async ({ tokenAmount }) => {
 		return await this.params.erc20TokenContract.approve({
 			address: this.getAddress(),
@@ -499,12 +653,23 @@ class FixedSwapContract {
 		});
 	};
 
-
+	/**
+	* @function isApproved
+	* @description Verify if the Admin has approved the pool to use receive the tokens for sale
+	* @param {Integer} tokenAmount
+	* @param {Address} address
+	* @returns {Boolean}
+	*/
 	isApproved = async ({tokenAmount, address}) => {
 		console.log("address", address, tokenAmount)
 		return await this.params.erc20TokenContract.isApproved({address : address, amount : tokenAmount, spenderAddress : this.getAddress()});
 	}
 
+	/**
+	* @function fund
+	* @description Send tokens to pool for sale, fund the sale
+	* @param {Integer} tokenAmount
+	*/
 	fund = async ({tokenAmount}) => {
 		try {
 			let amountWithDecimals = Numbers.toSmartContractDecimals(
@@ -522,6 +687,12 @@ class FixedSwapContract {
 		}
 	};
 
+	/**
+	* @function removeOtherERC20Tokens
+	* @description Remove Tokens from other ERC20 Address (in case of accident)
+	* @param {Address} tokenAddress
+    * @param {Address} toAddress
+	*/
 	removeOtherERC20Tokens = async ({tokenAddress, toAddress}) => {
 		try {
 			return await this.__sendTx( 
@@ -544,6 +715,11 @@ class FixedSwapContract {
 		return Math.round(int * 100);
 	}
 
+	/**
+	* @function deploy
+	* @description Deploy the Pool Contract
+
+	*/
 	deploy = async ({
 		tradeValue,
 		tokensForSale,
@@ -617,6 +793,11 @@ class FixedSwapContract {
 		return this.params.erc20TokenContract;
 	}
 
+	/**
+	* @function getOwner
+	* @description Get owner address of contract
+	* @param {Address} Address
+	*/
 	getOwner = async () => {
 		try {
 			return await this.params.contract

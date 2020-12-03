@@ -62,6 +62,7 @@ class Application {
 		}
 	};
 
+	
 	/* Initialize the system */
 	getFixedSwapContract = ({tokenAddress, decimals, contractAddress=null}) => {
 		try{
