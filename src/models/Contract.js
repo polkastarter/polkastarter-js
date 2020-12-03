@@ -34,6 +34,7 @@ class Contract {
 	}
 
 	__metamaskDeploy = async ({byteCode, args, acc}) => {
+		console.log("__metamaskDeploy");
 		return new Promise ((resolve, reject) => {
 			try{
 				this.getContract()
@@ -43,6 +44,7 @@ class Contract {
 				}).send({from : acc})
 				.on('confirmation', (confirmationNumber, receipt) => { 
 					if(confirmationNumber > 8){
+						console.log("here",confirmationNumber);
 						resolve(receipt);
 					}
 				})
