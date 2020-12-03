@@ -46,7 +46,7 @@ class Contract {
 						resolve(receipt);
 					}
 				})
-				.on('error', err => {throw err});
+				.on('error', err => {reject(err)});
 			}catch(err){
 				reject(err);
 			}

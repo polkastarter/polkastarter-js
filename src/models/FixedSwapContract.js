@@ -555,7 +555,6 @@ class FixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	isApproved = async ({ tokenAmount, address }) => {
-		console.log("isApproved", address, tokenAmount, this.getAddress());
 		return await this.params.erc20TokenContract.isApproved({
 			address: address,
 			amount: tokenAmount,
