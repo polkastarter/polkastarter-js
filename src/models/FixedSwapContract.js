@@ -21,31 +21,33 @@ class FixedSwapContract {
 		acc,
 	}) {
 		try {
-			if (!tokenAddress && !decimals) {
-				throw new Error(
-					"Please provide a Token Address and the decimals of this Tokens"
-				);
-			}
-
 			if (!web3) {
 				throw new Error("Please provide a valid web3 provider");
 			}
+			this.web3 = web3;
 			if (acc) {
 				this.acc = acc;
 			}
+
 			this.params = {
 				web3: web3,
 				contractAddress: contractAddress,
 				contract: new Contract(web3, fixedswap, contractAddress),
-				erc20TokenContract: new ERC20TokenContract({
+			};
+
+			
+
+			if(tokenAddress && decimals){
+				this.params.erc20TokenContract = new ERC20TokenContract({
 					web3: web3,
 					decimals: decimals,
 					contractAddress: tokenAddress,
-					acc,
-				}),
-			};
-
-			this.decimals = decimals;
+					acc
+				});
+				this.decimals = decimals;
+			}else{
+				if(!contractAddress){throw new Error("Please provide a contractAddress if already deployed")}
+			}
 		} catch (err) {
 			throw err;
 		}
@@ -56,10 +58,23 @@ class FixedSwapContract {
 			if (!this.getAddress()) {
 				throw new Error("Please add a Contract Address");
 			}
+			
 			this.__assert();
 		} catch (err) {
 			throw err;
 		}
+	};
+
+	assertERC20Info = async () => {
+		let decimals = await this.decimals();
+		let tokenAddress = await this.erc20();
+
+		this.params.erc20TokenContract = new ERC20TokenContract({
+			web3: this.web3,
+			decimals: decimals,
+			contractAddress: tokenAddress,
+			acc : this.acc
+		});
 	}
 
 	__metamaskCall = async ({ f, acc, value }) => {
@@ -155,6 +170,31 @@ class FixedSwapContract {
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.pause()
 		);
+	}
+
+
+	/**
+	 * @function erc20
+	 * @description Get Token Address
+	 * @returns {Address} Token Address
+	 */
+	async erc20() {
+		return await this.params.contract
+		.getContract()
+		.methods.erc20()
+		.call();
+	}
+
+	/**
+	 * @function decimals
+	 * @description Get Decimals
+	 * @returns {Integer} Integer
+	 */
+	async decimals() {
+		return parseInt(await this.params.contract
+		.getContract()
+		.methods.decimals()
+		.call());
 	}
 
 	/**

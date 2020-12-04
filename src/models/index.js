@@ -64,7 +64,7 @@ class Application {
 
 	
 	/* Initialize the system */
-	getFixedSwapContract = ({tokenAddress, decimals, contractAddress=null}) => {
+	getFixedSwapContract =  ({tokenAddress, decimals, contractAddress=null}) => {
 		try{
 			return new FixedSwapContract({
 				web3: this.web3,

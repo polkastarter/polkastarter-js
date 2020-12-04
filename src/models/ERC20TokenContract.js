@@ -11,7 +11,6 @@ class ERC20TokenContract {
 		if(acc){
 			this.acc = acc;
 		}
-
 		this.params = {
 			web3 : web3,
 			contractAddress : contractAddress,

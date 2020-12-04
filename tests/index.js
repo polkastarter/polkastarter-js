@@ -6,7 +6,7 @@ import moment from 'moment';
 import Application from '../src/models';
 import delay from 'delay';
 const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
-var contractAddress = '0xeCB7b5AeCe719963cedF343486d7be56c7D4c113';
+var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
 const expect = chai.expect;
@@ -40,11 +40,12 @@ context('Tests', async () => {
         expect(res).to.not.equal(false);
     }));
 
-    it('should get a Fixed Swap Contract', mochaAsync(async () => {
+    it('should get a Fixed Swap Contract From contractAddress', mochaAsync(async () => {
 
         /* Create Contract */
-        swapContract = app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18, contractAddress});
+        swapContract = app.getFixedSwapContract({contractAddress});
         swapContract.__init__();
+        await swapContract.assertERC20Info();
         expect(swapContract).to.not.equal(false);
     }));
 
