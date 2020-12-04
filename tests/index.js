@@ -42,7 +42,7 @@ context('Tests', async () => {
 
     it('should get a Fixed Swap Contract From contractAddress', mochaAsync(async () => {
 
-        /* Create Contract */
+        /* Get Contract */
         swapContract = app.getFixedSwapContract({contractAddress});
         swapContract.__init__();
         await swapContract.assertERC20Info();

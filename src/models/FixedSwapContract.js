@@ -66,7 +66,7 @@ class FixedSwapContract {
 	};
 
 	assertERC20Info = async () => {
-		let decimals = await this.decimals();
+		let decimals = await this.decimalsAsync();
 		let tokenAddress = await this.erc20();
 
 		this.params.erc20TokenContract = new ERC20TokenContract({
@@ -75,6 +75,7 @@ class FixedSwapContract {
 			contractAddress: tokenAddress,
 			acc : this.acc
 		});
+		this.decimals = decimals;
 	}
 
 	__metamaskCall = async ({ f, acc, value }) => {
@@ -190,7 +191,7 @@ class FixedSwapContract {
 	 * @description Get Decimals
 	 * @returns {Integer} Integer
 	 */
-	async decimals() {
+	async decimalsAsync() {
 		return parseInt(await this.params.contract
 		.getContract()
 		.methods.decimals()
