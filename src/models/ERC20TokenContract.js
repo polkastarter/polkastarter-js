@@ -104,7 +104,7 @@ class ERC20TokenContract {
 				await this.getContract().methods.allowance(address, spenderAddress).call(),
 				this.getDecimals()
 			);
-			return amount >= approvedAmount;
+			return (approvedAmount >= amount);
 		} catch (err) {
 			throw err;
 		}
