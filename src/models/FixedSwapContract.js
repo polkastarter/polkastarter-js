@@ -361,7 +361,7 @@ class FixedSwapContract {
 	async withdrawableUnsoldTokens() {
 		var res = 0;
 		if(await this.hasFinalized()
-		&& (await this.wereUnsoldTokensReedemed())
+		&& (!await this.wereUnsoldTokensReedemed())
 		){
 			res = (await this.tokensForSale()) - (await this.tokensAllocated());
 		}
