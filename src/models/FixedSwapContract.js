@@ -78,8 +78,8 @@ class FixedSwapContract {
 		this.decimals = decimals;
 	}
 
-	__metamaskCall = async ({ f, acc, value, callback }) => {
-		return new Promise((resolve, reject) => {
+	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
+		return new Promise( (resolve, reject) => {
 			f.send({
 				from: acc,
 				value: value,
@@ -96,7 +96,7 @@ class FixedSwapContract {
 		});
 	};
 
-	__sendTx = async (f, call = false, value, callback) => {
+	__sendTx = async (f, call = false, value, callback=()=>{}) => {
 		var res;
 		if (!this.acc) {
 			const accounts = await this.params.web3.eth.getAccounts();

@@ -33,7 +33,7 @@ context('Tests', async () => {
             tokensForSale : tokenFundAmount, 
             isTokenSwapAtomic : true,
             individualMaximumAmount : tokenFundAmount,
-            startDate : moment().add(3, 'minutes'),
+            startDate : moment().add(6, 'minutes'),
             endDate : moment().add(8, 'minutes')
         });
         contractAddress = swapContract.getAddress();
@@ -81,15 +81,15 @@ context('Tests', async () => {
     }));
 
     it('should fund a Swap Contract and confirm balances', mochaAsync(async () => {
-        let res = await swapContract.hasStarted();
-        expect(res).to.equal(false);
+     
         /* Approve ERC20 Fund */
-        res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
+        let res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
-
         res = await swapContract.isApproved({address : app.account.getAddress(), tokenAmount : tokenFundAmount});
         expect(res).to.equal(true);
         /* Fund */
+        res = await swapContract.hasStarted();
+        expect(res).to.equal(false);
         res = await swapContract.fund({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
     }));

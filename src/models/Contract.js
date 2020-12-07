@@ -11,7 +11,7 @@ class Contract {
 		this.contract = new web3.eth.Contract(contract_json.abi, address);
 	}
 
-	async deploy(account, abi, byteCode, args = [], callback) {
+	async deploy(account, abi, byteCode, args = [], callback=()=>{}) {
 		var res;
 		this.contract = new this.web3.eth.Contract(abi);
 		if(account){	
@@ -33,7 +33,7 @@ class Contract {
 		return res;
 	}
 
-	__metamaskDeploy = async ({byteCode, args, acc, callback}) => {
+	__metamaskDeploy = async ({byteCode, args, acc, callback = () => {}}) => {
 		return new Promise ((resolve, reject) => {
 			try{
 				this.getContract()
@@ -64,7 +64,7 @@ class Contract {
 		);
 	}
 
-	async send(account, byteCode, value='0x0', callback= () => {}){
+	async send(account, byteCode, value='0x0', callback=() => {}){
 		return new Promise( async (resolve, reject) => {
 			let tx = {
 				data : byteCode,

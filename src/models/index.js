@@ -79,7 +79,7 @@ class Application {
 		}
 	};
 
-	/* Initialize the system */
+	/* getERC20TokenContract */
 	getERC20TokenContract =  ({tokenAddress, decimals}) => {
 		try{
 			return new ERC20TokenContract({
