@@ -360,8 +360,8 @@ class FixedSwapContract {
 	 */
 	async withdrawableUnsoldTokens() {
 		var res = 0;
-		if(this.hasFinalized()
-		&& await this.wereUnsoldTokensReedemed()
+		if(await this.hasFinalized()
+		&& (await this.wereUnsoldTokensReedemed())
 		){
 			res = (await this.tokensForSale()) - (await this.tokensAllocated());
 		}
@@ -375,7 +375,7 @@ class FixedSwapContract {
 	 */
 	async withdrawableFunds() {
 		var res = await this.getBalance();
-		if(!this.hasFinalized()){
+		if(!await this.hasFinalized()){
 			res = 0;
 		}
 		return res;
