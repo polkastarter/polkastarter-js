@@ -354,6 +354,19 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function withdrawableUnsoldTokens
+	 * @description Get Total tokens available to be withdrawn by the admin
+	 * @returns {Integer} Amount in Tokens
+	 */
+	async withdrawableUnsoldTokens() {
+		var res = 0;
+		if(!(await this.wereUnsoldTokensReedemed())){
+			res = (await this.tokensForSale()) - (await this.tokensAllocated());
+		}
+		return res;
+	}
+
+	/**
 	 * @function isTokenSwapAtomic
 	 * @description Verify if the Token Swap is atomic on this pool
 	 * @returns {Boolean}
@@ -362,6 +375,18 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods.isTokenSwapAtomic()
+			.call();
+	}
+
+	/**
+	 * @function wereUnsoldTokensReedemed
+	 * @description Verify if the admin already reemeded unsold tokens
+	 * @returns {Boolean}
+	 */
+	async wereUnsoldTokensReedemed() {
+		return await this.params.contract
+			.getContract()
+			.methods.unsoldTokensReedemed()
 			.call();
 	}
 
