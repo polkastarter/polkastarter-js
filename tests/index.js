@@ -49,8 +49,6 @@ context('Tests', async () => {
         expect(swapContract).to.not.equal(false);
     }));
 
-
-
     it('GET - isPreFunded', mochaAsync(async () => {        
         let res = await swapContract.isPreStart();
         expect(res).to.equal(true);

@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import FixedSwapContract from "./FixedSwapContract";
 import Account from './Account';
+import ERC20TokenContract from "./ERC20TokenContract";
 
 const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
@@ -63,7 +64,7 @@ class Application {
 	};
 
 	
-	/* Initialize the system */
+	/* getFixedSwapContract */
 	getFixedSwapContract =  ({tokenAddress, decimals, contractAddress=null}) => {
 		try{
 			return new FixedSwapContract({
@@ -71,6 +72,20 @@ class Application {
 				tokenAddress: tokenAddress,
 				decimals : decimals,
 				contractAddress: contractAddress,
+				acc : this.test ? this.account : null
+			});
+		}catch(err){
+			throw err;
+		}
+	};
+
+	/* Initialize the system */
+	getERC20TokenContract =  ({tokenAddress, decimals}) => {
+		try{
+			return new ERC20TokenContract({
+				web3: this.web3,
+				contractAddress: tokenAddress,
+				decimals : decimals,
 				acc : this.test ? this.account : null
 			});
 		}catch(err){
