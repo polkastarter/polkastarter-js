@@ -360,8 +360,23 @@ class FixedSwapContract {
 	 */
 	async withdrawableUnsoldTokens() {
 		var res = 0;
-		if(!(await this.wereUnsoldTokensReedemed())){
+		if(this.hasFinalized()
+		&& await this.wereUnsoldTokensReedemed()
+		){
 			res = (await this.tokensForSale()) - (await this.tokensAllocated());
+		}
+		return res;
+	}
+
+	/**
+	 * @function withdrawableFunds
+	 * @description Get Total funds raised to be withdrawn by the admin
+	 * @returns {Integer} Amount in ETH
+	 */
+	async withdrawableFunds() {
+		var res = await this.getBalance();
+		if(!this.hasFinalized()){
+			res = 0;
 		}
 		return res;
 	}
@@ -711,13 +726,17 @@ class FixedSwapContract {
 		if(individualMinimumAmount < 0) {
 			throw new Error("Individual Minimum Amount should be bigger than 0")
 		}
-		if(individualMaximumAmount <= individualMinimumAmount) {
-			throw new Error("Individual Maximum Amount should be bigger than Individual Minimum Amount")
-		}
-		if(individualMaximumAmount > tokensForSale) {
-			throw new Error("Individual Maximum Amount should be smaller than total Tokens For Sale")
-		}
 
+		if(individualMaximumAmount > 0){
+			/* If exists individualMaximumAmount */
+			if(individualMaximumAmount <= individualMinimumAmount) {
+				throw new Error("Individual Maximum Amount should be bigger than Individual Minimum Amount")
+			}
+			if(individualMaximumAmount > tokensForSale) {
+				throw new Error("Individual Maximum Amount should be smaller than total Tokens For Sale")
+			}
+		}
+	
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, 18) /* to wei */,
@@ -764,6 +783,16 @@ class FixedSwapContract {
 	 */
 	getOwner = async () => {
 		return await this.params.contract.getContract().methods.owner().call();
+	};
+
+	/**
+	 * @function getBalance
+	 * @description Get Balance of Contract
+	 * @param {Integer} Balance
+	 */
+	getBalance = async () => {
+		let wei = await this.web3.eth.getBalance(this.getAddress());
+        return this.web3.utils.fromWei(wei, 'ether');
 	};
 }
 

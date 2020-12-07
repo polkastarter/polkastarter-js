@@ -24,7 +24,7 @@ class ERC20TokenContract {
 	
 
 
-	__metamaskCall = async ({ f, acc, value, callback }) => {
+	__metamaskCall = async ({ f, acc, value, callback=()=>{}}) => {
 		return new Promise((resolve, reject) => {
 			f.send({
 				from: acc,
@@ -43,7 +43,7 @@ class ERC20TokenContract {
 	};
 
 
-	__sendTx = async (f, call = false, value, callback) => {
+	__sendTx = async (f, call = false, value, callback=()=>{}) => {
 		var res;
 		if (!this.acc) {
 			const accounts = await this.params.web3.eth.getAccounts();
