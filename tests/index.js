@@ -55,9 +55,16 @@ context('Tests', async () => {
         let res = await swapContract.isPreStart();
         expect(res).to.equal(true);
     }));
+
     it('GET - tokensAllocated', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAllocated();
         expect(tokens).to.equal(0);
+    }));
+
+     
+    it('GET - tradeValue', mochaAsync(async () => {        
+        let td = await swapContract.tradeValue();
+        expect(td).to.equal(tradeValue);
     }));
 
     it('GET - tokensAvailable', mochaAsync(async () => {        
@@ -76,8 +83,10 @@ context('Tests', async () => {
     }));
 
     it('should fund a Swap Contract and confirm balances', mochaAsync(async () => {
+        let res = await swapContract.hasStarted();
+        expect(res).to.equal(false);
         /* Approve ERC20 Fund */
-        let res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
+        res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
 
         res = await swapContract.isApproved({address : app.account.getAddress(), tokenAmount : tokenFundAmount});

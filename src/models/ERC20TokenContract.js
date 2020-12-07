@@ -24,14 +24,14 @@ class ERC20TokenContract {
 	
 
 
-	__metamaskCall = async ({ f, acc, value }) => {
+	__metamaskCall = async ({ f, acc, value, callback }) => {
 		return new Promise((resolve, reject) => {
 			f.send({
 				from: acc,
 				value: value,
 			})
 				.on("confirmation", (confirmationNumber, receipt) => {
-					console.log("confirmations", confirmationNumber);
+					callback(confirmationNumber);
 					if (confirmationNumber > 8) {
 						resolve(receipt);
 					}
@@ -43,11 +43,11 @@ class ERC20TokenContract {
 	};
 
 
-	__sendTx = async (f, call = false, value) => {
+	__sendTx = async (f, call = false, value, callback) => {
 		var res;
 		if (!this.acc) {
 			const accounts = await this.params.web3.eth.getAccounts();
-			res = await this.__metamaskCall({ f, acc: accounts[0], value });
+			res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
 		} else if (this.acc && !call) {
 			let data = f.encodeABI();
 			res = await this.params.contract.send(
@@ -130,7 +130,7 @@ class ERC20TokenContract {
 		}
 	}
 
-	async approve({ address, amount }) {
+	async approve({ address, amount, callback }) {
 		try {
 			let amountWithDecimals = Numbers.toSmartContractDecimals(
 				amount,
@@ -139,7 +139,10 @@ class ERC20TokenContract {
 			return await this.__sendTx( 
 				this.params.contract
 				.getContract()
-				.methods.approve(address, amountWithDecimals)
+				.methods.approve(address, amountWithDecimals),
+				null,
+				null,
+				callback
 			);
 		} catch (err) {
 			throw err;

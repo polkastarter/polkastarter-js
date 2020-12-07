@@ -3,7 +3,7 @@ import Contract from "./Contract";
 import ERC20TokenContract from "./ERC20TokenContract";
 import Numbers from "../utils/Numbers";
 import _ from "lodash";
-
+import moment from 'moment';
 /**
  * Fixed Swap Object
  * @constructor FixedSwapContract
@@ -78,14 +78,14 @@ class FixedSwapContract {
 		this.decimals = decimals;
 	}
 
-	__metamaskCall = async ({ f, acc, value }) => {
+	__metamaskCall = async ({ f, acc, value, callback }) => {
 		return new Promise((resolve, reject) => {
 			f.send({
 				from: acc,
 				value: value,
 			})
 				.on("confirmation", (confirmationNumber, receipt) => {
-					console.log("confirmations", confirmationNumber);
+					callback(confirmationNumber)
 					if (confirmationNumber > 8) {
 						resolve(receipt);
 					}
@@ -96,11 +96,11 @@ class FixedSwapContract {
 		});
 	};
 
-	__sendTx = async (f, call = false, value) => {
+	__sendTx = async (f, call = false, value, callback) => {
 		var res;
 		if (!this.acc) {
 			const accounts = await this.params.web3.eth.getAccounts();
-			res = await this.__metamaskCall({ f, acc: accounts[0], value });
+			res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
 		} else if (this.acc && !call) {
 			let data = f.encodeABI();
 			res = await this.params.contract.send(
@@ -116,12 +116,13 @@ class FixedSwapContract {
 		return res;
 	};
 
-	__deploy = async (params) => {
+	__deploy = async (params, callback) => {
 		return await this.params.contract.deploy(
 			this.acc,
 			this.params.contract.getABI(),
 			this.params.contract.getJSON().bytecode,
-			params
+			params,
+			callback
 		);
 	};
 
@@ -220,8 +221,8 @@ class FixedSwapContract {
 			(await this.params.contract
 				.getContract()
 				.methods.tradeValue()
-				.call(),
-			this.getDecimals())
+				.call()),
+			this.getDecimals()
 		);
 	}
 
@@ -269,10 +270,10 @@ class FixedSwapContract {
 	 */
 	async individualMaximumAmount() {
 		return Numbers.fromDecimals(
-			await this.params.contract
+			(await this.params.contract
 				.getContract()
 				.methods.individualMaximumAmount()
-				.call(),
+				.call()),
 			this.getDecimals()
 		);
 	}
@@ -284,10 +285,10 @@ class FixedSwapContract {
 	 */
 	async minimumRaise() {
 		return Numbers.fromDecimals(
-			await this.params.contract
+			(await this.params.contract
 				.getContract()
 				.methods.minimumRaise()
-				.call(),
+				.call()),
 			this.getDecimals()
 		);
 	}
@@ -299,10 +300,10 @@ class FixedSwapContract {
 	 */
 	async tokensAllocated() {
 		return Numbers.fromDecimals(
-			await this.params.contract
+			(await this.params.contract
 				.getContract()
 				.methods.tokensAllocated()
-				.call(),
+				.call()),
 			this.getDecimals()
 		);
 	}
@@ -510,22 +511,20 @@ class FixedSwapContract {
 	 * @param {Integer} tokenAmount
 	 */
 
-	swap = async ({ tokenAmount }) => {
+	swap = async ({ tokenAmount, callback }) => {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
 			this.getDecimals()
 		);
-		console.log("amountWithDecimals", amountWithDecimals);
 		let ETHCost = await this.getETHCostFromTokens({
 			tokenAmount: amountWithDecimals,
 		});
-		console.log("ETHCost", ETHCost);
 		let ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
-		console.log("ETHToWei", ETHToWei);
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals),
 			false,
-			ETHToWei
+			ETHToWei,
+			callback
 		);
 	};
 
@@ -581,10 +580,11 @@ class FixedSwapContract {
 	 * @function approveFundERC20
 	 * @description Approve the pool to use approved tokens for sale
 	 */
-	approveFundERC20 = async ({ tokenAmount }) => {
+	approveFundERC20 = async ({ tokenAmount, callback }) => {
 		return await this.params.erc20TokenContract.approve({
 			address: this.getAddress(),
 			amount: tokenAmount,
+			callback
 		});
 	};
 
@@ -599,7 +599,7 @@ class FixedSwapContract {
 		return await this.params.erc20TokenContract.isApproved({
 			address: address,
 			amount: tokenAmount,
-			spenderAddress: this.getAddress(),
+			spenderAddress: this.getAddress()
 		});
 	};
 
@@ -608,14 +608,17 @@ class FixedSwapContract {
 	 * @description Send tokens to pool for sale, fund the sale
 	 * @param {Integer} tokenAmount
 	 */
-	fund = async ({ tokenAmount }) => {
+	fund = async ({ tokenAmount, callback }) => {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
 			this.getDecimals()
 		);
 
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.fund(amountWithDecimals)
+			this.params.contract.getContract().methods.fund(amountWithDecimals),
+			null,
+			null,
+			callback
 		);
 	};
 
@@ -654,6 +657,7 @@ class FixedSwapContract {
 		isTokenSwapAtomic = true,
 		minimumRaise = 0,
 		feeAmount = 1,
+		callback
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -666,6 +670,27 @@ class FixedSwapContract {
 		}
 		if (feeAmount < 1) {
 			throw new Error("Fee Amount has to be >= 1");
+		}
+		if(minimumRaise != 0 && (minimumRaise > tokensForSale)) {
+			throw new Error("Minimum Raise has to be bigger than total Raise")
+		}
+		if(Date.parse(startDate) >= Date.parse(endDate)) {
+			throw new Error("Start Date has to be smaller than End Date")
+		}
+		if(Date.parse(startDate) <= Date.parse(moment(Date.now()).add(2, 'm').toDate())) {
+			throw new Error("Start Date has to be higher (at least 2 minutes) than now")
+		}
+		if(individualMaximumAmount < 0) {
+			throw new Error("Individual Maximum Amount should be bigger than 0")
+		}
+		if(individualMinimumAmount < 0) {
+			throw new Error("Individual Minimum Amount should be bigger than 0")
+		}
+		if(individualMaximumAmount <= individualMinimumAmount) {
+			throw new Error("Individual Maximum Amount should be bigger than Individual Minimum Amount")
+		}
+		if(individualMaximumAmount > tokensForSale) {
+			throw new Error("Individual Maximum Amount should be smaller than total Tokens For Sale")
 		}
 
 		let params = [
@@ -687,7 +712,7 @@ class FixedSwapContract {
 			parseInt(feeAmount),
 		];
 		console.log("params", params);
-		let res = await this.__deploy(params);
+		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */
 

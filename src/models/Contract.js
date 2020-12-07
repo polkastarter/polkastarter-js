@@ -11,7 +11,7 @@ class Contract {
 		this.contract = new web3.eth.Contract(contract_json.abi, address);
 	}
 
-	async deploy(account, abi, byteCode, args = [], gas = 5913388) {
+	async deploy(account, abi, byteCode, args = [], callback) {
 		var res;
 		this.contract = new this.web3.eth.Contract(abi);
 		if(account){	
@@ -27,13 +27,13 @@ class Contract {
 			)).rawTransaction);
 		}else{
 			const accounts = await this.web3.eth.getAccounts();
-			res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0]});
+			res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0], callback});
 		}
 		this.address = res.contractAddress;
 		return res;
 	}
 
-	__metamaskDeploy = async ({byteCode, args, acc}) => {
+	__metamaskDeploy = async ({byteCode, args, acc, callback}) => {
 		return new Promise ((resolve, reject) => {
 			try{
 				this.getContract()
@@ -42,6 +42,7 @@ class Contract {
 					arguments: args,
 				}).send({from : acc})
 				.on('confirmation', (confirmationNumber, receipt) => { 
+					callback(confirmationNumber)
 					if(confirmationNumber > 8){
 						resolve(receipt);
 					}
@@ -63,7 +64,7 @@ class Contract {
 		);
 	}
 
-	async send(account, byteCode, value='0x0'){
+	async send(account, byteCode, value='0x0', callback= () => {}){
 		return new Promise( async (resolve, reject) => {
 			let tx = {
 				data : byteCode,
@@ -77,6 +78,7 @@ class Contract {
 			let result = await account.signTransaction(tx);
 			this.web3.eth.sendSignedTransaction(result.rawTransaction)
 			.on('confirmation', (confirmationNumber, receipt) => { 
+				callback(confirmationNumber);
 				if(confirmationNumber > 8){
 					resolve(receipt);
 				}
