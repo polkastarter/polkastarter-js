@@ -19,8 +19,9 @@ const networksEnum = Object.freeze({
 });
 
 class Application {
-	constructor({test=false}) {
+	constructor({test=false, mainnet=true}) {
 		this.test = test;
+		this.mainnet = mainnet;
 		if(this.test){
 			this.start();
 			this.login();
@@ -32,7 +33,7 @@ class Application {
 	start = () => {
 		this.web3 = new Web3(
 			new Web3.providers.HttpProvider(
-				this.test ? ETH_URL_TESTNET : ETH_URL_MAINNET
+				this.mainnet ? ETH_URL_MAINNET : ETH_URL_TESTNET
 			)
 		);
 		if (typeof window !== "undefined") {
