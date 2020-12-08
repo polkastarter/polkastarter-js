@@ -22,12 +22,28 @@ class Application {
 	constructor({test=false}) {
 		this.test = test;
 		if(this.test){
+			this.start();
 			this.login();
 			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
 		}
 	}
 
-	__ethEnabled = () => {
+	
+	start = () => {
+		this.web3 = new Web3(
+			new Web3.providers.HttpProvider(
+				this.test ? ETH_URL_TESTNET : ETH_URL_MAINNET
+			)
+		);
+		if (typeof window !== "undefined") {
+			window.web3 = this.web3;
+			throw new Error(
+				"Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet"
+			);
+		}
+	}
+
+	login = () => {
 		if (typeof window === "undefined") { return false; }
 		if (window.ethereum || !this.test) {
 			window.web3 = new Web3(window.ethereum);
@@ -41,28 +57,6 @@ class Application {
 	__getUserAccount = ({privateKey}) => {
 		return new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(privateKey));
 	}
-
-	/* Login with Metamask */
-	/**
-	 * @ERROR if metamask is not available, but application should work normally
-	*/
-	
-	login = async () => {
-		if (!this.__ethEnabled()) {
-			this.web3 = new Web3(
-				new Web3.providers.HttpProvider(
-					this.test ? ETH_URL_TESTNET : ETH_URL_MAINNET
-				)
-			);
-			if (typeof window !== "undefined") {
-				window.web3 = this.web3;
-				throw new Error(
-					"Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet"
-				);
-			}
-		}
-	};
-
 	
 	/* getFixedSwapContract */
 	getFixedSwapContract =  ({tokenAddress, decimals, contractAddress=null}) => {
