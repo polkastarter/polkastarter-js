@@ -45,7 +45,7 @@ class ERC20TokenContract {
 
 	__sendTx = async (f, call = false, value, callback=()=>{}) => {
 		var res;
-		if (!this.acc) {
+		if (!this.acc && !call) {
 			const accounts = await this.params.web3.eth.getAccounts();
 			res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
 		} else if (this.acc && !call) {

@@ -98,7 +98,7 @@ class FixedSwapContract {
 
 	__sendTx = async (f, call = false, value, callback=()=>{}) => {
 		var res;
-		if (!this.acc) {
+		if (!this.acc && !call) {
 			const accounts = await this.params.web3.eth.getAccounts();
 			res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
 		} else if (this.acc && !call) {
@@ -737,6 +737,10 @@ class FixedSwapContract {
 			}
 		}
 	
+		if(individualMaximumAmount == 0){
+			individualMaximumAmount = tokensForSale; /* Set Max Amount to Unlimited if 0 */
+		}
+
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, 18) /* to wei */,

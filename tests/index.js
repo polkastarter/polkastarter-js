@@ -122,6 +122,7 @@ context('Tests', async () => {
     }));
 
     it('should do a non atomic swap on the Contract', mochaAsync(async () => {
+        console.log("token", tokenPurchaseAmount)
         let res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
         expect(res).to.not.equal(false);
     }));
