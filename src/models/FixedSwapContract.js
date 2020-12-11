@@ -297,7 +297,7 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods
-			.minimumRaiseAchieved();
+			.minimumRaiseAchieved().call();
 	}
 
 	/**
