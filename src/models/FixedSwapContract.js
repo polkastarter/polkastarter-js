@@ -286,7 +286,7 @@ class FixedSwapContract {
 	async minimumRaiseAchieved() {
 		return await this.params.contract
 			.getContract()
-			.methods.individualMaximumAmount()
+			.methods
 			.minimumRaiseAchieved();
 	}
 
