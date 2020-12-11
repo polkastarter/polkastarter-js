@@ -249,6 +249,16 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function isFinalized
+	 * @description To see if contract was finalized
+	 * @returns {Boolean}
+	 */
+	async isFinalized() {
+		return await this.params.contract.getContract().methods.hasFinalized().call()
+		
+	}
+
+	/**
 	 * @function individualMinimumAmount
 	 * @description Get Individual Minimum Amount for each address
 	 * @returns {Integer}
