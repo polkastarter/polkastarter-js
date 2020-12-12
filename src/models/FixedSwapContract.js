@@ -303,6 +303,7 @@ class FixedSwapContract {
 		}catch(err){
 			return false;
 		}
+		return res;
 	}
 
 	/**
