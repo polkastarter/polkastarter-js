@@ -83,16 +83,12 @@ class numbers {
   }
 
   fromDecimals(value, decimals) {
-    try{
       value = new BN(Web3.utils.hexToNumberString(Web3.utils.hexToNumberString(value)));
       const divisor = new BN(10).pow(new BN(decimals));
       const beforeDecimal = value.div(divisor);
       const afterDecimal  = value.mod(divisor);
       let res = beforeDecimal.toString() + "." + afterDecimal.toString();
       return res;
-    }catch(err){
-      console.log(err)
-    }
   }
 
   fromExponential(x) {
