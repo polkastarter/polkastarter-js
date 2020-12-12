@@ -72,7 +72,7 @@ class numbers {
 
   toSmartContractDecimals(value, decimals) {
     let numberWithNoExponents = new Number(value * 10 ** decimals).noExponents();
-    return numberWithNoExponents
+    return numberWithNoExponents;
   }
 
   fromBigNumberToInteger(value, decimals = 18) {
