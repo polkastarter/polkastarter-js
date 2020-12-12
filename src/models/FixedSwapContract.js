@@ -294,10 +294,15 @@ class FixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async minimumRaiseAchieved() {
-		return await this.params.contract
+		var res;
+		try{
+			res = await this.params.contract
 			.getContract()
 			.methods
 			.minimumRaiseAchieved().call();
+		}catch(err){
+			return false;
+		}
 	}
 
 	/**
