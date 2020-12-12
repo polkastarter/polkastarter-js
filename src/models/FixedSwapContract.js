@@ -300,7 +300,7 @@ class FixedSwapContract {
 			.getContract()
 			.methods
 			.minimumRaiseAchieved().call()
-			.catch(err => {throw err;})
+			.catch(err => {console.log("err", err);throw err;})
 		}catch(err){
 			return false;
 		}
@@ -417,7 +417,7 @@ class FixedSwapContract {
 		if(await this.hasFinalized()
 		&& (!await this.wereUnsoldTokensReedemed())
 		){
-			if(this.wasMinimumRaiseReached()){
+			if(await this.wasMinimumRaiseReached()){
 				/* Minimum reached */
 				res = (await this.tokensForSale()) - (await this.tokensAllocated());
 			}else{
