@@ -299,7 +299,8 @@ class FixedSwapContract {
 			res = await this.params.contract
 			.getContract()
 			.methods
-			.minimumRaiseAchieved().call();
+			.minimumRaiseAchieved().call().
+			;
 		}catch(err){
 			return false;
 		}
@@ -590,7 +591,7 @@ class FixedSwapContract {
 			this.getDecimals()
 		);
 		let ETHCost = await this.getETHCostFromTokens({
-			tokenAmount: amountWithDecimals,
+			tokenAmount,
 		});
 		let ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
 		return await this.__sendTx(
