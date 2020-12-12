@@ -81,7 +81,7 @@ class numbers {
 
   fromDecimals(value, decimals) {
     let res = parseInt(value) / 10 ** decimals;
-    return parseFloat(res).toPrecision(decimals);
+    return parseFloat(res).toPrecision(10);
   }
 
   fromExponential(x) {
