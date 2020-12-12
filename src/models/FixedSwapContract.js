@@ -561,10 +561,15 @@ class FixedSwapContract {
 	 * @returns {Integer} ethAmount
 	 */
 	getETHCostFromTokens = async ({ tokenAmount }) => {
+		let amountWithDecimals = Numbers.toSmartContractDecimals(
+			tokenAmount,
+			this.getDecimals()
+		);
+
 		return Numbers.fromDecimals(
 			await this.params.contract
 				.getContract()
-				.methods.cost(tokenAmount)
+				.methods.cost(amountWithDecimals)
 				.call(),
 			18
 		);
