@@ -353,6 +353,31 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function hasMinimumRaise
+	 * @description See if hasMinimumRaise 
+	 * @returns {Boolea} 
+	 */
+	async hasMinimumRaise() {
+		return await this.params.contract
+			.getContract()
+			.methods.hasMinimumRaise()
+			.call();
+	}
+
+	/**
+	 * @function minimumReached
+	 * @description See if minimumRaise was Reached
+	 * @returns {Integer}
+	 */
+	async wasMinimumRaiseReached() {
+		if(await this.hasMinimumRaise()){
+			return (await this.tokensAllocated() > await this.minimumRaise());
+		}else{
+			return true;
+		}
+	}
+
+	/**
 	 * @function tokensAvailable
 	 * @description Get Total tokens owned by the Pool
 	 * @returns {Integer} Amount in Tokens
@@ -392,7 +417,13 @@ class FixedSwapContract {
 		if(await this.hasFinalized()
 		&& (!await this.wereUnsoldTokensReedemed())
 		){
-			res = (await this.tokensForSale()) - (await this.tokensAllocated());
+			if(this.wasMinimumRaiseReached()){
+				/* Minimum reached */
+				res = (await this.tokensForSale()) - (await this.tokensAllocated());
+			}else{
+				/* Minimum reached */
+				res = await this.tokensForSale();
+			}
 		}
 		return res;
 	}
@@ -403,9 +434,12 @@ class FixedSwapContract {
 	 * @returns {Integer} Amount in ETH
 	 */
 	async withdrawableFunds() {
-		var res = await this.getBalance();
-		if(!await this.hasFinalized()){
-			res = 0;
+		var res = 0;
+		if(
+			await this.hasFinalized() &&
+			await this.wasMinimumRaiseReached()
+			){
+			res = await this.getBalance();
 		}
 		return res;
 	}
