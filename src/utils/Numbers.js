@@ -1,6 +1,9 @@
 import moment from 'moment'
 import accounting from 'accounting'
 import dayjs from 'dayjs'
+import BN from 'bn.js';
+import web3 from "web3";
+let Web3 = new web3();
 
 Number.prototype.noExponents = function () {
   var data = String(this).split(/[eE]/)
@@ -80,8 +83,16 @@ class numbers {
   }
 
   fromDecimals(value, decimals) {
-    let res = parseInt(value) / 10 ** decimals;
-    return parseFloat(res).toPrecision(10);
+    try{
+      value = new BN(Web3.utils.hexToNumberString(Web3.utils.hexToNumberString(value)));
+      const divisor = new BN(10).pow(new BN(decimals));
+      const beforeDecimal = value.div(divisor);
+      const afterDecimal  = value.mod(divisor);
+      let res = beforeDecimal.toString() + "." + afterDecimal.toString();
+      return res;
+    }catch(err){
+      console.log(err)
+    }
   }
 
   fromExponential(x) {

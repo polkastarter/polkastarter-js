@@ -300,7 +300,7 @@ class FixedSwapContract {
 			.getContract()
 			.methods
 			.minimumRaiseAchieved().call()
-			.catch(err => {console.log("err", err);throw err;})
+			.catch(err => {throw err;})
 		}catch(err){
 			return false;
 		}

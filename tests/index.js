@@ -19,7 +19,7 @@ context('Tests', async () => {
     var app;
    
     before( async () =>  {
-        app = new Application({test : true});
+        app = new Application({test : true, mainnet : false});
     });
 
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
@@ -56,28 +56,28 @@ context('Tests', async () => {
 
     it('GET - tokensAllocated', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAllocated();
-        expect(tokens).to.equal(0);
+        expect(parseFloat(tokens)).to.equal(0);
     }));
 
      
     it('GET - tradeValue', mochaAsync(async () => {        
         let td = await swapContract.tradeValue();
-        expect(td).to.equal(tradeValue);
+        expect(parseFloat(td)).to.equal(tradeValue);
     }));
 
     it('GET - tokensAvailable', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAvailable();
-        expect(tokens).to.equal(0);
+        expect(parseFloat(tokens)).to.equal(0);
     }));
 
     it('GET - tokensForSale', mochaAsync(async () => {        
         let tokens = await swapContract.tokensForSale();
-        expect(tokens).to.equal(100);
+        expect(parseFloat(tokens)).to.equal(100);
     }));
 
     it('GET - tokensLeft', mochaAsync(async () => {        
         let tokens = await swapContract.tokensLeft();
-        expect(tokens).to.equal(100);
+        expect(parseFloat(tokens)).to.equal(100);
     }));
 
     it('should fund a Swap Contract and confirm balances', mochaAsync(async () => {
@@ -97,7 +97,7 @@ context('Tests', async () => {
 
     it('GET - tokensAvailable', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAvailable();
-        expect(tokens).to.equal(100);
+        expect(parseFloat(tokens)).to.equal(100);
     }));
 
     it('GET - isFunded', mochaAsync(async () => {  
@@ -118,7 +118,7 @@ context('Tests', async () => {
 
     it('GET - tokensAvailable after fund', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAvailable();
-        expect(tokens).to.equal(tokenFundAmount);
+        expect(parseFloat(tokens)).to.equal(tokenFundAmount);
     }));
 
     it('should do a non atomic swap on the Contract', mochaAsync(async () => {
