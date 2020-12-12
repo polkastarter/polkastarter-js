@@ -299,7 +299,8 @@ class FixedSwapContract {
 			res = await this.params.contract
 			.getContract()
 			.methods
-			.minimumRaiseAchieved().call();
+			.minimumRaiseAchieved().call()
+			.catch(err => {throw err;})
 		}catch(err){
 			return false;
 		}
