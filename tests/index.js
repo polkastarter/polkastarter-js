@@ -20,6 +20,9 @@ context('Tests', async () => {
    
     before( async () =>  {
         app = new Application({test : true, mainnet : false});
+        let a = parseFloat(tradeValue / 10 ** 18).toFixed(18);
+        let b = new Number(parseFloat(tradeValue / 10 ** 18).toPrecision(18)).noExponents();
+        console.log("a", a, b)
     });
 
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
