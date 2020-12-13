@@ -12,7 +12,7 @@ var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706a
 const expect = chai.expect;
 const tokenPurchaseAmount = 60;
 const tokenFundAmount = 100;
-const tradeValue = 0.0000001;
+const tradeValue = 0.0000000000012342;
 
 context('Tests', async () => {
     var swapContract;
