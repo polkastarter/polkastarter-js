@@ -24,7 +24,7 @@ context('Tests', async () => {
 
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
 
-        app = new Application({test : true});
+        app = new Application({test : true, mainnet : false});
         /* Create Contract */
         swapContract = app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
         /* Deploy */
