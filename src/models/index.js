@@ -34,7 +34,7 @@ class Application {
 	start = () => {
 		this.web3 = new Web3(
 			new Web3.providers.HttpProvider(
-				this.mainnet ? ETH_URL_MAINNET : ETH_URL_TESTNET
+				(this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET
 			)
 		);
 		if (typeof window !== "undefined") {
