@@ -86,7 +86,7 @@ class FixedSwapContract {
 			})
 				.on("confirmation", (confirmationNumber, receipt) => {
 					callback(confirmationNumber)
-					if (confirmationNumber > 8) {
+					if (confirmationNumber > 3) {
 						resolve(receipt);
 					}
 				})

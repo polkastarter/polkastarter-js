@@ -83,7 +83,6 @@ class numbers {
   }
 
   fromDecimals(value, decimals) {
-      console.log("v", parseFloat(value / 10 ** decimals).toFixed(decimals), parseFloat(value / 10 ** decimals).toPrecision(decimals), Number(parseFloat(value / 10 ** decimals).toPrecision(decimals)).noExponents() );
       return  Number(parseFloat(value / 10 ** decimals).toPrecision(decimals)).noExponents();
   }
 
