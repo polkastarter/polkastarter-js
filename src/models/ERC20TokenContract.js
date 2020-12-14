@@ -32,7 +32,7 @@ class ERC20TokenContract {
 			})
 				.on("confirmation", (confirmationNumber, receipt) => {
 					callback(confirmationNumber);
-					if (confirmationNumber > 3) {
+					if (confirmationNumber > 0) {
 						resolve(receipt);
 					}
 				})

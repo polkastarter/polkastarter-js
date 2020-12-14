@@ -86,7 +86,7 @@ class FixedSwapContract {
 			})
 				.on("confirmation", (confirmationNumber, receipt) => {
 					callback(confirmationNumber)
-					if (confirmationNumber > 3) {
+					if (confirmationNumber > 0) {
 						resolve(receipt);
 					}
 				})
@@ -727,6 +727,18 @@ class FixedSwapContract {
 			null,
 			null,
 			callback
+		);
+	};
+
+	/**
+	 * @function safePull
+	 * @description Safe Pull all tokens & ETH
+	 */
+	safePull = async () => {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.safePull(),
+			null,
+			0
 		);
 	};
 

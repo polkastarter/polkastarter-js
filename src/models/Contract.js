@@ -43,7 +43,7 @@ class Contract {
 				}).send({from : acc})
 				.on('confirmation', (confirmationNumber, receipt) => { 
 					callback(confirmationNumber)
-					if(confirmationNumber > 3){
+					if(confirmationNumber > 0){
 						resolve(receipt);
 					}
 				})
@@ -79,7 +79,7 @@ class Contract {
 			this.web3.eth.sendSignedTransaction(result.rawTransaction)
 			.on('confirmation', (confirmationNumber, receipt) => { 
 				callback(confirmationNumber);
-				if(confirmationNumber > 3){
+				if(confirmationNumber > 0){
 					resolve(receipt);
 				}
 			})
