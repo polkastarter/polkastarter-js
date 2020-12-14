@@ -22,6 +22,7 @@ class Application {
 	constructor({test=false, mainnet=true}) {
 		this.test = test;
 		this.mainnet = mainnet;
+		console.log("Is mainnet", this.mainnet);
 		if(this.test){
 			this.start();
 			this.login();

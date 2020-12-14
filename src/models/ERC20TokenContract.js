@@ -21,8 +21,6 @@ class ERC20TokenContract {
 			contract: new contract(web3, ierc20, contractAddress)
 		};
 	}
-	
-
 
 	__metamaskCall = async ({ f, acc, value, callback=()=>{}}) => {
 		return new Promise((resolve, reject) => {
