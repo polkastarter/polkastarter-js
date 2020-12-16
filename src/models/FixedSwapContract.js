@@ -456,6 +456,31 @@ class FixedSwapContract {
 			.call();
 	}
 
+
+	/**
+	 * @function hasWhitelisting
+	 * @description Verify if swap has whitelisting
+	 * @returns {Boolean}
+	 */
+	async hasWhitelisting() {
+		return await this.params.contract
+			.getContract()
+			.methods.hasWhitelisting()
+			.call();
+	}
+
+	/**
+	 * @function isWhitelisted
+	 * @description Verify if address is whitelisted
+	 * @returns {Boolean}
+	 */
+	async isWhitelisted({address}) {
+		return await this.params.contract
+			.getContract()
+			.methods.isWhitelisted(address)
+			.call();
+	}
+	
 	/**
 	 * @function wereUnsoldTokensReedemed
 	 * @description Verify if the admin already reemeded unsold tokens
@@ -553,6 +578,15 @@ class FixedSwapContract {
 			reverted: res[5],
 		};
 	};
+
+	/**
+	 * @function getWhiteListedAddresses
+	 * @description Get Whitelisted Addresses
+	 * @returns {Array | Address} addresses
+	 */
+
+	getWhitelistedAddresses = async () =>
+		await this.params.contract.getContract().methods.getWhitelistedAddresses().call();
 
 	/**
 	 * @function getBuyers
@@ -731,6 +765,28 @@ class FixedSwapContract {
 	};
 
 	/**
+	 * @function addWhitelistedAddress
+	 * @description add WhiteListed Address
+	 * @param { Array | Addresses} Addresses
+	 */
+	addWhitelistedAddress = async ({addresses}) => {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.add(addresses)
+		);
+	};
+
+		/**
+	 * @function removeWhitelistedAddress
+	 * @description remove WhiteListed Address
+	 */
+	removeWhitelistedAddress = async ({address}) => {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.remove(address)
+		);
+	};
+
+
+	/**
 	 * @function safePull
 	 * @description Safe Pull all tokens & ETH
 	 */
@@ -777,6 +833,7 @@ class FixedSwapContract {
 		isTokenSwapAtomic = true,
 		minimumRaise = 0,
 		feeAmount = 1,
+		hasWhitelisting = false,
 		callback
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
@@ -838,6 +895,7 @@ class FixedSwapContract {
 			isTokenSwapAtomic,
 			Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()),
 			parseInt(feeAmount),
+			hasWhitelisting
 		];
 		console.log("params", params);
 		let res = await this.__deploy(params, callback);
