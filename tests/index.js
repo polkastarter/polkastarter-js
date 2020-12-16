@@ -34,11 +34,14 @@ context('Tests', async () => {
             isTokenSwapAtomic : true,
             individualMaximumAmount : tokenFundAmount,
             startDate : moment().add(6, 'minutes'),
-            endDate : moment().add(8, 'minutes')
+            endDate : moment().add(8, 'minutes'),
+            hasWhitelisting : true
         });
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
     }));
+
+
 
     it('should get a Fixed Swap Contract From contractAddress', mochaAsync(async () => {
 
@@ -47,6 +50,20 @@ context('Tests', async () => {
         swapContract.__init__();
         await swapContract.assertERC20Info();
         expect(swapContract).to.not.equal(false);
+    }));
+
+
+    it('SET - whitelisted Addresses', mochaAsync(async () => {        
+        let add = await swapContract.addWhitelistedAddress({addresses : ['0x43257a77e909ca48e4c2cc44687ffeb79b0e0b98', '0x98c039e95e7c555534a53f12ae2ac2d3398d534b']});
+        expect(add).to.not.equal(false);
+    }));
+
+
+    it('SET - whitelisted Addresses (with repeated ones)', mochaAsync(async () => {        
+        let res = await swapContract.addWhitelistedAddress({addresses : ['0x43257a77e909ca48e4c2cc44687ffeb79b0e0b98', '0x98c039e95e7c555534a53f12ae2ac2d3398d534b', '0x98c039e95e7c555534a53f12ae2ac2d3398d534c']});
+        expect(res).to.not.equal(false);
+        res = await swapContract.getWhitelistedAddresses();
+        expect(res.length).to.equal(3);
     }));
 
     it('GET - isPreFunded', mochaAsync(async () => {        

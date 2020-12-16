@@ -475,10 +475,11 @@ class FixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isWhitelisted({address}) {
-		return await this.params.contract
+		let res = await this.params.contract
 			.getContract()
 			.methods.isWhitelisted(address)
 			.call();
+		return res == true ? true : false;
 	}
 	
 	/**
@@ -770,8 +771,28 @@ class FixedSwapContract {
 	 * @param { Array | Addresses} Addresses
 	 */
 	addWhitelistedAddress = async ({addresses}) => {
+
+		if(!addresses || !addresses.length || addresses.length == 0){
+			throw new Error("Addresses not well setup");
+		}
+
+		let oldAddresses = await this.getWhitelistedAddresses();
+		oldAddresses = oldAddresses.map( a => String(a).toLowerCase());
+		addresses = addresses.map( a => String(a).toLowerCase());
+
+		var addressesClean = [];
+		addresses = addresses.filter( (item) => {
+			if(
+				(oldAddresses.indexOf(item) < 0) && 
+				(addressesClean.indexOf(item) < 0)
+				){
+				// Does not exist
+				addressesClean.push(item);
+			}
+		})
+
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.add(addresses)
+			this.params.contract.getContract().methods.add(addressesClean)
 		);
 	};
 
