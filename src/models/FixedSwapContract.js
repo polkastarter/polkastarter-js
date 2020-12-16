@@ -779,9 +779,9 @@ class FixedSwapContract {
 	 * @function removeWhitelistedAddress
 	 * @description remove WhiteListed Address
 	 */
-	removeWhitelistedAddress = async ({address}) => {
+	removeWhitelistedAddress = async ({address, index}) => {
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.remove(address)
+			this.params.contract.getContract().methods.remove(address, index)
 		);
 	};
 
