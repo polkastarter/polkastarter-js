@@ -7,6 +7,8 @@ const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const ETH_URL_TESTNET =
 	"https://kovan.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+const MOONBEAM_TESTNET_URL =
+	"https://rpc.testnet.moonbeam.network";
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
@@ -19,9 +21,14 @@ const networksEnum = Object.freeze({
 });
 
 class Application {
-	constructor({test=false, mainnet=true}) {
+	constructor({test=false, mainnet=true, network='ETH'}) {
 		this.test = test;
 		this.mainnet = mainnet;
+		if((network != 'ETH') && (network != 'DOT')){
+			throw new Error("Network has to be ETH or DOT");
+		}
+		this.network = network;
+
 		if(this.test){
 			this.start();
 			this.login();
@@ -31,11 +38,16 @@ class Application {
 
 	
 	start = () => {
-		this.web3 = new Web3(
-			new Web3.providers.HttpProvider(
-				(this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET
-			)
-		);
+		if(this.network == 'DOT'){
+			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
+		}else{
+			this.web3 = new Web3(
+				new Web3.providers.HttpProvider(
+					(this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET
+				)
+			);
+		}
+		
 		if (typeof window !== "undefined") {
 			window.web3 = this.web3;
 		}else{
