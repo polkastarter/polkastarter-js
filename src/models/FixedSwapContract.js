@@ -222,7 +222,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.tradeValue()
 				.call()),
-			this.getDecimals()
+			18
 		);
 	}
 
