@@ -370,8 +370,13 @@ class FixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async wasMinimumRaiseReached() {
-		if(await this.hasMinimumRaise()){
-			return (await this.tokensAllocated() > await this.minimumRaise());
+		let hasMinimumRaise = await this.hasMinimumRaise();
+		console.log("Has Minimum Raise", hasMinimumRaise);
+		if(hasMinimumRaise){
+			let tokensAllocated = await this.tokensAllocated();
+			let minimumRaise = await this.minimumRaise();
+			console.log("Tokens Allocated/Min Raise", tokensAllocated, minimumRaise);
+			return (tokensAllocated > minimumRaise);
 		}else{
 			return true;
 		}
@@ -415,7 +420,7 @@ class FixedSwapContract {
 	async withdrawableUnsoldTokens() {
 		var res = 0;
 		if(await this.hasFinalized()
-		&& (!await this.wereUnsoldTokensReedemed())
+		&& !(await this.wereUnsoldTokensReedemed())
 		){
 			if(await this.wasMinimumRaiseReached()){
 				/* Minimum reached */
@@ -435,10 +440,13 @@ class FixedSwapContract {
 	 */
 	async withdrawableFunds() {
 		var res = 0;
+		var hasFinalized = await this.hasFinalized();
+		var wasMinimumRaiseReached = await this.wasMinimumRaiseReached();
+
 		if(
-			await this.hasFinalized() &&
-			await this.wasMinimumRaiseReached()
-			){
+			hasFinalized &&
+			wasMinimumRaiseReached
+		){
 			res = await this.getBalance();
 		}
 		return res;
