@@ -850,8 +850,8 @@ class FixedSwapContract {
 	/**
 	* @function deploy
 	* @description Deploy the Pool Contract
-
 	*/
+	
 	deploy = async ({
 		tradeValue,
 		tokensForSale,
