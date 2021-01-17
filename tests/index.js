@@ -55,13 +55,13 @@ context('Tests', async () => {
 
 
     it('SET - whitelisted Addresses', mochaAsync(async () => {        
-        let add = await swapContract.addWhitelistedAddress({addresses : ['0x43257a77e909ca48e4c2cc44687ffeb79b0e0b98', '0x98c039e95e7c555534a53f12ae2ac2d3398d534b']});
+        let add = await swapContract.addWhitelistedAddress({addresses : ['0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB', '0x98c039e95e7c555534a53f12ae2ac2d3398d534b']});
         expect(add).to.not.equal(false);
     }));
 
 
     it('SET - whitelisted Addresses (with repeated ones)', mochaAsync(async () => {        
-        let res = await swapContract.addWhitelistedAddress({addresses : ['0x43257a77e909ca48e4c2cc44687ffeb79b0e0b98', '0x98c039e95e7c555534a53f12ae2ac2d3398d534b', '0x98c039e95e7c555534a53f12ae2ac2d3398d534c']});
+        let res = await swapContract.addWhitelistedAddress({addresses : ['0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB', '0x98c039e95e7c555534a53f12ae2ac2d3398d534b', '0x98c039e95e7c555534a53f12ae2ac2d3398d534c',]});
         expect(res).to.not.equal(false);
         res = await swapContract.getWhitelistedAddresses();
         expect(res.length).to.equal(3);
@@ -69,7 +69,6 @@ context('Tests', async () => {
 
     it('GET - isPreFunded', mochaAsync(async () => {  
         let res = await swapContract.isPreStart();
-        console.log("isPreFunded:: ", res)
         expect(res).to.equal(true);
     }));
 
@@ -95,7 +94,6 @@ context('Tests', async () => {
 
     it('GET - whitelisted Addresses', mochaAsync(async () => { 
         let res = await swapContract.getWhitelistedAddresses();
-        console.log("res:: ", res)
         expect(res.length).to.equal(3);
     }));
 
@@ -156,14 +154,12 @@ context('Tests', async () => {
 
     it('GET - startDate ', mochaAsync(async () => {        
         let res = await swapContract.startDate();
-        console.log("startDate:: ", res)
         res = isDate(res);
         expect(res).to.equal(true);
     }));
 
     it('GET - endDate ', mochaAsync(async () => {        
         let res = await swapContract.endDate();
-        console.log("endDate:: ", res)
         res = isDate(res);
         expect(res).to.equal(true);
     }));
@@ -182,7 +178,6 @@ context('Tests', async () => {
 
     it('GET - getETHCostFromTokens ', mochaAsync(async () => {        
         let res = await swapContract.getETHCostFromTokens({tokenAmount : tokenPurchaseAmount});
-        console.log("getETHCostFromTokens:: ", res)
         cost = res;
         expect(Number(res).noExponents()).to.equal(Number(tokenPurchaseAmount * tradeValue).noExponents());
     }));
