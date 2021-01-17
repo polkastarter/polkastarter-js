@@ -14,7 +14,7 @@ npm i polkastarter-js
 
 ```javascript
 import moment from 'moment';
-import Application from 'polkastarter-js/models';
+import Application from 'polkastarter-js/src/models';
 
 /* Test Version */
 let app = new Application({test : true});
