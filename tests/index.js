@@ -86,11 +86,6 @@ context('Tests', async () => {
         let tokens = await swapContract.tokensAvailable();
         expect(tokens).to.equal(Number(0).noExponents());
     }));
-    
-    it('GET - balance', mochaAsync(async () => { 
-        let res = await swapContract.getBalance('0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2');
-        expect(res).to.equal(Number(0).noExponents());
-    }));
 
     it('GET - whitelisted Addresses', mochaAsync(async () => { 
         let res = await swapContract.getWhitelistedAddresses();
@@ -148,6 +143,11 @@ context('Tests', async () => {
 
     it('GET - hasWhitelisting ', mochaAsync(async () => {        
         let res = await swapContract.hasWhitelisting();
+        expect(res).to.equal(true);
+    }));
+
+    it('GET - isWhitelisted ', mochaAsync(async () => {        
+        let res = await swapContract.isWhitelisted({ address : '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB' });
         hasWhitelist = res;
         expect(res).to.equal(true);
     }));
@@ -256,6 +256,11 @@ context('Tests', async () => {
         expect(res).to.equal(true);
         res = await swapContract.isOpen();
         expect(res).to.equal(false);
+    }));
+
+    it('GET - tokensAvailable after closed', mochaAsync(async () => {  
+        let res = await swapContract.tokensAvailable();
+        expect(Number(res).noExponents()).to.equal(Number(tokenFundAmount - tokenPurchaseAmount).noExponents());
     }));
 
     it('Remove ETH From Purchases - Admin', mochaAsync(async () => {  
