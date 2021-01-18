@@ -80,10 +80,18 @@ class FixedSwapContract {
 
 	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
 		return new Promise( (resolve, reject) => {
-			f.send({
-				from: acc,
-				value: value,
-			})
+			// Detect possible error on tx
+			f.estimateGas({gas: 5000000}, (error, gasAmount) => {
+				if(error){reject("Transaction will fail");}
+				if(gasAmount > 5000000){
+					reject("Transaction will fail");
+				}
+
+				// all alright
+				f.send({
+					from: acc,
+					value: value,
+				})
 				.on("confirmation", (confirmationNumber, receipt) => {
 					callback(confirmationNumber)
 					if (confirmationNumber > 0) {
@@ -93,6 +101,8 @@ class FixedSwapContract {
 				.on("error", (err) => {
 					reject(err);
 				});
+			});
+
 		});
 	};
 
@@ -667,6 +677,7 @@ class FixedSwapContract {
 			tokenAmount,
 			this.getDecimals()
 		);
+
 		let ETHCost = await this.getETHCostFromTokens({
 			tokenAmount,
 		});
