@@ -683,7 +683,7 @@ class FixedSwapContract {
 		});
 		let ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.swap(amountWithDecimals),
+			this.params.contract.getContract().methods.swap(),
 			false,
 			ETHToWei,
 			callback
