@@ -83,7 +83,7 @@ class FixedSwapContract {
 			// Detect possible error on tx
 			f.estimateGas({gas: 5000000}, (error, gasAmount) => {
 				if(error){reject("Transaction will fail");}
-				if(gasAmount > 5000000){
+				if(gasAmount >= 5000000){
 					reject("Transaction will fail");
 				}
 
