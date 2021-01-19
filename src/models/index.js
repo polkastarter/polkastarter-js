@@ -49,7 +49,8 @@ class Application {
 		}
 		
 		if (typeof window !== "undefined") {
-			window.ethereum = this.web3;
+			window.web3 = new Web3(window.ethereum);
+			this.web3 = window.web3;
 		}else{
 			if(!this.test){
 				throw new Error("Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet");
@@ -63,8 +64,8 @@ class Application {
 		try{
 			if (typeof window === "undefined") { return false; }
 			if (window.ethereum) {
-				window.ethereum = new Web3(window.ethereum);
-				this.web3 = window.ethereum;
+				window.web3 = new Web3(window.ethereum);
+				this.web3 = window.web3;
 				await window.ethereum.enable();
 				return true;
 			}
