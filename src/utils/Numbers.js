@@ -74,7 +74,7 @@ class numbers {
   }
 
   toSmartContractDecimals(value, decimals) {
-    let numberWithNoExponents = new Number(parseFloat(value.toFixed(decimals)) * 10 ** decimals).noExponents();
+    let numberWithNoExponents = new Number(parseFloat(parseFloat(value).toFixed(decimals)) * 10 ** decimals).noExponents();
     return numberWithNoExponents;
   }
 
