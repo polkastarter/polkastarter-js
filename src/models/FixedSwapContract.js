@@ -82,9 +82,9 @@ class FixedSwapContract {
 		return new Promise( (resolve, reject) => {
 			// Detect possible error on tx
 			f.estimateGas({gas: 5000000}, (error, gasAmount) => {
-				if(error){reject("Transaction will fail");}
+				if(error){reject("Transaction will fail : " + error);}
 				if(gasAmount >= 5000000){
-					reject("Transaction will fail");
+					reject("Transaction will fail, too much gas");
 				}
 
 				// all alright
