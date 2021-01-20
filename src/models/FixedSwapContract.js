@@ -381,11 +381,9 @@ class FixedSwapContract {
 	 */
 	async wasMinimumRaiseReached() {
 		let hasMinimumRaise = await this.hasMinimumRaise();
-		console.log("Has Minimum Raise", hasMinimumRaise);
 		if(hasMinimumRaise){
 			let tokensAllocated = await this.tokensAllocated();
 			let minimumRaise = await this.minimumRaise();
-			console.log("Tokens Allocated/Min Raise", tokensAllocated, minimumRaise);
 			return parseFloat(tokensAllocated) > parseFloat(minimumRaise);
 		}else{
 			return true;
