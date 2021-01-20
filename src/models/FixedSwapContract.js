@@ -452,11 +452,8 @@ class FixedSwapContract {
 		var res = 0;
 		var hasFinalized = await this.hasFinalized();
 		var wasMinimumRaiseReached = await this.wasMinimumRaiseReached();
-
-		if(
-			hasFinalized &&
-			wasMinimumRaiseReached
-		){
+		console.log("withdrawable Funds", hasFinalized, wasMinimumRaiseReached)
+		if(hasFinalized && wasMinimumRaiseReached){
 			res = await this.getBalance();
 		}
 		return res;
