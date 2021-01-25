@@ -28,7 +28,9 @@ await swapContract.deploy({
     tokensForSale : 100, 
     startDate : moment().add(6, 'hours'),
     endDate : moment().add(16, 'hours'),
-    isETHTrade : true // isETHTrade
+    isETHTrade : true // isETHTrade,
+    ERC20TradingAddress : // optional,
+    isPOLSWhitelist : false // optional (default : false)
 });
 
 /* User Swap */
