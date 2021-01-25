@@ -75,6 +75,16 @@ class FixedSwapContract {
 			contractAddress: tokenAddress,
 			acc : this.acc
 		});
+
+		if(!(await this.isETHTrade)){
+			this.params.tradingERC20Contract = new ERC20TokenContract({
+				web3: this.web3,
+				decimals: await this.getTradingDecimals(),
+				contractAddress: await this.getTradingERC20Address(),
+				acc : this.acc
+			});	
+		};
+
 		this.decimals = decimals;
 	}
 
@@ -82,9 +92,9 @@ class FixedSwapContract {
 		return new Promise( (resolve, reject) => {
 			// Detect possible error on tx
 			f.estimateGas({gas: 5000000}, (error, gasAmount) => {
-				if(error){reject("Transaction will fail");}
+				//if(error){reject("Transaction will fail : " + error);}
 				if(gasAmount >= 5000000){
-					reject("Transaction will fail");
+					reject("Transaction will fail, too much gas");
 				}
 
 				// all alright
@@ -380,12 +390,10 @@ class FixedSwapContract {
 	 */
 	async wasMinimumRaiseReached() {
 		let hasMinimumRaise = await this.hasMinimumRaise();
-		console.log("Has Minimum Raise", hasMinimumRaise);
 		if(hasMinimumRaise){
 			let tokensAllocated = await this.tokensAllocated();
 			let minimumRaise = await this.minimumRaise();
-			console.log("Tokens Allocated/Min Raise", tokensAllocated, minimumRaise);
-			return (tokensAllocated > minimumRaise);
+			return parseFloat(tokensAllocated) > parseFloat(minimumRaise);
 		}else{
 			return true;
 		}
@@ -451,11 +459,7 @@ class FixedSwapContract {
 		var res = 0;
 		var hasFinalized = await this.hasFinalized();
 		var wasMinimumRaiseReached = await this.wasMinimumRaiseReached();
-
-		if(
-			hasFinalized &&
-			wasMinimumRaiseReached
-		){
+		if(hasFinalized && wasMinimumRaiseReached){
 			res = await this.getBalance();
 		}
 		return res;
@@ -557,6 +561,66 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function isETHTrade
+	 * @description Verify if Token Sale is against Ethereum
+	 * @returns {Boolean}
+	 */
+	async isETHTrade() {
+		return await this.params.contract
+			.getContract()
+			.methods.isETHTrade()
+			.call();
+	}
+
+	/**
+	 * @function isPOLSWhitelisted
+	 * @description Verify if Token Sale is POLS Whitelisted
+	 * @returns {Boolean}
+	 */
+	async isPOLSWhitelisted() {
+		return await this.params.contract
+		.getContract()
+		.methods.isPOLSWhitelisted()
+		.call();
+	}
+
+	/**
+	 * @function isAddressPOLSWhitelisted
+	 * @description Verify if Address is Whitelisted by POLS (returns false if not needed)
+	 * @returns {Boolean}
+	 */
+	async isAddressPOLSWhitelisted(){
+		return await this.params.contract
+		.getContract()
+		.methods.isAddressPOLSWhitelisted()
+		.call();
+	}
+
+	/**
+	 * @function getTradingDecimals
+	 * @description Get Trading Decimals (18 if isETHTrade, X if not)
+	 * @returns {Integer}
+	 */
+	async getTradingDecimals(){
+		return parseInt(await this.params.contract
+		.getContract()
+		.methods.tradingDecimals()
+		.call());
+	}
+
+	/**
+	 * @function getTradingERC20Address
+	 * @description Get Trading Address if ERC20
+	 * @returns {Address}
+	 */
+	async getTradingERC20Address(){
+		return await this.params.contract
+		.getContract()
+		.methods.erc20TradeAddress()
+		.call();
+	}
+
+	/**
 	 * @function isPreStart
 	 * @description Verify if the Token Sale in not open yet, where the admin can fund the pool
 	 * @returns {Boolean}
@@ -575,7 +639,7 @@ class FixedSwapContract {
 	 * @returns {Integer} _id
 	 * @returns {Integer} amount
 	 * @returns {Address} purchaser
-	 * @returns {Integer} ethAmount
+	 * @returns {Integer} costAmount
 	 * @returns {Date} timestamp
 	 * @returns {Boolean} wasFinalized
 	 * @returns {Boolean} reverted
@@ -590,7 +654,7 @@ class FixedSwapContract {
 			_id: purchase_id,
 			amount: Numbers.fromDecimals(res[0], this.getDecimals()),
 			purchaser: res[1],
-			ethAmount: Numbers.fromDecimals(res[2], 18),
+			costAmount: Numbers.fromDecimals(res[2], 18),
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
 			wasFinalized: res[4],
 			reverted: res[5],
@@ -646,7 +710,7 @@ class FixedSwapContract {
 	 * @function getETHCostFromTokens
 	 * @description Get ETH Cost from Tokens Amount
 	 * @param {Integer} tokenAmount
-	 * @returns {Integer} ethAmount
+	 * @returns {Integer} costAmount
 	 */
 	getETHCostFromTokens = async ({ tokenAmount }) => {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
@@ -667,23 +731,26 @@ class FixedSwapContract {
 
 	/**
 	 * @function swap
-	 * @description Swap tokens by Ethereum
+	 * @description Swap tokens by Ethereum or ERC20
 	 * @param {Integer} tokenAmount
 	 */
 
 	swap = async ({ tokenAmount, callback }) => {
+
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
 			this.getDecimals()
 		);
-		let ETHCost = await this.getETHCostFromTokens({
+		let cost = await this.getETHCostFromTokens({
 			tokenAmount,
 		});
-		let ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
+
+		let costToDecimals = Numbers.toSmartContractDecimals(cost, await this.getTradingDecimals());
+
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals),
 			false,
-			ETHToWei,
+			costToDecimals,
 			callback
 		);
 	};
@@ -745,6 +812,30 @@ class FixedSwapContract {
 			address: this.getAddress(),
 			amount: tokenAmount,
 			callback
+		});
+	};
+
+	/**
+	 * @function approveSwapERC20
+	 * @description Approve the investor to use approved tokens for the sale
+	 */
+	approveSwapERC20 = async ({ tokenAmount, callback }) => {
+		return await this.params.tradingERC20Contract.approve({
+			address: this.getAddress(),
+			amount: tokenAmount,
+			callback
+		});
+	};
+
+	/**
+	 * @function isApprovedSwapERC20
+	 * @description Verify if it is approved to invest
+	 */
+	isApprovedSwapERC20 = async ({ tokenAmount, address }) => {
+		return await this.params.tradingERC20Contract.isApproved({
+			address,
+			spenderAddress: this.getAddress(),
+			amount: tokenAmount
 		});
 	};
 
@@ -872,7 +963,10 @@ class FixedSwapContract {
 		minimumRaise = 0,
 		feeAmount = 1,
 		hasWhitelisting = false,
-		callback
+		callback,
+		ERC20TradingAddress = '0x0000000000000000000000000000000000000000',
+		isPOLSWhitelist = false,
+		isETHTrade = true
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -933,7 +1027,10 @@ class FixedSwapContract {
 			isTokenSwapAtomic,
 			Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()),
 			parseInt(feeAmount),
-			hasWhitelisting
+			hasWhitelisting,
+			ERC20TradingAddress,
+			isETHTrade,
+			isPOLSWhitelist
 		];
 		console.log("params", params);
 		let res = await this.__deploy(params, callback);

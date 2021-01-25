@@ -27,8 +27,37 @@ await swapContract.deploy({
     tradeValue : 0.001, 
     tokensForSale : 100, 
     startDate : moment().add(6, 'hours'),
-    endDate : moment().add(16, 'hours')
+    endDate : moment().add(16, 'hours'),
+    isETHTrade : true // isETHTrade,
+    ERC20TradingAddress : // optional,
+    isPOLSWhitelist : false // optional (default : false)
 });
+
+/* User Swap */
+
+/* a) (isETHTrade == false) */
+/* 1 - swap */
+await swapContract.swap({
+    tokenAmount : 10 
+});
+
+/* b) (isETHTrade == false) */
+/* 1 - verify if approved */
+await swapContract.isApprovedSwapERC20({
+    tokenAmount : 10 ,
+    address : /* address to be approved - user address */
+});
+
+/* 2 - approve tx (if not approved) */
+await swapContract.approveSwapERC20({
+    tokenAmount : 10 
+});
+
+/* 3 - swap */
+await swapContract.swap({
+    tokenAmount : 10 
+});
+
 ```
 ## License
 
