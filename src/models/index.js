@@ -4,9 +4,9 @@ import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 
 const ETH_URL_MAINNET =
-	"https://mainnet.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
 const ETH_URL_TESTNET =
-	"https://kovan.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+	"https://kovan.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
 const MOONBEAM_TESTNET_URL =
 	"https://rpc.testnet.moonbeam.network";
 const TEST_PRIVATE_KEY = 
