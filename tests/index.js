@@ -39,6 +39,7 @@ context('Tests', async () => {
             hasWhitelisting : true,
             isETHTrade : true
         });
+        console.log(res)
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
     }));
