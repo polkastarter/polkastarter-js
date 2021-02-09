@@ -76,7 +76,7 @@ class FixedSwapContract {
 			acc : this.acc
 		});
 
-		if(!(await this.isETHTrade)){
+		if(!(await this.isETHTrade())){
 			this.params.tradingERC20Contract = new ERC20TokenContract({
 				web3: this.web3,
 				decimals: await this.getTradingDecimals(),
