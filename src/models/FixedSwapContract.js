@@ -981,7 +981,7 @@ class FixedSwapContract {
 			throw new Error("Fee Amount has to be >= 1");
 		}
 		if(minimumRaise != 0 && (minimumRaise > tokensForSale)) {
-			throw new Error("Minimum Raise has to be bigger than total Raise")
+			throw new Error("Minimum Raise has to be smaller than total Raise")
 		}
 		if(Date.parse(startDate) >= Date.parse(endDate)) {
 			throw new Error("Start Date has to be smaller than End Date")
