@@ -66,6 +66,8 @@ class FixedSwapContract {
 	};
 
 	assertERC20Info = async () => {
+		if(await this.isETHTrade()){return true}; // If ETH Trade no need to do
+
 		let decimals = await this.decimalsAsync();
 		let tokenAddress = await this.erc20();
 
@@ -241,7 +243,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.tradeValue()
 				.call()),
-			18
+			await this.getTradingDecimals()
 		);
 	}
 
@@ -654,7 +656,7 @@ class FixedSwapContract {
 			_id: purchase_id,
 			amount: Numbers.fromDecimals(res[0], this.getDecimals()),
 			purchaser: res[1],
-			costAmount: Numbers.fromDecimals(res[2], 18),
+			costAmount: Numbers.fromDecimals(res[2], await this.getTradingDecimals()),
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
 			wasFinalized: res[4],
 			reverted: res[5],
@@ -707,12 +709,12 @@ class FixedSwapContract {
 	};
 
 	/**
-	 * @function getETHCostFromTokens
-	 * @description Get ETH Cost from Tokens Amount
+	 * @function getCostFromTokens
+	 * @description Get Cost from Tokens Amount
 	 * @param {Integer} tokenAmount
 	 * @returns {Integer} costAmount
 	 */
-	getETHCostFromTokens = async ({ tokenAmount }) => {
+	getCostFromTokens = async ({ tokenAmount }) => {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
 			this.getDecimals()
@@ -723,9 +725,12 @@ class FixedSwapContract {
 				.getContract()
 				.methods.cost(amountWithDecimals)
 				.call(),
-			18
+			await this.getTradingDecimals()
 		);
 	};
+
+	/* Legacy Call */
+	getETHCostFromTokens = () => {throw new Error("Please use 'getCostFromTokens' instead")};
 
 	/* POST User Functions */
 
@@ -820,6 +825,7 @@ class FixedSwapContract {
 	 * @description Approve the investor to use approved tokens for the sale
 	 */
 	approveSwapERC20 = async ({ tokenAmount, callback }) => {
+		if(await this.isETHTrade()){throw new Error("Funcion only available to ERC20 Trades")};
 		return await this.params.tradingERC20Contract.approve({
 			address: this.getAddress(),
 			amount: tokenAmount,
@@ -832,6 +838,7 @@ class FixedSwapContract {
 	 * @description Verify if it is approved to invest
 	 */
 	isApprovedSwapERC20 = async ({ tokenAmount, address }) => {
+		if(await this.isETHTrade()){throw new Error("Funcion only available to ERC20 Trades")};
 		return await this.params.tradingERC20Contract.isApproved({
 			address,
 			spenderAddress: this.getAddress(),
@@ -966,7 +973,8 @@ class FixedSwapContract {
 		callback,
 		ERC20TradingAddress = '0x0000000000000000000000000000000000000000',
 		isPOLSWhitelist = false,
-		isETHTrade = true
+		isETHTrade = true,
+		tradingDecimals = 0 /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -1005,6 +1013,13 @@ class FixedSwapContract {
 				throw new Error("Individual Maximum Amount should be smaller than total Tokens For Sale")
 			}
 		}
+
+		if(!isETHTrade && (tradingDecimals == 0)){
+			throw new Error("If an ERC20 Trading Address please add the 'decimals' field to the trading address (Ex : USDT -> 6)");
+		}else{
+			/* is ETH Trade */
+			tradingDecimals = 18;
+		}
 	
 		if(individualMaximumAmount == 0){
 			individualMaximumAmount = tokensForSale; /* Set Max Amount to Unlimited if 0 */
@@ -1012,7 +1027,7 @@ class FixedSwapContract {
 
 		let params = [
 			this.getTokenAddress(),
-			Numbers.toSmartContractDecimals(tradeValue, 18) /* to wei */,
+			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
 			Numbers.toSmartContractDecimals(tokensForSale, this.getDecimals()),
 			Numbers.timeToSmartContractTime(startDate),
 			Numbers.timeToSmartContractTime(endDate),
