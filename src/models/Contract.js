@@ -22,7 +22,7 @@ class Contract {
 						arguments: args
 					}).encodeABI(),
 					from  : account.getAddress(),
-					gas : 5913388
+					gas : 7913388
 				}
 			)).rawTransaction);
 		}else{
