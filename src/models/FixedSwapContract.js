@@ -643,6 +643,8 @@ class FixedSwapContract {
 	 * @returns {Address} purchaser
 	 * @returns {Integer} costAmount
 	 * @returns {Date} timestamp
+	 * @returns {Integer} amountReedemed
+	 * @returns {Integer} lastTrancheSent
 	 * @returns {Boolean} wasFinalized
 	 * @returns {Boolean} reverted
 	 */
@@ -658,8 +660,10 @@ class FixedSwapContract {
 			purchaser: res[1],
 			costAmount: Numbers.fromDecimals(res[2], await this.getTradingDecimals()),
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
-			wasFinalized: res[4],
-			reverted: res[5],
+			amountReedemed : Numbers.fromDecimals(res[4], this.getDecimals()),
+			lastTrancheSent : parseInt(res[5], this.getDecimals()),
+			wasFinalized: res[6],
+			reverted: res[7],
 		};
 	};
 
@@ -728,6 +732,32 @@ class FixedSwapContract {
 			await this.getTradingDecimals()
 		);
 	};
+
+	/**
+	 * @function getDistributionInformation
+	 * @description Get Distribution Information
+	 * @returns {Integer} currentSchedule (Ex : 1)
+	 * @returns {Integer} vestingTime (Ex : 1)
+	 * @returns {Array | Integer} vestingSchedule (Ex : [100])
+	 */
+	getDistributionInformation = async () => {
+		let currentSchedule = parseInt(await this.params.contract.getContract().methods.getCurrentSchedule().call());
+		let vestingTime = parseInt(await this.params.contract.getContract().methods.vestingTime().call());
+		let vestingSchedule = [];
+
+		for(var i = 1; i <= vestingTime; i++){
+			let a = parseInt(await this.params.contract.getContract().methods.vestingSchedule(vestingTime).call());
+			vestingSchedule.push(a);
+		}
+
+		return {
+			currentSchedule,
+			vestingTime,
+			vestingSchedule
+		}
+	}
+
+	
 
 	/* Legacy Call */
 	getETHCostFromTokens = () => {throw new Error("Please use 'getCostFromTokens' instead")};
@@ -974,7 +1004,9 @@ class FixedSwapContract {
 		ERC20TradingAddress = '0x0000000000000000000000000000000000000000',
 		isPOLSWhitelist = false,
 		isETHTrade = true,
-		tradingDecimals = 0 /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
+		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
+		vestingTime = 1,
+		vestingSchedule = [100] 
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -1025,6 +1057,24 @@ class FixedSwapContract {
 			individualMaximumAmount = tokensForSale; /* Set Max Amount to Unlimited if 0 */
 		}
 
+		if(vestingTime < 1){
+			throw new Error("'vestingTime' has to be at least 1")
+		}
+
+		if(vestingTime != vestingSchedule.length){
+			throw new Error("'vestingTime' has to be equal to 'vestingSchedule' length")
+		}
+
+		if(vestingSchedule.reduce((a, b) => a + b, 0) != 100){
+			throw new Error("'vestingSchedule' sum has to be equal to 100")
+		}
+
+		vestingSchedule.map( a => {
+			if(a != parseInt(a, 10)){
+				throw new Error("All 'vestingSchedule' array items have to be integeres and not decimals")
+			}
+		})
+
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
@@ -1045,7 +1095,9 @@ class FixedSwapContract {
 			hasWhitelisting,
 			ERC20TradingAddress,
 			isETHTrade,
-			isPOLSWhitelist
+			isPOLSWhitelist,
+			vestingTime,
+			vestingSchedule
 		];
 		console.log("params", params);
 		let res = await this.__deploy(params, callback);

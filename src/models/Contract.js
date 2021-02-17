@@ -15,16 +15,16 @@ class Contract {
 		var res;
 		this.contract = new this.web3.eth.Contract(abi);
 		if(account){	
-			res = await this.web3.eth.sendSignedTransaction(
-				(await account.getAccount().signTransaction({
-					data : this.contract.deploy({
-						data : byteCode,
-						arguments: args
-					}).encodeABI(),
+			let txSigned = await account.getAccount().signTransaction({
+				data : this.contract.deploy({
+					data : byteCode,
+					arguments: args
+				}).encodeABI(),
 					from  : account.getAddress(),
-					gas : 7913388
+					gas : 6913388
 				}
-			)).rawTransaction);
+			);
+			res = await this.web3.eth.sendSignedTransaction(txSigned.rawTransaction);
 		}else{
 			const accounts = await this.web3.eth.getAccounts();
 			res = await this.__metamaskDeploy({byteCode, args, acc : accounts[0], callback});
