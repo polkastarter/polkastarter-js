@@ -36,7 +36,6 @@ class FixedSwapContract {
 			};
 
 			
-
 			if(tokenAddress && decimals){
 				this.params.erc20TokenContract = new ERC20TokenContract({
 					web3: web3,
@@ -66,7 +65,6 @@ class FixedSwapContract {
 	};
 
 	assertERC20Info = async () => {
-		if(await this.isETHTrade()){return true}; // If ETH Trade no need to do
 
 		let decimals = await this.decimalsAsync();
 		let tokenAddress = await this.erc20();
@@ -776,7 +774,7 @@ class FixedSwapContract {
 			tokenAmount,
 			this.getDecimals()
 		);
-		let cost = await this.getETHCostFromTokens({
+		let cost = await this.getCostFromTokens({
 			tokenAmount,
 		});
 
@@ -843,7 +841,7 @@ class FixedSwapContract {
 	 * @description Approve the pool to use approved tokens for sale
 	 */
 	approveFundERC20 = async ({ tokenAmount, callback }) => {
-		return await this.params.erc20TokenContract.approve({
+		return await this.getTokenContract().approve({
 			address: this.getAddress(),
 			amount: tokenAmount,
 			callback
@@ -884,7 +882,7 @@ class FixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	isApproved = async ({ tokenAmount, address }) => {
-		return await this.params.erc20TokenContract.isApproved({
+		return await this.getTokenContract().isApproved({
 			address: address,
 			amount: tokenAmount,
 			spenderAddress: this.getAddress()
@@ -1113,7 +1111,7 @@ class FixedSwapContract {
 	}
 
 	getTokenAddress() {
-		return this.params.erc20TokenContract.getAddress();
+		return this.getTokenContract().getAddress();
 	}
 
 	getTokenContract() {
