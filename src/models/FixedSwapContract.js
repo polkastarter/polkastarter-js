@@ -66,7 +66,6 @@ class FixedSwapContract {
 	};
 
 	assertERC20Info = async () => {
-		if(await this.isETHTrade()){return true}; // If ETH Trade no need to do
 
 		let decimals = await this.decimalsAsync();
 		let tokenAddress = await this.erc20();
@@ -776,7 +775,7 @@ class FixedSwapContract {
 			tokenAmount,
 			this.getDecimals()
 		);
-		let cost = await this.getETHCostFromTokens({
+		let cost = await this.getCostFromTokens({
 			tokenAmount,
 		});
 
