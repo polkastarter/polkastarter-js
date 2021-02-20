@@ -44,7 +44,6 @@ context('Tests', async () => {
     }));
 
 
-
     it('should get a Fixed Swap Contract From contractAddress', mochaAsync(async () => {
 
         /* Get Contract */

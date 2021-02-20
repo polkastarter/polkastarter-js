@@ -116,12 +116,18 @@ class ERC20TokenContract {
 		return this.params.decimals;
 	}
 
-	async isApproved({ address, amount, spenderAddress }) {
+	async isApproved({ address, amount, spenderAddress, callback }) {
 		try {
-			let approvedAmount = Numbers.fromDecimals(
-				await this.getContract().methods.allowance(address, spenderAddress).call(),
-				this.getDecimals()
+			let res =  await this.__sendTx( 
+				this.params.contract
+				.getContract()
+				.methods.allowance(address, spenderAddress),
+				true,
+				null,
+				callback
 			);
+
+			let approvedAmount = Numbers.fromDecimals(res, this.getDecimals());
 			return (approvedAmount >= amount);
 		} catch (err) {
 			throw err;

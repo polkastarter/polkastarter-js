@@ -633,6 +633,31 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function getCurrentSchedule
+	 * @description Gets Current Schedule
+	 * @returns {Integer}
+	 */
+	async getCurrentSchedule() {
+		return parseInt(await this.params.contract
+			.getContract()
+			.methods.getCurrentSchedule()
+			.call());
+	}
+
+	/**
+	 * @function getVestingSchedule
+	 * @description Gets Vesting Schedule
+	 * @param {Integer} Position Get Position of Integer 
+	 * @returns {Array | Integer}
+	 */
+	async getVestingSchedule({position}) {
+		return parseInt(await this.params.contract
+			.getContract()
+			.methods.vestingSchedule(position)
+			.call());
+	}
+
+	/**
 	 * @function getPurchase
 	 * @description Get Purchase based on ID
 	 * @param {Integer} purchase_id
@@ -652,14 +677,28 @@ class FixedSwapContract {
 			.getContract()
 			.methods.getPurchase(purchase_id)
 			.call();
+
+		let currentSchedule = await this.getCurrentSchedule();
+		let lastTrancheSent = parseInt(res[5]);
+		let amount = Numbers.fromDecimals(res[0], this.getDecimals());
+		let costAmount = Numbers.fromDecimals(res[2], await this.getTradingDecimals());
+		let amountLeftToRedeem = amount-amountReedemed;
+		let amountToReedemNow = 0;
+
+		for(var i = lastTrancheSent; i < currentSchedule; i++){
+			amountToReedemNow =+ amount*(await getVestingSchedule(i))/100
+		}
+
 		return {
 			_id: purchase_id,
-			amount: Numbers.fromDecimals(res[0], this.getDecimals()),
+			amount: amount,
 			purchaser: res[1],
-			costAmount: Numbers.fromDecimals(res[2], await this.getTradingDecimals()),
+			costAmount: costAmount,
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
 			amountReedemed : Numbers.fromDecimals(res[4], this.getDecimals()),
-			lastTrancheSent : parseInt(res[5], this.getDecimals()),
+			amountLeftToRedeem : amountLeftToRedeem,
+			amountToReedemNow : amountToReedemNow,
+			lastTrancheSent :  lastTrancheSent,
 			wasFinalized: res[6],
 			reverted: res[7],
 		};
@@ -739,12 +778,12 @@ class FixedSwapContract {
 	 * @returns {Array | Integer} vestingSchedule (Ex : [100])
 	 */
 	getDistributionInformation = async () => {
-		let currentSchedule = parseInt(await this.params.contract.getContract().methods.getCurrentSchedule().call());
+		let currentSchedule = parseInt(await this.getCurrentSchedule());
 		let vestingTime = parseInt(await this.params.contract.getContract().methods.vestingTime().call());
 		let vestingSchedule = [];
 
 		for(var i = 1; i <= vestingTime; i++){
-			let a = parseInt(await this.params.contract.getContract().methods.vestingSchedule(vestingTime).call());
+			let a = parseInt(await this.getVestingSchedule(vestingTime));
 			vestingSchedule.push(a);
 		}
 
@@ -774,6 +813,7 @@ class FixedSwapContract {
 			tokenAmount,
 			this.getDecimals()
 		);
+
 		let cost = await this.getCostFromTokens({
 			tokenAmount,
 		});
@@ -783,7 +823,7 @@ class FixedSwapContract {
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals),
 			false,
-			costToDecimals,
+			await this.isETHTrade() ? costToDecimals : 0,
 			callback
 		);
 	};
@@ -865,12 +905,13 @@ class FixedSwapContract {
 	 * @function isApprovedSwapERC20
 	 * @description Verify if it is approved to invest
 	 */
-	isApprovedSwapERC20 = async ({ tokenAmount, address }) => {
+	isApprovedSwapERC20 = async ({ tokenAmount, address, callback }) => {
 		if(await this.isETHTrade()){throw new Error("Funcion only available to ERC20 Trades")};
 		return await this.params.tradingERC20Contract.isApproved({
 			address,
 			spenderAddress: this.getAddress(),
-			amount: tokenAmount
+			amount: tokenAmount,
+			callback
 		});
 	};
 
@@ -1004,7 +1045,7 @@ class FixedSwapContract {
 		isETHTrade = true,
 		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
 		vestingTime = 1,
-		vestingSchedule = [100] 
+		firstUnlock = 100
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -1045,7 +1086,7 @@ class FixedSwapContract {
 		}
 
 		if(!isETHTrade && (tradingDecimals == 0)){
-			throw new Error("If an ERC20 Trading Address please add the 'decimals' field to the trading address (Ex : USDT -> 6)");
+			throw new Error("If an ERC20 Trading Address please add the 'tradingDecimals' field to the trading address (Ex : USDT -> 6)");
 		}else{
 			/* is ETH Trade */
 			tradingDecimals = 18;
@@ -1057,6 +1098,16 @@ class FixedSwapContract {
 
 		if(vestingTime < 1){
 			throw new Error("'vestingTime' has to be at least 1")
+		}
+
+		if((firstUnlock > 100) || (firstUnlock < 0)){
+			throw new Error("'firstUnlock' has to be between 0 and 100 (inclusive)")
+		}
+
+		let vestingSchedule = [firstUnlock];
+		
+		for(var i = 2; i <= vestingTime; i++){
+			vestingSchedule.push((100-firstUnlock)/(vestingTime-1))
 		}
 
 		if(vestingTime != vestingSchedule.length){
