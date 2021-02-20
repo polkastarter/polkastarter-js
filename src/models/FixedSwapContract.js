@@ -1184,8 +1184,13 @@ class FixedSwapContract {
 	 * @param {Integer} Balance
 	 */
 	getBalance = async () => {
-		let wei = await this.web3.eth.getBalance(this.getAddress());
-        return this.web3.utils.fromWei(wei, 'ether');
+		if(await this.isETHTrade()){
+			let wei = await this.web3.eth.getBalance(this.getAddress());
+			return this.web3.utils.fromWei(wei, 'ether');
+		}else{
+			return await this.getTokenAddress().getTokenAmount(this.getAddress());
+		}
+	
 	};
 }
 
