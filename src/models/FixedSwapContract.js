@@ -664,7 +664,7 @@ class FixedSwapContract {
 			tokenAmount,
 		});
 		console.log("ETHCost",ETHCost,RESIDUAL_ETH,parseFloat(ETHCost) )
-		let ETHToWei = Numbers.toSmartContractDecimals(parseFloat(ETHCost)+RESIDUAL_ETH, 18);
+		let ETHToWei = Numbers.toSmartContractDecimals(parseFloat(ETHCost), 18);
 		
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals),
