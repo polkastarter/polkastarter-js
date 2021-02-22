@@ -662,7 +662,9 @@ class FixedSwapContract {
 		let ETHCost = await this.getETHCostFromTokens({
 			tokenAmount,
 		});
+
 		let ETHToWei = Numbers.toSmartContractDecimals(ETHCost, 18);
+		
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals),
 			false,
