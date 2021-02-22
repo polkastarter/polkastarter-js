@@ -656,7 +656,7 @@ class FixedSwapContract {
 	 */
 
 	swap = async ({ tokenAmount, callback }) => {
-		console.log("tokens", tokenAmount, parseFloat(tokenAmount), parseFloat(tokenAmount)-(parseFloat(tokenAmount)*RESIDUAL_TOKEN))
+
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			parseFloat(tokenAmount)-(parseFloat(tokenAmount)*RESIDUAL_TOKEN),
 			this.getDecimals()
