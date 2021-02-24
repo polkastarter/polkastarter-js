@@ -37,7 +37,7 @@ context('Vesting Time = 2 And Vesting Schedule = 20% - 80%', async () => {
             hasWhitelisting : false,
             isETHTrade : true,
             vestingTime: 2,
-            vestingSchedule: [20,80]
+            firstUnlock: 20
         });
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
