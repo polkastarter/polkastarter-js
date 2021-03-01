@@ -197,4 +197,11 @@ context('ERC-20 Contract', async () => {
         let res = await swapContract.withdrawUnsoldTokens();
         expect(res).to.not.equal(false);
     }));
+
+    it('should deploy Fixed Swap Contract - isPOLSWhitelisted', mochaAsync(async () => {  
+        /*
+          It is necessary to create in the future, as it is necessary to simulate a "uniswap" 
+          with the entire structure of the kovan network.
+        */
+    }));
 });
