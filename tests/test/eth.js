@@ -10,14 +10,14 @@ var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
 var userPrivateKey = process.env.TEST_PRIVATE_KEY || '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
 const expect = chai.expect;
-const tokenPurchaseAmount = 1;
-const tokenFundAmount = 20;
-const tradeValue = 10;
+const tokenPurchaseAmount = 0.01;
+const tokenFundAmount = 0.03;
+const tradeValue = 0.01;
 
 context('ETH Contract', async () => {
     var swapContract;
     var app;
-    var isFunded, isSaleOpen, hasWhitelist, tokensLeft, indiviMinAmount, indivMaxAmount, cost
+    var isFunded, isSaleOpen, hasWhitelist, tokensLeft, indiviMinAmount, indivMaxAmount, cost, tokensAvailable
    
     before( async () =>  {
         app = new Application({test : true, mainnet : false});
@@ -112,17 +112,13 @@ context('ETH Contract', async () => {
     it('should fund a Swap Contract and confirm balances', mochaAsync(async () => {
         /* Approve ERC20 Fund */
         let res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
-        console.log("res::", res)
         expect(res).to.not.equal(false);
         res = await swapContract.isApproved({address : app.account.getAddress(), tokenAmount : tokenFundAmount});
-        console.log("res1::", res)
         expect(res).to.equal(true);
         /* Fund */
         res = await swapContract.hasStarted();
-        console.log("res2::", res)
         expect(res).to.equal(false);
         res = await swapContract.fund({tokenAmount : tokenFundAmount});
-        console.log("res3::", res)
         expect(res).to.not.equal(false);
     }));
 
@@ -182,8 +178,9 @@ context('ETH Contract', async () => {
 
     it('GET - getCostFromTokens ', mochaAsync(async () => {        
         let res = await swapContract.getCostFromTokens({tokenAmount : tokenPurchaseAmount});
-        cost = res;
-        expect(Number(res).noExponents()).to.equal(Number(tokenPurchaseAmount * tradeValue).noExponents());
+        res = Number(res).noExponents();
+        cost = Number(res).toFixed(4);
+        expect(Number(cost).noExponents()).to.equal(Number(tokenPurchaseAmount * tradeValue).noExponents());
     }));
 
     it('check conditions for swap  ', mochaAsync(async () => {
@@ -219,7 +216,6 @@ context('ETH Contract', async () => {
     it('should do a non atomic swap on the Contract', mochaAsync(async () => {
         // await delay(15*1000);
         let res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
-        console.log("resSwap:: ", res)
         expect(res).to.not.equal(false);
     }));
 
@@ -236,8 +232,9 @@ context('ETH Contract', async () => {
 
     it('GET - Purchase ID', mochaAsync(async () => {     
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
-        let purchase = await swapContract.getPurchase({purchase_id : purchases[0]}); 
-        expect(Number(purchase.amount).noExponents()).to.equal(Number(tokenPurchaseAmount).noExponents());
+        let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
+        const amountPurchase = Number(purchase.amount).noExponents();
+        expect(Number(amountPurchase).toFixed(2)).to.equal(Number(tokenPurchaseAmount).noExponents());
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.wasFinalized).to.equal(true);
         expect(purchase.reverted).to.equal(false);
@@ -246,7 +243,9 @@ context('ETH Contract', async () => {
 
     it('GET - tokensAvailable after Swap', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAvailable();
-        expect(Number(tokens).noExponents()).to.equal(Number(tokenFundAmount-tokenPurchaseAmount).noExponents());
+        tokens = Number(tokens).noExponents();
+        tokensAvailable = Number(tokenFundAmount-tokenPurchaseAmount).noExponents();
+        expect(Number(tokens).toFixed(2)).to.equal(Number(tokensAvailable).toFixed(2));
     }));
 
     it('GET - Buyers', mochaAsync(async () => {  
@@ -264,7 +263,8 @@ context('ETH Contract', async () => {
 
     it('GET - tokensAvailable after closed', mochaAsync(async () => {  
         let res = await swapContract.tokensAvailable();
-        expect(Number(res).noExponents()).to.equal(Number(tokenFundAmount - tokenPurchaseAmount).noExponents());
+        res = Number(res).noExponents()
+        expect(Number(res).toFixed(2)).to.equal(Number(tokensAvailable).toFixed(2));
     }));
 
     it('Remove ETH From Purchases - Admin', mochaAsync(async () => {  

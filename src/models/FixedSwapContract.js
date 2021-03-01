@@ -679,16 +679,17 @@ class FixedSwapContract {
 			.getContract()
 			.methods.getPurchase(purchase_id)
 			.call();
-
+			
 		let currentSchedule = await this.getCurrentSchedule();
 		let lastTrancheSent = parseInt(res[5]);
 		let amount = Numbers.fromDecimals(res[0], this.getDecimals());
 		let costAmount = Numbers.fromDecimals(res[2], await this.getTradingDecimals());
+		let amountReedemed = Numbers.fromDecimals(res[4], this.getDecimals());
 		let amountLeftToRedeem = amount-amountReedemed;
 		let amountToReedemNow = 0;
 
 		for(var i = lastTrancheSent; i < currentSchedule; i++){
-			amountToReedemNow =+ amount*(await getVestingSchedule(i))/100
+			amountToReedemNow =+ amount*(await this.getVestingSchedule({position: i}))/100
 		}
 
 		return {
@@ -697,7 +698,7 @@ class FixedSwapContract {
 			purchaser: res[1],
 			costAmount: costAmount,
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
-			amountReedemed : Numbers.fromDecimals(res[4], this.getDecimals()),
+			amountReedemed : amountReedemed,
 			amountLeftToRedeem : amountLeftToRedeem,
 			amountToReedemNow : amountToReedemNow,
 			lastTrancheSent :  lastTrancheSent,
@@ -785,7 +786,7 @@ class FixedSwapContract {
 		let vestingSchedule = [];
 
 		for(var i = 1; i <= vestingTime; i++){
-			let a = parseInt(await this.getVestingSchedule(i));
+			let a = parseInt(await this.getVestingSchedule({position: i}));
 			vestingSchedule.push(a);
 		}
 

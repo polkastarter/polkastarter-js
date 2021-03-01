@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 import chai from 'chai';
-import { mochaAsync } from '../../utils';
+import { mochaAsync, decimalAdjust } from '../../utils';
 import moment from 'moment';
 import Application from '../../../src/models';
 import delay from 'delay';
@@ -10,9 +10,9 @@ var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
 var userPrivateKey = process.env.TEST_PRIVATE_KEY || '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
 const expect = chai.expect;
-const tokenPurchaseAmount = 1;
-const tokenFundAmount = 3;
-const tradeValue = 1;
+const tokenPurchaseAmount = 0.01;
+const tokenFundAmount = 0.03;
+const tradeValue = 0.01;
 
 context('Vesting Time = 1 And Vesting Schedule = 100', async () => {
     var swapContract, app, isSaleOpen;
@@ -96,10 +96,11 @@ context('Vesting Time = 1 And Vesting Schedule = 100', async () => {
         expect(res).to.equal(false);
     }));
 
-    it('GET - Purchase ID', mochaAsync(async () => {     
+    it('GET - Purchase ID', mochaAsync(async () => {
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
         let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
-        expect(Number(purchase.amount).noExponents()).to.equal(Number(tokenPurchaseAmount).noExponents());
+        const amountPurchase = Number(purchase.amount).noExponents();
+        expect(Number(amountPurchase).toFixed(2)).to.equal(Number(tokenPurchaseAmount).noExponents());
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.wasFinalized).to.equal(false);
         expect(purchase.reverted).to.equal(false);
@@ -122,7 +123,8 @@ context('Vesting Time = 1 And Vesting Schedule = 100', async () => {
     it('GET - Purchase ID After Redeem', mochaAsync(async () => {
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
         let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
-        expect(Number(purchase.amount).noExponents()).to.equal(Number(tokenPurchaseAmount).noExponents());
+        const amountPurchase = Number(purchase.amount).noExponents();
+        expect(Number(amountPurchase).toFixed(2)).to.equal(Number(tokenPurchaseAmount).noExponents());
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.wasFinalized).to.equal(false);
         expect(purchase.reverted).to.equal(false);
