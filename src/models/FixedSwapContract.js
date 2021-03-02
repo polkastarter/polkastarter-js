@@ -781,11 +781,15 @@ class FixedSwapContract {
 	 * @returns {Array | Integer} vestingSchedule (Ex : [100])
 	 */
 	getDistributionInformation = async () => {
-		let currentSchedule = await this.getCurrentSchedule();
+		
+		let currentSchedule = 0;
+		if(await this.hasStarted()){
+			currentSchedule = parseInt(await this.getCurrentSchedule());
+		}
 		let vestingTime = parseInt(await this.params.contract.getContract().methods.vestingTime().call());
 		let vestingSchedule = [];
 
-		for(var i = 0; i < vestingTime; i++){
+		for(var i = 1; i <= vestingTime; i++){
 			let a = parseInt(await this.getVestingSchedule({position: i}));
 			vestingSchedule.push(a);
 		}
