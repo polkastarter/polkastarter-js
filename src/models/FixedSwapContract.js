@@ -1110,7 +1110,7 @@ class FixedSwapContract {
 		let vestingSchedule = [firstUnlock];
 		
 		for(var i = 2; i <= vestingTime; i++){
-			vestingSchedule.push((100-firstUnlock)/(vestingTime-1))
+			vestingSchedule.push(parseInt((100-firstUnlock)/(vestingTime-1)))
 		}
 
 		if(vestingTime != vestingSchedule.length){
