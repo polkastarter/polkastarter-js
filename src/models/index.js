@@ -2,6 +2,8 @@ import Web3 from "web3";
 import FixedSwapContract from "./FixedSwapContract";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
+import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
+import { fixedswap } from "../interfaces";
 
 const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
@@ -80,16 +82,30 @@ class Application {
 		return new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(privateKey));
 	}
 	
+	isContractLegacy = async ({contractAddress}) => {
+		return (await this.web3.eth.getCode(contractAddress)) == fixedswap.deployedBytecode;
+	}
+
 	/* getFixedSwapContract */
-	getFixedSwapContract =  ({tokenAddress, decimals, contractAddress=null}) => {
+	getFixedSwapContract =  ({tokenAddress, decimals, contractAddress=null, isLegacy=false}) => {
 		try{
-			return new FixedSwapContract({
-				web3: this.web3,
-				tokenAddress: tokenAddress,
-				decimals : decimals,
-				contractAddress: contractAddress,
-				acc : this.test ? this.account : null
-			});
+			if(isLegacy){
+				return new FixedSwapContractLegacy({
+					web3: this.web3,
+					tokenAddress: tokenAddress,
+					decimals : decimals,
+					contractAddress: contractAddress,
+					acc : this.test ? this.account : null
+				});
+			}else{
+				return new FixedSwapContract({
+					web3: this.web3,
+					tokenAddress: tokenAddress,
+					decimals : decimals,
+					contractAddress: contractAddress,
+					acc : this.test ? this.account : null
+				});
+			}
 		}catch(err){
 			throw err;
 		}

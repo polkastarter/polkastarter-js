@@ -51,6 +51,7 @@ context('ETH Contract', async () => {
         swapContract = app.getFixedSwapContract({contractAddress});
         swapContract.__init__();
         await swapContract.assertERC20Info();
+        console.log(await app.isContractLegacy({contractAddress : swapContract.getAddress()}));
         expect(swapContract).to.not.equal(false);
     }));
 
