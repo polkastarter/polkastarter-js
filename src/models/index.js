@@ -11,6 +11,10 @@ const ETH_URL_TESTNET =
 	"https://kovan.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const MOONBEAM_TESTNET_URL =
 	"https://rpc.testnet.moonbeam.network";
+const BINANCE_CHAIN_TESTNET_URL =
+	"https://data-seed-prebsc-1-s1.binance.org:8545";
+const BINANCE_CHAIN_URL = 
+	"https://bsc-dataseed1.binance.org:443";
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
@@ -26,8 +30,8 @@ class Application {
 	constructor({test=false, mainnet=true, network='ETH'}) {
 		this.test = test;
 		this.mainnet = mainnet;
-		if((network != 'ETH') && (network != 'DOT')){
-			throw new Error("Network has to be ETH or DOT");
+		if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') ){
+			throw new Error("Network has to be ETH or DOT or BSC");
 		}
 		this.network = network;
 
@@ -42,7 +46,11 @@ class Application {
 	start = () => {
 		if(this.network == 'DOT'){
 			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
-		}else{
+		}else if(this.network == 'BSC'){
+			this.web3 = new Web3(
+				(this.mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL
+			);
+		}else if(this.network == 'ETH'){
 			this.web3 = new Web3(
 				new Web3.providers.HttpProvider(
 					(this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET

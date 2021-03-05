@@ -27,6 +27,7 @@ class FixedSwapContract {
 				throw new Error("Please provide a valid web3 provider");
 			}
 			this.web3 = web3;
+			this.isLegacy = false;
 			if (acc) {
 				this.acc = acc;
 			}

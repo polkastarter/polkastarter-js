@@ -5,6 +5,7 @@ import { mochaAsync } from '../utils';
 import moment, { isDate } from 'moment';
 import Application from '../../src/models';
 import delay from 'delay';
+
 const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
 var userPrivateKey = process.env.TEST_PRIVATE_KEY || '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
@@ -19,13 +20,9 @@ context('ETH Contract', async () => {
     var app;
     var isFunded, isSaleOpen, hasWhitelist, tokensLeft, indiviMinAmount, indivMaxAmount, cost, tokensAvailable
    
-    before( async () =>  {
-        app = new Application({test : true, mainnet : false});
-    });
-
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
 
-        app = new Application({test : true, mainnet : false});
+        app = new Application({test : true, mainnet : false, network : 'BSC'});
         /* Create Contract */
         swapContract = app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
         /* Deploy */
