@@ -22,9 +22,9 @@ context('ETH Contract', async () => {
    
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
 
-        app = new Application({test : true, mainnet : false, network : 'BSC'});
+        app = new Application({test : true, mainnet : false, network : 'ETH'});
         /* Create Contract */
-        swapContract = app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
         /* Deploy */
         let res = await swapContract.deploy({
             tradeValue : tradeValue, 
@@ -41,14 +41,21 @@ context('ETH Contract', async () => {
     }));
 
 
-
-    it('should get a Fixed Swap Contract From contractAddress', mochaAsync(async () => {
-
+    it('should get a Fixed Swap Contract From contractAddress - 1.0', mochaAsync(async () => {
         /* Get Contract */
-        swapContract = app.getFixedSwapContract({contractAddress});
+        let swapContract_1 = await app.getFixedSwapContract({contractAddress : '0xc59f72fcE0C826f5564Ecc46Bb0602cBB94275A2'});
+        swapContract_1.__init__();
+        await swapContract_1.assertERC20Info();
+        expect(swapContract_1.version).to.equal("1.0");
+        expect(swapContract_1).to.not.equal(false);
+    }));
+
+    it('should get a Fixed Swap Contract From contractAddress - 2.0', mochaAsync(async () => {
+        /* Get Contract */
+        swapContract = await app.getFixedSwapContract({contractAddress});
         swapContract.__init__();
         await swapContract.assertERC20Info();
-        console.log(await app.isContractLegacy({contractAddress : swapContract.getAddress()}));
+        expect(swapContract.version).to.equal("2.0");
         expect(swapContract).to.not.equal(false);
     }));
 

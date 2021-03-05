@@ -89,33 +89,48 @@ class Application {
 	__getUserAccount = ({privateKey}) => {
 		return new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(privateKey));
 	}
-	
-	isContractLegacy = async ({contractAddress}) => {
-		return (await this.web3.eth.getCode(contractAddress)) == fixedswap.deployedBytecode;
-	}
 
 	/* getFixedSwapContract */
-	getFixedSwapContract =  ({tokenAddress, decimals, contractAddress=null, isLegacy=false}) => {
-		try{
-			if(isLegacy){
-				return new FixedSwapContractLegacy({
+	getFixedSwapContract = async ({tokenAddress, decimals, contractAddress=null}) => {
+		let contract;
+		
+		if(!contractAddress){
+			// Not deployed
+			return new FixedSwapContract({
+				web3: this.web3,
+				tokenAddress: tokenAddress,
+				decimals : decimals,
+				contractAddress: contractAddress,
+				acc : this.test ? this.account : null
+			});
+		}else{
+			// Deployed
+			try{
+				contract = new FixedSwapContract({
 					web3: this.web3,
 					tokenAddress: tokenAddress,
 					decimals : decimals,
 					contractAddress: contractAddress,
 					acc : this.test ? this.account : null
 				});
-			}else{
-				return new FixedSwapContract({
-					web3: this.web3,
-					tokenAddress: tokenAddress,
-					decimals : decimals,
-					contractAddress: contractAddress,
-					acc : this.test ? this.account : null
-				});
+				await contract.isETHTrade();
+			}catch(err){
+				console.log("err", "1.0")
+				try{
+					contract = new FixedSwapContractLegacy({
+						web3: this.web3,
+						tokenAddress: tokenAddress,
+						decimals : decimals, 
+						contractAddress: contractAddress,
+						acc : this.test ? this.account : null
+					});
+				}catch(err){
+					throw err;
+	
+				}
 			}
-		}catch(err){
-			throw err;
+	
+			return contract;
 		}
 	};
 

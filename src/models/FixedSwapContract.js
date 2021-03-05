@@ -27,7 +27,7 @@ class FixedSwapContract {
 				throw new Error("Please provide a valid web3 provider");
 			}
 			this.web3 = web3;
-			this.isLegacy = false;
+			this.version = "2.0";
 			if (acc) {
 				this.acc = acc;
 			}
@@ -383,7 +383,11 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods.hasMinimumRaise()
-			.call();
+			.call( {}, (error, result) => {
+				if(error){
+					throw new Error(error);
+				}
+			});
 	}
 
 	/**
@@ -548,7 +552,11 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods.hasStarted()
-			.call();
+			.call( {}, (error, result) => {
+				if(error){
+					throw new Error(error);
+				}
+			});
 	}
 
 	/**
@@ -560,7 +568,11 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods.hasFinalized()
-			.call();
+			.call( {}, (error, result) => {
+				if(error){
+					throw new Error(error);
+				}
+			});
 	}
 
 	/**
@@ -572,7 +584,7 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods.isETHTrade()
-			.call();
+			.call();		
 	}
 
 	/**

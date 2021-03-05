@@ -25,7 +25,7 @@ context('Vesting Time = 2 And Vesting Schedule = 20% - 80%', async () => {
 
         app = new Application({test : true, mainnet : false});
         /* Create Contract */
-        swapContract = app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
         /* Deploy */
         let res = await swapContract.deploy({
             tradeValue : tradeValue, 
@@ -46,7 +46,7 @@ context('Vesting Time = 2 And Vesting Schedule = 20% - 80%', async () => {
     it('should get a Fixed Swap Contract From contractAddress', mochaAsync(async () => {
 
         /* Get Contract */
-        swapContract = app.getFixedSwapContract({contractAddress});
+        swapContract = await app.getFixedSwapContract({contractAddress});
         swapContract.__init__();
         await swapContract.assertERC20Info();
         expect(swapContract).to.not.equal(false);

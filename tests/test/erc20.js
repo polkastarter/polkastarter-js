@@ -27,7 +27,7 @@ context('ERC-20 Contract', async () => {
 
         app = new Application({test : true, mainnet : false});
         /* Create Contract */
-        swapContract = app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
         /* Deploy */
         let res = await swapContract.deploy({
             tradeValue : tradeValue, 
@@ -51,7 +51,7 @@ context('ERC-20 Contract', async () => {
     it('should get a Fixed Swap Contract From contractAddress', mochaAsync(async () => {
 
         /* Get Contract */
-        swapContract = app.getFixedSwapContract({contractAddress});
+        swapContract = await app.getFixedSwapContract({contractAddress});
         swapContract.__init__();
         await swapContract.assertERC20Info();
         expect(swapContract).to.not.equal(false);

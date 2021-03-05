@@ -24,7 +24,7 @@ class FixedSwapContractLegacy {
 			if (!web3) {
 				throw new Error("Please provide a valid web3 provider");
 			}
-            this.isLegacy = true;
+			this.version = "1.0";
 			this.web3 = web3;
 			if (acc) {
 				this.acc = acc;
@@ -362,7 +362,11 @@ class FixedSwapContractLegacy {
 		return await this.params.contract
 			.getContract()
 			.methods.hasMinimumRaise()
-			.call();
+			.call( {}, (error, result) => {
+				if(error){
+					throw new Error(error);
+				}
+			});
 	}
 
 	/**
@@ -371,8 +375,11 @@ class FixedSwapContractLegacy {
 	 * @returns {Integer}
 	 */
 	async wasMinimumRaiseReached() {
-		if(await this.hasMinimumRaise()){
-			return (await this.tokensAllocated() > await this.minimumRaise());
+		let hasMinimumRaise = await this.hasMinimumRaise();
+		if(hasMinimumRaise){
+			let tokensAllocated = await this.tokensAllocated();
+			let minimumRaise = await this.minimumRaise();
+			return parseFloat(tokensAllocated) > parseFloat(minimumRaise);
 		}else{
 			return true;
 		}
@@ -540,6 +547,53 @@ class FixedSwapContractLegacy {
 			.call();
 	}
 
+    /**
+	 * @function isETHTrade
+	 * @description Verify if Token Sale is against Ethereum
+	 * @returns {Boolean}
+	 */
+	async isETHTrade() {
+		return true;		
+	}
+
+	/**
+	 * @function isPOLSWhitelisted
+	 * @description Verify if Token Sale is POLS Whitelisted
+	 * @returns {Boolean}
+	 */
+	async isPOLSWhitelisted() {
+		return false;
+	}
+
+	/**
+	 * @function isAddressPOLSWhitelisted
+	 * @description Verify if Address is Whitelisted by POLS (returns false if not needed)
+	 * @returns {Boolean}
+	 */
+	async isAddressPOLSWhitelisted(){
+		return false;
+	}
+
+
+	/**
+	 * @function getTradingDecimals
+	 * @description Get Trading Decimals (18 if isETHTrade, X if not)
+	 * @returns {Integer}
+	 */
+	async getTradingDecimals(){
+		return 18;
+	}
+
+	/**
+	 * @function getTradingERC20Address
+	 * @description Get Trading Address if ERC20
+	 * @returns {Address}
+	 */
+	async getTradingERC20Address(){
+		return null;
+	}
+
+
 	/**
 	 * @function isPreStart
 	 * @description Verify if the Token Sale in not open yet, where the admin can fund the pool
@@ -550,6 +604,25 @@ class FixedSwapContractLegacy {
 			.getContract()
 			.methods.isPreStart()
 			.call();
+	}
+
+    /**
+	 * @function getCurrentSchedule
+	 * @description Gets Current Schedule
+	 * @returns {Integer}
+	 */
+	async getCurrentSchedule() {
+		return 0;
+	}
+
+	/**
+	 * @function getVestingSchedule
+	 * @description Gets Vesting Schedule
+	 * @param {Integer} Position Get Position of Integer 
+	 * @returns {Array | Integer}
+	 */
+	async getVestingSchedule({position}) {
+		return 100;
 	}
 
 	/**
@@ -574,10 +647,16 @@ class FixedSwapContractLegacy {
 			_id: purchase_id,
 			amount: Numbers.fromDecimals(res[0], this.getDecimals()),
 			purchaser: res[1],
+            costAmount : Numbers.fromDecimals(res[2], 18),
+            /* legacy */
 			ethAmount: Numbers.fromDecimals(res[2], 18),
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
 			wasFinalized: res[4],
 			reverted: res[5],
+            amountReedemed : 0,
+            amountLeftToRedeem : 0,
+            amountToReedemNow : 0,
+            lastTrancheSent : 0
 		};
 	};
 
@@ -626,6 +705,17 @@ class FixedSwapContractLegacy {
 		return res.map((id) => Numbers.fromHex(id));
 	};
 
+
+	/**
+	 * @function getCostFromTokens
+	 * @description Get Cost from Tokens Amount
+	 * @param {Integer} tokenAmount
+	 * @returns {Integer} costAmount
+	 */
+	getCostFromTokens = async ({ tokenAmount }) => {
+		return await this.getETHCostFromTokens({tokenAmount});
+	};
+
 	/**
 	 * @function getETHCostFromTokens
 	 * @description Get ETH Cost from Tokens Amount
@@ -671,6 +761,21 @@ class FixedSwapContractLegacy {
 			callback
 		);
 	};
+
+    /**
+	 * @function getDistributionInformation
+	 * @description Get Distribution Information
+	 * @returns {Integer} currentSchedule (Ex : 1)
+	 * @returns {Integer} vestingTime (Ex : 1)
+	 * @returns {Array | Integer} vestingSchedule (Ex : [100])
+	*/
+	getDistributionInformation = async () => {
+		return {
+			currentSchedule : 1,
+			vestingTime : 1,
+			vestingSchedule : [100]
+		}
+	}
 
 	/**
 	 * @function redeemTokens
@@ -730,6 +835,22 @@ class FixedSwapContractLegacy {
 			amount: tokenAmount,
 			callback
 		});
+	};
+
+    /**
+	 * @function approveSwapERC20
+	 * @description Approve the investor to use approved tokens for the sale
+	 */
+	approveSwapERC20 = async ({ tokenAmount, callback }) => {
+        return;
+	};
+
+	/**
+	 * @function isApprovedSwapERC20
+	 * @description Verify if it is approved to invest
+	 */
+	isApprovedSwapERC20 = async ({ tokenAmount, address, callback }) => {
+		return;
 	};
 
 	/**
