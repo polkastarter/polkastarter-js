@@ -6,9 +6,9 @@ import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
 import { fixedswap } from "../interfaces";
 
 const ETH_URL_MAINNET =
-	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
+	"https://dark-cold-bush.quiknode.io/9bdbc33b-14e7-4afe-bf41-e50074f83eb5/oIdoD0CCACMoKc6Vzet5uGlhtwi9NsPm7VWYh8VXy78aFykwqcJ7yUf7rvDkFCrnXI2_i-rhE6HSaG5tw3ogJg==";
 const ETH_URL_TESTNET =
-	"https://kovan.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
+	"https://quiet-delicate-sunset.kovan.quiknode.pro/b501d6516276a209489679d6891cba54e5c0ef68";
 const MOONBEAM_TESTNET_URL =
 	"https://rpc.testnet.moonbeam.network";
 const BINANCE_CHAIN_TESTNET_URL =
