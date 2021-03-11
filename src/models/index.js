@@ -3,12 +3,11 @@ import FixedSwapContract from "./FixedSwapContract";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
-import { fixedswap } from "../interfaces";
 
 const ETH_URL_MAINNET =
 	"https://dark-cold-bush.quiknode.io/9bdbc33b-14e7-4afe-bf41-e50074f83eb5/oIdoD0CCACMoKc6Vzet5uGlhtwi9NsPm7VWYh8VXy78aFykwqcJ7yUf7rvDkFCrnXI2_i-rhE6HSaG5tw3ogJg==";
 const ETH_URL_TESTNET =
-	"https://quiet-delicate-sunset.kovan.quiknode.pro/b501d6516276a209489679d6891cba54e5c0ef68";
+	"https://kovan.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
 const MOONBEAM_TESTNET_URL =
 	"https://rpc.testnet.moonbeam.network";
 const BINANCE_CHAIN_TESTNET_URL =
@@ -17,6 +16,7 @@ const BINANCE_CHAIN_URL =
 	"https://bsc-dataseed1.binance.org:443";
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
+export var IS_TEST = false;
 
 const networksEnum = Object.freeze({
 	1: "Main",
@@ -29,6 +29,7 @@ const networksEnum = Object.freeze({
 class Application {
 	constructor({test=false, mainnet=true, network='ETH'}) {
 		this.test = test;
+		IS_TEST = test;
 		this.mainnet = mainnet;
 		if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') ){
 			throw new Error("Network has to be ETH or DOT or BSC");
@@ -115,7 +116,6 @@ class Application {
 				});
 				await contract.isETHTrade();
 			}catch(err){
-				console.log("err", "1.0")
 				try{
 					contract = new FixedSwapContractLegacy({
 						web3: this.web3,

@@ -29,7 +29,7 @@ context('ETH Contract', async () => {
         let res = await swapContract.deploy({
             tradeValue : tradeValue, 
             tokensForSale : tokenFundAmount, 
-            isTokenSwapAtomic : true,
+            isTokenSwapAtomic : false,
             individualMaximumAmount : tokenFundAmount,
             startDate : moment().add(4, 'minutes'),
             endDate : moment().add(8, 'minutes'),
@@ -122,7 +122,7 @@ context('ETH Contract', async () => {
         expect(res).to.equal(true);
         /* Fund */
         res = await swapContract.hasStarted();
-        expect(res).to.equal(false);
+        expect(res).to.not.equal(true);
         res = await swapContract.fund({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
     }));
@@ -271,6 +271,13 @@ context('ETH Contract', async () => {
         res = Number(res).noExponents()
         expect(Number(res).toFixed(2)).to.equal(Number(tokensAvailable).toFixed(2));
     }));
+
+    it('Redeem Sale (withdraw tokens)', mochaAsync(async () => {  
+        let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
+        let res = await swapContract.redeemTokens({purchase_id : purchases[0]});
+        expect(res).to.not.equal(false);
+    }));
+
 
     it('Remove ETH From Purchases - Admin', mochaAsync(async () => {  
         let res = await swapContract.withdrawFunds();

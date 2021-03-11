@@ -1,9 +1,11 @@
-import { fixedswap } from "../interfaces";
+import { fixedswap, fixedswap_test } from "../interfaces";
 import Contract from "./Contract";
 import ERC20TokenContract from "./ERC20TokenContract";
 import Numbers from "../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
+import { IS_TEST } from ".";
+
 const RESIDUAL_TOKEN  = 0.00001;
 
 /**
@@ -31,11 +33,10 @@ class FixedSwapContract {
 			if (acc) {
 				this.acc = acc;
 			}
-
 			this.params = {
 				web3: web3,
 				contractAddress: contractAddress,
-				contract: new Contract(web3, fixedswap, contractAddress),
+				contract: new Contract(web3, IS_TEST ? fixedswap_test : fixedswap, contractAddress),
 			};
 
 			
@@ -552,11 +553,7 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods.hasStarted()
-			.call( {}, (error, result) => {
-				if(error){
-					throw new Error(error);
-				}
-			});
+			.call();
 	}
 
 	/**
@@ -568,11 +565,7 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods.hasFinalized()
-			.call( {}, (error, result) => {
-				if(error){
-					throw new Error(error);
-				}
-			});
+			.call();
 	}
 
 	/**
@@ -1038,7 +1031,7 @@ class FixedSwapContract {
 	};
 
 	__assert() {
-		this.params.contract.use(fixedswap, this.getAddress());
+		this.params.contract.use(IS_TEST ? fixedswap_test : fixedswap, this.getAddress());
 	}
 
 	getDecimals = () => this.decimals || 18;
