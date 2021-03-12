@@ -5,9 +5,9 @@ import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
 
 const ETH_URL_MAINNET =
-	"https://dark-cold-bush.quiknode.io/9bdbc33b-14e7-4afe-bf41-e50074f83eb5/oIdoD0CCACMoKc6Vzet5uGlhtwi9NsPm7VWYh8VXy78aFykwqcJ7yUf7rvDkFCrnXI2_i-rhE6HSaG5tw3ogJg==";
+	"https://dark-cold-bush.quiknode.io/9bdbc33b-14e7-4afe-bf41-e50074f83eb5/oIdoD0CCACMoKc6Vzet5uGlhtwi9NsPm7VWYh8VXy78aFykwqcJ7yUf7rvDkFCrnXI2_i-rhE6HSaG5tw3ogJg==/";
 const ETH_URL_TESTNET =
-	"https://cold-frosty-field.quiknode.io/30c2de5a-a07d-4274-aa09-67fd2aa2cbb3/sr2iM2CFzWxbGfFUfn6TAPhmH1nuGd3uRP4mggvEb8JhKDZHNGxajlo_LyDGqf-NqD2njsHiksEBBWmwBFtxJw==";
+	"https://cold-frosty-field.quiknode.io/30c2de5a-a07d-4274-aa09-67fd2aa2cbb3/sr2iM2CFzWxbGfFUfn6TAPhmH1nuGd3uRP4mggvEb8JhKDZHNGxajlo_LyDGqf-NqD2njsHiksEBBWmwBFtxJw==/";
 const MOONBEAM_TESTNET_URL =
 	"https://rpc.testnet.moonbeam.network";
 const BINANCE_CHAIN_TESTNET_URL =
@@ -52,11 +52,7 @@ class Application {
 				(this.mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL
 			);
 		}else if(this.network == 'ETH'){
-			this.web3 = new Web3(
-				new Web3.providers.HttpProvider(
-					(this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET
-				)
-			);
+			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
 		}
 		
 		if (typeof window !== "undefined") {
