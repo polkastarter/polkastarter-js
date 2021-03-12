@@ -1201,7 +1201,7 @@ class FixedSwapContract {
 			let wei = await this.web3.eth.getBalance(this.getAddress());
 			return this.web3.utils.fromWei(wei, 'ether');
 		}else{
-			return await this.getTokenAddress().getTokenAmount(this.getAddress());
+			return await this.getTokenContract().getTokenAmount(this.getAddress());
 		}
 	
 	};
