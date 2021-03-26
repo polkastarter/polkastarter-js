@@ -6,8 +6,6 @@ import _ from "lodash";
 import moment from 'moment';
 import { IS_TEST } from ".";
 
-const RESIDUAL_TOKEN  = 0.00001;
-
 /**
  * Fixed Swap Object
  * @constructor FixedSwapContract
@@ -693,10 +691,11 @@ class FixedSwapContract {
 		let amountReedemed = Numbers.fromDecimals(res[4], this.getDecimals());
 		let amountLeftToRedeem = amount-amountReedemed;
 		let amountToReedemNow = 0;
-
 		for(var i = lastTrancheSent; i <= currentSchedule; i++){
-			amountToReedemNow =+ amount*(await this.getVestingSchedule({position: i}))/100
+			amountToReedemNow = amountToReedemNow + amount*(await this.getVestingSchedule({position: i}))/100
 		}
+
+		let isFinalized = await this.hasFinalized();
 
 		return {
 			_id: purchase_id,
@@ -706,7 +705,7 @@ class FixedSwapContract {
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
 			amountReedemed : amountReedemed,
 			amountLeftToRedeem : amountLeftToRedeem,
-			amountToReedemNow : amountToReedemNow,
+			amountToReedemNow : isFinalized ? 0 : amountToReedemNow,
 			lastTrancheSent :  lastTrancheSent,
 			wasFinalized: res[6],
 			reverted: res[7],
@@ -823,7 +822,7 @@ class FixedSwapContract {
 	swap = async ({ tokenAmount, callback }) => {
 
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
-			parseFloat(tokenAmount)-(parseFloat(tokenAmount)*RESIDUAL_TOKEN),
+			parseFloat(tokenAmount),
 			this.getDecimals()
 		);
 
