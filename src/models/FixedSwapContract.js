@@ -705,7 +705,7 @@ class FixedSwapContract {
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
 			amountReedemed : amountReedemed,
 			amountLeftToRedeem : amountLeftToRedeem,
-			amountToReedemNow : isFinalized ? 0 : amountToReedemNow,
+			amountToReedemNow : isFinalized ? amountToReedemNow : 0,
 			lastTrancheSent :  lastTrancheSent,
 			wasFinalized: res[6],
 			reverted: res[7],
