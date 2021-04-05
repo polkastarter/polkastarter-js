@@ -691,7 +691,7 @@ class FixedSwapContract {
 		let amountReedemed = Numbers.fromDecimals(res[4], this.getDecimals());
 		let amountLeftToRedeem = amount-amountReedemed;
 		let amountToReedemNow = 0;
-		for(var i = lastTrancheSent; i <= currentSchedule; i++){
+		for(var i = lastTrancheSent+1; i <= currentSchedule; i++){
 			amountToReedemNow = amountToReedemNow + amount*(await this.getVestingSchedule({position: i}))/100
 		}
 
