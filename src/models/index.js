@@ -7,13 +7,15 @@ import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
 const ETH_URL_MAINNET =
 	"https://dark-cold-bush.quiknode.io/9bdbc33b-14e7-4afe-bf41-e50074f83eb5/oIdoD0CCACMoKc6Vzet5uGlhtwi9NsPm7VWYh8VXy78aFykwqcJ7yUf7rvDkFCrnXI2_i-rhE6HSaG5tw3ogJg==/";
 const ETH_URL_TESTNET =
-	"https://kovan.infura.io/v3/37ec248f2a244e3ab9c265d0919a6cbc";
+	"https://kovan.infura.io/v3/811fe4fa5c4b41cb9b92f9656aaeaa3b";
 const MOONBEAM_TESTNET_URL =
 	"https://rpc.testnet.moonbeam.network";
 const BINANCE_CHAIN_TESTNET_URL =
 	"https://data-seed-prebsc-1-s1.binance.org:8545";
 const BINANCE_CHAIN_URL = 
 	"https://bsc-dataseed1.binance.org:443";
+
+
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 export var IS_TEST = false;
