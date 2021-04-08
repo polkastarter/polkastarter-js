@@ -50,10 +50,12 @@ class Application {
 		if(this.network == 'DOT'){
 			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
 		}else if(this.network == 'BSC'){
+			console.log("BSC Network opened, mainnet?", this.mainnet);
 			this.web3 = new Web3(
 				(this.mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL
 			);
 		}else if(this.network == 'ETH'){
+			console.log("ETH Network opened, mainnet?", this.mainnet);
 			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
 		}
 		
