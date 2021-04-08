@@ -67,9 +67,10 @@ class FixedSwapContract {
 	};
 
 	assertERC20Info = async () => {
-
+		console.log("0")
 		let decimals = await this.decimalsAsync();
 		let tokenAddress = await this.erc20();
+		console.log("0", tokenAddress)
 
 		this.params.erc20TokenContract = new ERC20TokenContract({
 			web3: this.web3,
@@ -77,6 +78,7 @@ class FixedSwapContract {
 			contractAddress: tokenAddress,
 			acc : this.acc
 		});
+		console.log("1", this.params.erc20TokenContract)
 
 		if(!(await this.isETHTrade())){
 			this.params.tradingERC20Contract = new ERC20TokenContract({
@@ -86,6 +88,8 @@ class FixedSwapContract {
 				acc : this.acc
 			});	
 		};
+		console.log("2")
+
 
 		this.decimals = decimals;
 	}
