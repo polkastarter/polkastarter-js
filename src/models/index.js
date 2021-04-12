@@ -62,8 +62,8 @@ class Application {
 		}
 
 		console.log("web3", this.web3, this.network);
-		
-		if (typeof window !== "undefined") {
+		console.log("window", window)
+		if((typeof window !== "undefined") && window.ethereum) {
 			window.web3 = new Web3(window.ethereum);
 			this.web3 = window.web3;
 		}else{
