@@ -1133,7 +1133,7 @@ class FixedSwapContract {
 		})
 
 		console.log("Amount Max", individualMaximumAmount, Numbers.toSmartContractDecimals(
-			individualMinimumAmount,
+			individualMaximumAmount,
 			this.getDecimals()
 		))
 
