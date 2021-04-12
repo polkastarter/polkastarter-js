@@ -67,11 +67,8 @@ class FixedSwapContractLegacy {
 	};
 
 	assertERC20Info = async () => {
-		console.log("info assert", 1)
 		let decimals = await this.decimalsAsync();
-		console.log("info assert 2", decimals)
 		let tokenAddress = await this.erc20();
-		console.log("info assert 3", tokenAddress)
 
 		this.params.erc20TokenContract = new ERC20TokenContract({
 			web3: this.web3,

@@ -60,6 +60,8 @@ class Application {
 			console.log("ETH Network opened, mainnet?", this.mainnet);
 			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
 		}
+
+		console.log("web3", this.web3, this.network);
 		
 		if (typeof window !== "undefined") {
 			window.web3 = new Web3(window.ethereum);
@@ -69,6 +71,8 @@ class Application {
 				throw new Error("Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet");
 			}
 		}
+		console.log("web3", this.web3, this.network);
+
 	}
 
 	
