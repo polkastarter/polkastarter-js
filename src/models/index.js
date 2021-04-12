@@ -21,10 +21,12 @@ const TEST_PRIVATE_KEY =
 export var IS_TEST = false;
 
 const networksEnum = Object.freeze({
-	1: "Main",
+	1: "Ethereum Main",
 	2: "Morden",
 	3: "Ropsten",
 	4: "Rinkeby",
+	56: "BSC Main",
+	97: "BSC Test",
 	42: "Kovan",
 });
 
