@@ -67,8 +67,11 @@ class FixedSwapContract {
 	};
 
 	assertERC20Info = async () => {
+		console.log("info assert11", 1)
 		let decimals = await this.decimalsAsync();
+		console.log("info assert 2", decimals)
 		let tokenAddress = await this.erc20();
+		console.log("info assert 3", tokenAddress)
 		this.params.erc20TokenContract = new ERC20TokenContract({
 			web3: this.web3,
 			decimals: decimals,
@@ -1131,11 +1134,6 @@ class FixedSwapContract {
 				throw new Error("All 'vestingSchedule' array items have to be integeres and not decimals")
 			}
 		})
-
-		console.log("Amount Max", individualMaximumAmount, Numbers.toSmartContractDecimals(
-			individualMaximumAmount,
-			this.getDecimals()
-		))
 
 		let params = [
 			this.getTokenAddress(),
