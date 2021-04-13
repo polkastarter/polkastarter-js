@@ -381,11 +381,7 @@ class FixedSwapContract {
 		return await this.params.contract
 			.getContract()
 			.methods.hasMinimumRaise()
-			.call( {}, (error, result) => {
-				if(error){
-					throw new Error(error);
-				}
-			});
+			.call();
 	}
 
 	/**
