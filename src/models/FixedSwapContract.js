@@ -306,28 +306,6 @@ class FixedSwapContract {
 	}
 
 	/**
-	 * @function minimumRaiseAchieved
-	 * @description Was Minimum Raise Achieved
-	 * @returns {Boolean}
-	 */
-	async minimumRaiseAchieved() {
-		var res;
-		try{
-			res = await this.params.contract
-			.getContract()
-			.methods
-			.minimumRaiseAchieved().call()
-			.catch(err => {throw err;})
-		}catch(err){
-			return false;
-		}
-		if(!res){
-			return false;
-		}
-		return res;
-	}
-
-	/**
 	 * @function minimumRaise
 	 * @description Get Minimum Raise amount for Token Sale
 	 * @returns {Integer} Amount in Tokens

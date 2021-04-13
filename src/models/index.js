@@ -47,6 +47,17 @@ class Application {
 		}
 	}
 
+	stopLocalWeb3 = () => {
+		if(this.network == 'DOT'){
+			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
+		}else if(this.network == 'BSC'){
+			this.web3 = new Web3(
+				(this.mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL
+			);
+		}else if(this.network == 'ETH'){
+			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
+		}
+	}
 	
 	start = () => {
 		if(this.network == 'DOT'){
