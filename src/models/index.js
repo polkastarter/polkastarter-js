@@ -84,6 +84,7 @@ class Application {
 
 	login = async () => {
 		try{
+			console.log("Login being done")
 			if (typeof window === "undefined") { return false; }
 			if (window.ethereum) {
 				window.web3 = new Web3(window.ethereum);
