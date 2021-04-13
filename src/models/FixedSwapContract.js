@@ -319,8 +319,10 @@ class FixedSwapContract {
 			.minimumRaiseAchieved().call()
 			.catch(err => {throw err;})
 		}catch(err){
+			console.log("minimumRaiseAchieved err", err)
 			return false;
 		}
+		console.log("minimumRaiseAchieved", res)
 		return res;
 	}
 
