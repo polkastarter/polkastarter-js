@@ -643,19 +643,23 @@ class FixedSwapContractLegacy {
 			.getContract()
 			.methods.getPurchase(purchase_id)
 			.call();
+
+		let amount = Numbers.fromDecimals(res[0], this.getDecimals());
+		let wasFinalized = res[4];
+
 		return {
 			_id: purchase_id,
-			amount: Numbers.fromDecimals(res[0], this.getDecimals()),
+			amount: amount,
 			purchaser: res[1],
             costAmount : Numbers.fromDecimals(res[2], 18),
             /* legacy */
 			ethAmount: Numbers.fromDecimals(res[2], 18),
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
-			wasFinalized: res[4],
+			wasFinalized: wasFinalized,
 			reverted: res[5],
-            amountReedemed : 0,
-            amountLeftToRedeem : 0,
-            amountToReedemNow : 0,
+            amountReedemed : wasFinalized ? amount : 0,
+            amountLeftToRedeem : wasFinalized ? 0 : amount,
+            amountToReedemNow : wasFinalized ? 0 : amount,
             lastTrancheSent : 0
 		};
 	};
