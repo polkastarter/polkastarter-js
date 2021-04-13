@@ -47,7 +47,7 @@ class Application {
 		}
 	}
 
-	stopLocalWeb3 = () => {
+	startWithoutMetamask = () => {
 		if(this.network == 'DOT'){
 			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
 		}else if(this.network == 'BSC'){
