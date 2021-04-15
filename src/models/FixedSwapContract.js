@@ -5,6 +5,7 @@ import Numbers from "../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
 import { IS_TEST } from ".";
+const RESIDUAL_ETH = 0.00001;
 
 /**
  * Fixed Swap Object
@@ -803,7 +804,7 @@ class FixedSwapContract {
 			tokenAmount,
 		});
 
-		let costToDecimals = Numbers.toSmartContractDecimals(cost, await this.getTradingDecimals());
+		let costToDecimals = Numbers.toSmartContractDecimals(cost+RESIDUAL_ETH, await this.getTradingDecimals());
 
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals),
