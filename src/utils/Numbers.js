@@ -83,7 +83,7 @@ class numbers {
   }
 
   fromDecimals(value, decimals) {
-      return  Number(parseFloat(value / 10 ** decimals).toPrecision(decimals)).noExponents();
+    return  Number(parseFloat(value / 10 ** decimals).toPrecision(decimals)).noExponents();
   }
 
   fromExponential(x) {

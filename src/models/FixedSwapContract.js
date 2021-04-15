@@ -804,7 +804,7 @@ class FixedSwapContract {
 			tokenAmount,
 		});
 
-		let costToDecimals = Numbers.toSmartContractDecimals(cost+RESIDUAL_ETH, await this.getTradingDecimals());
+		let costToDecimals = Numbers.toSmartContractDecimals(parseFloat(cost)+RESIDUAL_ETH, await this.getTradingDecimals());
 
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals),
