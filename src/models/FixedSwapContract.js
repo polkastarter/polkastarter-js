@@ -796,6 +796,11 @@ class FixedSwapContract {
 	swap = async ({ tokenAmount, callback }) => {
 
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
+			parseFloat(tokenAmount),
+			this.getDecimals()
+		);
+
+		let amountWithDecimalsWithResidual = Numbers.toSmartContractDecimals(
 			parseFloat(tokenAmount)-RESIDUAL_ETH,
 			this.getDecimals()
 		);
@@ -807,7 +812,7 @@ class FixedSwapContract {
 		let costToDecimals = Numbers.toSmartContractDecimals(cost, await this.getTradingDecimals());
 
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.swap(amountWithDecimals),
+			this.params.contract.getContract().methods.swap(amountWithDecimalsWithResidual),
 			false,
 			await this.isETHTrade() ? costToDecimals : 0,
 			callback
