@@ -7,7 +7,7 @@ import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
 const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
 const ETH_URL_TESTNET =
-	"https://cold-frosty-field.quiknode.io/30c2de5a-a07d-4274-aa09-67fd2aa2cbb3/sr2iM2CFzWxbGfFUfn6TAPhmH1nuGd3uRP4mggvEb8JhKDZHNGxajlo_LyDGqf-NqD2njsHiksEBBWmwBFtxJw==/";
+	"https://kovan.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
 const MOONBEAM_TESTNET_URL =
 	"https://rpc.testnet.moonbeam.network";
 const BINANCE_CHAIN_TESTNET_URL =

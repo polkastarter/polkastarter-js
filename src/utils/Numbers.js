@@ -1,7 +1,6 @@
 import moment from 'moment'
 import accounting from 'accounting'
 import dayjs from 'dayjs'
-import BN from 'bn.js';
 import web3 from "web3";
 let Web3 = new web3();
 
