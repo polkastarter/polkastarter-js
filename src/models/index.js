@@ -5,7 +5,7 @@ import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
 
 const ETH_URL_MAINNET =
-	"https://quiet-delicate-sunset.kovan.quiknode.pro/b501d6516276a209489679d6891cba54e5c0ef68/";
+	"https://dark-cold-bush.quiknode.io/9bdbc33b-14e7-4afe-bf41-e50074f83eb5/oIdoD0CCACMoKc6Vzet5uGlhtwi9NsPm7VWYh8VXy78aFykwqcJ7yUf7rvDkFCrnXI2_i-rhE6HSaG5tw3ogJg==/";
 const ETH_URL_TESTNET =
 	"https://kovan.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
 const MOONBEAM_TESTNET_URL =
