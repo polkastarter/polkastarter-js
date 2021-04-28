@@ -14,10 +14,9 @@ const BINANCE_CHAIN_TESTNET_URL =
 	"https://data-seed-prebsc-1-s1.binance.org:8545";
 const BINANCE_CHAIN_URL = 
 	"https://bsc-dataseed1.binance.org:443";
-
-
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
+
 export var IS_TEST = false;
 
 const networksEnum = Object.freeze({

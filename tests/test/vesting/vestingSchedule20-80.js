@@ -32,8 +32,8 @@ context('Vesting Time = 2 And Vesting Schedule = 20% - 80%', async () => {
             tokensForSale : tokenFundAmount, 
             isTokenSwapAtomic : false,
             individualMaximumAmount : tokenFundAmount,
-            startDate : moment().add(4, 'minutes'),
-            endDate : moment().add(8, 'minutes'),
+            startDate : moment().add(5, 'minutes'),
+            endDate : moment().add(10, 'minutes'),
             hasWhitelisting : false,
             isETHTrade : true,
             vestingTime: 2,
@@ -65,14 +65,8 @@ context('Vesting Time = 2 And Vesting Schedule = 20% - 80%', async () => {
         expect(res).to.not.equal(false);
     }));
 
-    it('GET - isSaleOpen - before Start', mochaAsync(async () => {     
-        await delay(3*60*1000);   
-        let res = await swapContract.isOpen();
-        isSaleOpen = res;
-        expect(res).to.equal(true);
-    }));
-
     it('should do a non atomic swap on the Contract', mochaAsync(async () => {
+        await delay(5*60*1000);   
         let res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
         expect(res).to.not.equal(false);
     }));
@@ -96,10 +90,11 @@ context('Vesting Time = 2 And Vesting Schedule = 20% - 80%', async () => {
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.wasFinalized).to.equal(false);
         expect(purchase.reverted).to.equal(false);
+        console.log(purchase)
     }));
 
     it('GET - Fixed Swap is Closed', mochaAsync(async () => {  
-        await delay(4*60*1000); 
+        await delay(5*60*1000); 
         let res = await swapContract.hasFinalized();
         expect(res).to.equal(true);
         res = await swapContract.isOpen();
