@@ -17,8 +17,6 @@ const BINANCE_CHAIN_URL =
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
-export var IS_TEST = false;
-
 const networksEnum = Object.freeze({
 	1: "Ethereum Main",
 	2: "Morden",
@@ -32,7 +30,7 @@ const networksEnum = Object.freeze({
 class Application {
 	constructor({test=false, mainnet=true, network='ETH'}) {
 		this.test = test;
-		IS_TEST = test;
+		global.IS_TEST = !mainnet;
 		this.mainnet = mainnet;
 		if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') ){
 			throw new Error("Network has to be ETH or DOT or BSC");
