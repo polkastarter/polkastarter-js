@@ -948,16 +948,17 @@ class FixedSwapContract {
 	 * @param { Array | Addresses} Addresses
 	 */
 	addWhitelistedAddress = async ({addresses}) => {
-
+		
 		if(!addresses || !addresses.length || addresses.length == 0){
 			throw new Error("Addresses not well setup");
 		}
 
 		let oldAddresses = await this.getWhitelistedAddresses();
+		addresses = await Numbers.toStringClean(addresses);
 		oldAddresses = oldAddresses.map( a => String(a).toLowerCase());
 		addresses = addresses.map( a => String(a).toLowerCase());
-
 		var addressesClean = [];
+		
 		addresses = addresses.filter( (item) => {
 			if(
 				(oldAddresses.indexOf(item) < 0) && 
