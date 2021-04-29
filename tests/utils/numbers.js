@@ -19,7 +19,6 @@ context('Numbers', async () => {
         expect(Numbers.toSmartContractDecimals(new Decimal(0.087234523452345).plus(0.01), 18)).to.equal("97234523452345000");
         expect(Numbers.toSmartContractDecimals(new Decimal(0.007234523453345333).plus(0.01), 18)).to.equal("17234523453345332");
         expect(Numbers.fromDecimals("97000000000000000", 18)).to.equal("0.097");
-        console.log(await Numbers.toStringClean(["04c733dC759d9dC8a8f2bb02767a14F7DC3ef0BCe2", "04c733dC759d9dC8a8f2bb02767a134F7DCef0BCe1", "04c7333dC759d9dC8a8f2bb02767a14F7DCef0BCe2"]));
     }));
 
 });
