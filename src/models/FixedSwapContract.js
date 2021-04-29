@@ -1038,7 +1038,8 @@ class FixedSwapContract {
 		isETHTrade = true,
 		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
 		vestingTime = 1,
-		firstUnlock = 100
+		vestingSchedule=[100]
+		//firstUnlock = 100
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -1093,15 +1094,15 @@ class FixedSwapContract {
 			throw new Error("'vestingTime' has to be at least 1")
 		}
 
-		if((firstUnlock > 100) || (firstUnlock < 0)){
-			throw new Error("'firstUnlock' has to be between 0 and 100 (inclusive)")
-		}
+		//if((firstUnlock > 100) || (firstUnlock < 0)){
+		//	throw new Error("'firstUnlock' has to be between 0 and 100 (inclusive)")
+		//}
 
-		let vestingSchedule = [firstUnlock];
+		//let vestingSchedule = [firstUnlock];
 		
-		for(var i = 2; i <= vestingTime; i++){
-			vestingSchedule.push(parseInt((100-firstUnlock)/(vestingTime-1)))
-		}
+		//for(var i = 1; i <= vestingTime; i++){
+		//	vestingSchedule.push(parseInt((100-firstUnlock)/(vestingTime-1)))
+		//}
 
 		if(vestingTime != vestingSchedule.length){
 			throw new Error("'vestingTime' has to be equal to 'vestingSchedule' length")
