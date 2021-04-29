@@ -954,9 +954,8 @@ class FixedSwapContract {
 		}
 
 		let oldAddresses = await this.getWhitelistedAddresses();
-		addresses = await Numbers.toStringClean(addresses);
+		addresses = await Numbers.toStringClean(addresses, oldAddresses);
 		oldAddresses = oldAddresses.map( a => String(a).toLowerCase());
-		addresses = addresses.map( a => String(a).toLowerCase());
 		var addressesClean = [];
 		
 		addresses = addresses.filter( (item) => {
