@@ -5,6 +5,7 @@ import Numbers from "../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
 const RESIDUAL_ETH = 0.00001;
+import { Decimal } from 'decimal.js';
 
 /**
  * Fixed Swap Object
@@ -1104,16 +1105,17 @@ class FixedSwapContract {
 		//	vestingSchedule.push(parseInt((100-firstUnlock)/(vestingTime-1)))
 		//}
 
+		
 		if(vestingTime != vestingSchedule.length){
 			throw new Error("'vestingTime' has to be equal to 'vestingSchedule' length")
 		}
-
+		
 		if(vestingSchedule.reduce((a, b) => a + b, 0) != 100){
 			throw new Error("'vestingSchedule' sum has to be equal to 100")
 		}
-
-		vestingSchedule = vestingSchedule.map( a => String(a).toString());
 		
+		vestingSchedule = vestingSchedule.map( a => String(new Decimal(a).mul(100)).toString());
+
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
