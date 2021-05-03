@@ -1112,12 +1112,6 @@ class FixedSwapContract {
 			throw new Error("'vestingSchedule' sum has to be equal to 100")
 		}
 
-		vestingSchedule.map( a => {
-			if(a != parseInt(a, 10)){
-				throw new Error("All 'vestingSchedule' array items have to be integeres and not decimals")
-			}
-		})
-
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
