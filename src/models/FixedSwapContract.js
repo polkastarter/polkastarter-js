@@ -1112,6 +1112,8 @@ class FixedSwapContract {
 			throw new Error("'vestingSchedule' sum has to be equal to 100")
 		}
 
+		vestingSchedule = vestingSchedule.map( a => String(a).toString());
+		
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
