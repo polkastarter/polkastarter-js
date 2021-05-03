@@ -669,7 +669,7 @@ class FixedSwapContract {
 		let amountLeftToRedeem = amount-amountReedemed;
 		let amountToReedemNow = 0;
 		for(var i = lastTrancheSent+1; i <= currentSchedule; i++){
-			amountToReedemNow = amountToReedemNow + amount*(await this.getVestingSchedule({position: i}))/100
+			amountToReedemNow = amountToReedemNow + amount*(await this.getVestingSchedule({position: i}))/10000
 		}
 
 		let isFinalized = await this.hasFinalized();
