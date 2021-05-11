@@ -14,6 +14,10 @@ const BINANCE_CHAIN_TESTNET_URL =
 	"https://data-seed-prebsc-1-s1.binance.org:8545";
 const BINANCE_CHAIN_URL = 
 	"https://bsc-dataseed1.binance.org:443";
+const POLYGON_CHAIN_TESTNET_URL =
+	"https://rpc-mumbai.maticvigil.com/";
+const POLYGON_CHAIN_URL =
+	"https://rpc-mainnet.maticvigil.com/";
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
 
@@ -25,6 +29,8 @@ const networksEnum = Object.freeze({
 	56: "BSC Main",
 	97: "BSC Test",
 	42: "Kovan",
+	137: "Polygon",
+	80001: "Mumbai",
 });
 
 class Application {
@@ -32,8 +38,8 @@ class Application {
 		this.test = test;
 		global.IS_TEST = !mainnet;
 		this.mainnet = mainnet;
-		if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') ){
-			throw new Error("Network has to be ETH or DOT or BSC");
+		if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC')){
+			throw new Error("Network has to be ETH or DOT or BSC or MATIC");
 		}
 		this.network = network;
 
@@ -53,6 +59,8 @@ class Application {
 			);
 		}else if(this.network == 'ETH'){
 			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
+		}else if(this.network == 'MATIC'){
+			this.web3 = new Web3((this.mainnet == true) ? POLYGON_CHAIN_URL : POLYGON_CHAIN_TESTNET_URL);
 		}
 	}
 	
