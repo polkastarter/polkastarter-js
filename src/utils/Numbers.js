@@ -2,7 +2,7 @@ import moment from 'moment'
 import accounting from 'accounting'
 import dayjs from 'dayjs'
 import web3 from "web3";
-let Web3 = new web3();
+import { create, all } from 'mathjs';
 
 Number.prototype.noExponents = function () {
   var data = String(this).split(/[eE]/)
@@ -24,6 +24,11 @@ Number.prototype.noExponents = function () {
 }
 
 class numbers {
+  math = create(all, {
+    number: 'BigNumber',
+    precision: 64,
+  });
+
   constructor() {}
 
   fromDayMonthYear(date) {
@@ -69,8 +74,7 @@ class numbers {
   }
 
   toSmartContractDecimals(value, decimals) {
-    let numberWithNoExponents = new Number(value * 10 ** decimals).noExponents().split(".")[0];
-    return numberWithNoExponents;
+    return this.math.chain(this.math.bignumber(value)).multiply(this.math.bignumber(10 ** decimals)).done().toFixed(0);
   }
 
   fromDecimals(value, decimals) {
