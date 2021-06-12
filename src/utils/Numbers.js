@@ -78,7 +78,7 @@ class numbers {
   }
 
   fromDecimals(value, decimals) {
-    return  Number(parseFloat(value / 10 ** decimals).toPrecision(decimals)).noExponents();
+    return this.math.chain(this.math.bignumber(value.toString())).divide(this.math.bignumber(10 ** decimals)).done().toFixed(decimals);
   }
 
   fromExponential(x) {
