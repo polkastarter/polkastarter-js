@@ -78,6 +78,9 @@ class numbers {
   }
 
   fromDecimals(value, decimals) {
+    if (value == null) {
+      return 0;
+    }
     return this.math.chain(this.math.bignumber(value.toString())).divide(this.math.bignumber(10 ** decimals)).done().toFixed(decimals);
   }
 
