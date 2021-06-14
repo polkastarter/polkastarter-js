@@ -5,7 +5,7 @@ import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
 
 const ETH_URL_MAINNET =
-	"https://wispy-young-dawn.quiknode.pro/f03f6085d8550400f416a0bc7282efd047818082/";
+	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
 const ETH_URL_TESTNET =
 	"https://kovan.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
 const MOONBEAM_TESTNET_URL =
