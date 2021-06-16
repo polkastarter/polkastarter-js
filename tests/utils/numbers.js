@@ -17,7 +17,7 @@ context('Numbers', async () => {
     it('should get a Fixed Value', mochaAsync(async () => {
         expect(Numbers.toSmartContractDecimals(new Decimal(0.087).plus(0.01), 18)).to.equal("97000000000000000");
         expect(Numbers.toSmartContractDecimals(new Decimal(0.087234523452345).plus(0.01), 18)).to.equal("97234523452345000");
-        expect(Numbers.toSmartContractDecimals(new Decimal(0.007234523453345333).plus(0.01), 18)).to.equal("17234523453345332");
+        expect(Numbers.toSmartContractDecimals(new Decimal(0.007234523453345333).plus(0.01), 18)).to.equal("17234523453345333");
         expect(Numbers.fromDecimals("97000000000000000", 18)).to.equal("0.097");
     }));
 
