@@ -18,10 +18,9 @@ const tradeValue = 0.01;
 context('ETH Contract', async () => {
     var swapContract;
     var app;
-    var isFunded, isSaleOpen, hasWhitelist, tokensLeft, indiviMinAmount, indivMaxAmount, cost, tokensAvailable
+    var isFunded, isSaleOpen, hasWhitelist, tokensLeft, indiviMinAmount, indivMaxAmount, cost, tokensAvailable;
    
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
-
         app = new Application({test : true, mainnet : false, network : 'ETH'});
         /* Create Contract */
         swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
@@ -211,6 +210,13 @@ context('ETH Contract', async () => {
     it('GET - isSaleOpen', mochaAsync(async () => {        
         let res = await swapContract.isOpen();
         expect(res).to.equal(true);
+    }));
+
+    it('Edit max allocation - Admin', mochaAsync(async () => {
+        let newMax = 500;
+        let res = await swapContract.editIndividualMaximumAmount({individualMaximumAmount: newMax});
+        expect(res).to.not.equal(false);
+        expect(await swapContract.individualMaximumAmount()).to.equal(newMax+'');
     }));
 
     it('GET - tokensAvailable after fund', mochaAsync(async () => {        
