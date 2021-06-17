@@ -23,6 +23,10 @@ Number.prototype.noExponents = function () {
   return str + z
 }
 
+/**
+ * Numbers object
+ * @constructor Numbers
+ */
 class numbers {
   math = create(all, {
     number: 'BigNumber',
@@ -73,10 +77,24 @@ class numbers {
     return accounting.formatNumber(number)
   }
 
+  /**
+	 * @function toSmartContractDecimals
+	 * @description Converts a "human" number to the minimum unit.
+   * @param {Float} value The number that you want to convert
+	 * @param {Integer} decimals Number of decimals
+	 * @returns {string}
+	 */
   toSmartContractDecimals(value, decimals) {
     return this.math.chain(this.math.bignumber(value)).multiply(this.math.bignumber(10 ** decimals)).done().toFixed(0);
   }
 
+  /**
+	 * @function fromDecimals
+	 * @description Converts a number from his minimum unit to a human readable one.
+   * @param {Float} value The number that you want to convert
+	 * @param {Integer} decimals Number of decimals
+	 * @returns {string}
+	 */
   fromDecimals(value, decimals) {
     if (value == null) {
       return 0;

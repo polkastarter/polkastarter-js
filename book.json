@@ -2,7 +2,6 @@
     "gitbook":   "3.2.2",
     "root":      "./docs",
     "structure": { 
-		"readme":  "api.md",
-		"summary": "toc.md" 
+		  "readme":  "README.md"
     }
 }
