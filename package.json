@@ -46,10 +46,11 @@
     "scripts": {
         "test": "./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
         "index": "babel-node ./index.js --presets es2015,stage-2",
-        "docs:api": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/models/FixedSwapContract.js src/utils/Numbers.js > docs/README.md",
+        "docs:numbers": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/models/FixedSwapContract.js > docs/SWAP.md",
+        "docs:swap": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/utils/Numbers.js > docs/NUMBERS.md",
         "docs:prepare": "gitbook install",
-        "docs:build": "npm run docs:prepare && npm run docs:api && gitbook build",
-        "docs:serve": "npm run docs:prepare && npm run docs:api && gitbook serve",
+        "docs:build": "npm run docs:prepare && npm run docs:numbers && npm run docs:swap && gitbook build",
+        "docs:serve": "npm run docs:prepare && npm run docs:numbers && npm run docs:swap && gitbook serve",
         "docs:clean": "rimraf _book"
     },
     "devDependencies": {
