@@ -2,7 +2,7 @@
 
 Welcome to the Polkastarter JS doc to integrate Polkastarter.
 
-#### [FixedSwap](/SWAP.md)
+#### [FixedSwap](/docs/SWAP.md)
 
-#### [Numbers](/NUMBERS.md)
+#### [Numbers](/docs/NUMBERS.md)
 
