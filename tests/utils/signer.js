@@ -7,9 +7,17 @@ import { mochaAsync } from '../utils';
 const expect = chai.expect;
 
 context('Signer', async () => {
+
+    const app = new Application({test : true, mainnet : false, network : 'ETH'});
+    const signer = app.getSigner();
+
+    it('should generate valid accounts', mochaAsync(async () => {
+        const account = signer.generateSignerAccount();
+        const address = account.address;
+        expect(signer.getAccountFromPrivateKey(account.privateKey).address).to.equal(address);
+    }));
+
     it('should sign addresses', mochaAsync(async () => {
-        const app = new Application({test : true, mainnet : false, network : 'ETH'});
-        const signer = app.getSigner();
         const account = signer.getAccountFromPrivateKey('0xc83b72173fd36e5945dd932b649deec654b927022e2442e8a63d7e938a3dba42');
         const signs = signer.signAddresses([
             '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
