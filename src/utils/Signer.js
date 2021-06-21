@@ -28,7 +28,7 @@ class Signer {
     /**
 	 * @function generateSignerAccount
 	 * @description Generates a new private key for signing the whitelist addresses
-	 * @param {string} entropy (Optional) a random string to increase entropy.
+	 * @param {string=} entropy (Optional) a random string to increase entropy.
      * @returns {Account} privateKey
 	 */
      generateSignerAccount(entropy) {

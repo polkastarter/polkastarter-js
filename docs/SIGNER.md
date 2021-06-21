@@ -8,7 +8,7 @@
 ## Functions
 
 <dl>
-<dt><a href="#generateSignerAccount">generateSignerAccount(entropy)</a> ⇒ <code><a href="#Account">Account</a></code></dt>
+<dt><a href="#generateSignerAccount">generateSignerAccount([entropy])</a> ⇒ <code><a href="#Account">Account</a></code></dt>
 <dd><p>Generates a new private key for signing the whitelist addresses</p>
 </dd>
 <dt><a href="#getAccountFromPrivateKey">getAccountFromPrivateKey(privateKey)</a> ⇒ <code><a href="#Account">Account</a></code></dt>
@@ -50,7 +50,7 @@ Signer object
 
 <a name="generateSignerAccount"></a>
 
-## generateSignerAccount(entropy) ⇒ [<code>Account</code>](#Account)
+## generateSignerAccount([entropy]) ⇒ [<code>Account</code>](#Account)
 Generates a new private key for signing the whitelist addresses
 
 **Kind**: global function  
@@ -58,7 +58,7 @@ Generates a new private key for signing the whitelist addresses
 
 | Param | Type | Description |
 | --- | --- | --- |
-| entropy | <code>string</code> | (Optional) a random string to increase entropy. |
+| [entropy] | <code>string</code> | (Optional) a random string to increase entropy. |
 
 <a name="getAccountFromPrivateKey"></a>
 
