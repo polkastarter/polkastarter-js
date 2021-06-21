@@ -6,3 +6,5 @@ Welcome to the Polkastarter JS doc to integrate Polkastarter.
 
 #### [Numbers](/docs/NUMBERS.md)
 
+#### [Signer](/docs/SIGNER.md)
+

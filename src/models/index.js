@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import FixedSwapContract from "./FixedSwapContract";
+import Signer from "../utils/Signer";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
@@ -106,6 +107,10 @@ class Application {
 
 	__getUserAccount = ({privateKey}) => {
 		return new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(privateKey));
+	}
+
+	getSigner = () => {
+		return new Signer(this.web3);
 	}
 
 	/* getFixedSwapContract */
