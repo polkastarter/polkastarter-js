@@ -8,19 +8,22 @@
 ## Functions
 
 <dl>
-<dt><a href="#generateSignerAccount">generateSignerAccount([entropy])</a> ⇒ <code><a href="#Account">Account</a></code></dt>
+<dt><a href="#generateSignerAccount">generateSignerAccount(password, [entropy])</a> ⇒ <code>string</code></dt>
 <dd><p>Generates a new private key for signing the whitelist addresses</p>
 </dd>
-<dt><a href="#getAccountFromPrivateKey">getAccountFromPrivateKey(privateKey)</a> ⇒ <code><a href="#Account">Account</a></code></dt>
+<dt><a href="#getAccountFromPrivateKey">getAccountFromPrivateKey(accountJson, password)</a> ⇒ <code>string</code></dt>
 <dd><p>Recovers an account given a private key</p>
 </dd>
-<dt><a href="#signAddresses">signAddresses(addresses, account)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
+<dt><a href="#signAddresses">signAddresses(addresses, accountJson, password)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
 <dd><p>Signs an array of addresses. Will ignore malformed addresses.</p>
 </dd>
-<dt><a href="#signMessage">signMessage(account, message)</a> ⇒ <code>string</code></dt>
+<dt><a href="#signAddresses">signAddresses(addresses, signer)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
+<dd><p>Signs an array of addresses. Will ignore malformed addresses.</p>
+</dd>
+<dt><a href="#signMessage">signMessage(signer, message)</a> ⇒ <code>string</code></dt>
 <dd><p>Signs a message given an account</p>
 </dd>
-<dt><a href="#signAddress">signAddress(account, address)</a> ⇒ <code>string</code></dt>
+<dt><a href="#signAddress">signAddress(signer, address)</a> ⇒ <code>string</code></dt>
 <dd><p>Signs a address given an account</p>
 </dd>
 </dl>
@@ -28,7 +31,7 @@
 ## Typedefs
 
 <dl>
-<dt><a href="#Account">Account</a> : <code>object</code></dt>
+<dt><a href="#Signer">Signer</a> : <code>object</code></dt>
 <dd></dd>
 <dt><a href="#SignedAddress">SignedAddress</a> : <code>object</code></dt>
 <dd></dd>
@@ -40,41 +43,38 @@
 **Kind**: global class  
 <a name="new_Signer_new"></a>
 
-### new Signer(web3)
+### new Signer()
 Signer object
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| web3 | <code>Web3</code> | Web3JS Instance |
 
 <a name="generateSignerAccount"></a>
 
-## generateSignerAccount([entropy]) ⇒ [<code>Account</code>](#Account)
+## generateSignerAccount(password, [entropy]) ⇒ <code>string</code>
 Generates a new private key for signing the whitelist addresses
 
 **Kind**: global function  
-**Returns**: [<code>Account</code>](#Account) - privateKey  
+**Returns**: <code>string</code> - JSON Account  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [entropy] | <code>string</code> | (Optional) a random string to increase entropy. |
+| password | <code>string</code> | Password for encryption |
+| [entropy] | <code>string</code> | Add more entropy |
 
 <a name="getAccountFromPrivateKey"></a>
 
-## getAccountFromPrivateKey(privateKey) ⇒ [<code>Account</code>](#Account)
+## getAccountFromPrivateKey(accountJson, password) ⇒ <code>string</code>
 Recovers an account given a private key
 
 **Kind**: global function  
-**Returns**: [<code>Account</code>](#Account) - Account  
+**Returns**: <code>string</code> - Address  
 
-| Param | Type |
-| --- | --- |
-| privateKey | <code>string</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| accountJson | <code>string</code> | Account in a json format |
+| password | <code>string</code> | Password to unlock the account |
 
 <a name="signAddresses"></a>
 
-## signAddresses(addresses, account) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
+## signAddresses(addresses, accountJson, password) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
 Signs an array of addresses. Will ignore malformed addresses.
 
 **Kind**: global function  
@@ -83,11 +83,25 @@ Signs an array of addresses. Will ignore malformed addresses.
 | Param | Type | Description |
 | --- | --- | --- |
 | addresses | <code>Array.&lt;string&gt;</code> | List of addresses to sign |
-| account | [<code>Account</code>](#Account) | Account to sign |
+| accountJson | <code>string</code> | Account in a json format |
+| password | <code>string</code> | Password to unlock the account |
+
+<a name="signAddresses"></a>
+
+## signAddresses(addresses, signer) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
+Signs an array of addresses. Will ignore malformed addresses.
+
+**Kind**: global function  
+**Returns**: [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress) - signedAddresses  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| addresses | <code>Array.&lt;string&gt;</code> | List of addresses to sign |
+| signer | [<code>Signer</code>](#Signer) | Signer object |
 
 <a name="signMessage"></a>
 
-## signMessage(account, message) ⇒ <code>string</code>
+## signMessage(signer, message) ⇒ <code>string</code>
 Signs a message given an account
 
 **Kind**: global function  
@@ -95,12 +109,12 @@ Signs a message given an account
 
 | Param | Type | Description |
 | --- | --- | --- |
-| account | [<code>Account</code>](#Account) | Signer |
+| signer | [<code>Signer</code>](#Signer) | Signer |
 | message | <code>string</code> | String to sign |
 
 <a name="signAddress"></a>
 
-## signAddress(account, address) ⇒ <code>string</code>
+## signAddress(signer, address) ⇒ <code>string</code>
 Signs a address given an account
 
 **Kind**: global function  
@@ -108,20 +122,23 @@ Signs a address given an account
 
 | Param | Type | Description |
 | --- | --- | --- |
-| account | [<code>Account</code>](#Account) | Signer |
+| signer | [<code>Signer</code>](#Signer) | Signer object |
 | address | <code>string</code> | Address to sign |
 
-<a name="Account"></a>
+<a name="Signer"></a>
 
-## Account : <code>object</code>
+## Signer : <code>object</code>
 **Kind**: global typedef  
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| address | <code>string</code> | Address |
-| privateKey | <code>string</code> | Private Key |
-| sign | <code>function</code> | Signs a message |
+| signMessage | <code>function</code> | Signs a message |
+
+<a name="new_Signer_new"></a>
+
+### new Signer()
+Signer object
 
 <a name="SignedAddress"></a>
 

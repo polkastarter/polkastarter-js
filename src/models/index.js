@@ -110,7 +110,7 @@ class Application {
 	}
 
 	getSigner = () => {
-		return new Signer(this.web3);
+		return new Signer();
 	}
 
 	/* getFixedSwapContract */
