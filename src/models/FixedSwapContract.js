@@ -413,6 +413,33 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function setSignerPublicAddress
+	 * @description Set the public address of the signer
+	 * @param {string} address
+	 */
+	 setSignerPublicAddress = async ({ address }) => {
+		try {
+			return await this.__sendTx(
+				this.params.contract
+					.getContract()
+					.methods.setSignerPublicAddress(address)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	/**
+	 * @function signerPublicAddress
+	 * @description Get the public address of the signer
+	 * @returns {string} address
+	 */
+
+	async signerPublicAddress() {
+		return await this.params.contract.getContract().methods.signerPublicAddress().call();
+	}
+
+	/**
 	 * @function withdrawableUnsoldTokens
 	 * @description Get Total tokens available to be withdrawn by the admin
 	 * @returns {Integer} Amount in Tokens
@@ -795,9 +822,10 @@ class FixedSwapContract {
 	 * @function swap
 	 * @description Swap tokens by Ethereum or ERC20
 	 * @param {Integer} tokenAmount
+	 * @param {string=} signature Signature for the offchain whitelist
 	 */
 
-	swap = async ({ tokenAmount, callback }) => {
+	swap = async ({ tokenAmount, callback, signature }) => {
 		console.log("swap (tokens Amount)", tokenAmount);
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
@@ -815,7 +843,7 @@ class FixedSwapContract {
 		console.log("cost (amount in decimals) ", costToDecimals);
 
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.swap(amountWithDecimals),
+			this.params.contract.getContract().methods.swap(amountWithDecimals, signature),
 			false,
 			await this.isETHTrade() ? costToDecimals : 0,
 			callback

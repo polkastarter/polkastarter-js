@@ -68,6 +68,12 @@
 <dt><a href="#tokensLeft">tokensLeft()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens available to be sold in the pool</p>
 </dd>
+<dt><a href="#setSignerPublicAddress">setSignerPublicAddress(address)</a></dt>
+<dd><p>Set the public address of the signer</p>
+</dd>
+<dt><a href="#signerPublicAddress">signerPublicAddress()</a> ⇒ <code>string</code></dt>
+<dd><p>Get the public address of the signer</p>
+</dd>
 <dt><a href="#withdrawableUnsoldTokens">withdrawableUnsoldTokens()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens available to be withdrawn by the admin</p>
 </dd>
@@ -143,7 +149,7 @@
 <dt><a href="#getDistributionInformation">getDistributionInformation()</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Array</code> | <code>Integer</code></dt>
 <dd><p>Get Distribution Information</p>
 </dd>
-<dt><a href="#swap">swap(tokenAmount)</a></dt>
+<dt><a href="#swap">swap(tokenAmount, [signature])</a></dt>
 <dd><p>Swap tokens by Ethereum or ERC20</p>
 </dd>
 <dt><a href="#redeemTokens(isStandard)">redeemTokens(purchase_id)</a></dt>
@@ -353,6 +359,24 @@ Get Total tokens available to be sold in the pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="setSignerPublicAddress"></a>
+
+## setSignerPublicAddress(address)
+Set the public address of the signer
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="signerPublicAddress"></a>
+
+## signerPublicAddress() ⇒ <code>string</code>
+Get the public address of the signer
+
+**Kind**: global function  
+**Returns**: <code>string</code> - address  
 <a name="withdrawableUnsoldTokens"></a>
 
 ## withdrawableUnsoldTokens() ⇒ <code>Integer</code>
@@ -534,14 +558,15 @@ Get Distribution Information
 **Returns**: <code>Integer</code> - currentSchedule (Ex : 1)<code>Integer</code> - vestingTime (Ex : 1)<code>Array</code> \| <code>Integer</code> - vestingSchedule (Ex : [100])  
 <a name="swap"></a>
 
-## swap(tokenAmount)
+## swap(tokenAmount, [signature])
 Swap tokens by Ethereum or ERC20
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| tokenAmount | <code>Integer</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| tokenAmount | <code>Integer</code> |  |
+| [signature] | <code>string</code> | Signature for the offchain whitelist |
 
 <a name="redeemTokens(isStandard)"></a>
 
