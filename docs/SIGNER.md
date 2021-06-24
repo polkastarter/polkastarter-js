@@ -11,17 +11,20 @@
 <dt><a href="#generateSignerAccount">generateSignerAccount(password, [entropy])</a> ⇒ <code>string</code></dt>
 <dd><p>Generates a new private key for signing the whitelist addresses</p>
 </dd>
-<dt><a href="#getAccountFromPrivateKey">getAccountFromPrivateKey(accountJson, password)</a> ⇒ <code>string</code></dt>
-<dd><p>Recovers an account given a private key</p>
+<dt><a href="#getAddressFromAccount">getAddressFromAccount(accountJson, password)</a> ⇒ <code>string</code></dt>
+<dd><p>Recovers an account given a json file</p>
 </dd>
 <dt><a href="#signAddresses">signAddresses(addresses, accountJson, password)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
 <dd><p>Signs an array of addresses. Will ignore malformed addresses.</p>
 </dd>
-<dt><a href="#signAddresses">signAddresses(addresses, signer)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
+<dt><a href="#signAddressesWithSigner">signAddressesWithSigner(addresses, signer)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
 <dd><p>Signs an array of addresses. Will ignore malformed addresses.</p>
 </dd>
 <dt><a href="#signMessage">signMessage(signer, message)</a> ⇒ <code>string</code></dt>
 <dd><p>Signs a message given an account</p>
+</dd>
+<dt><a href="#verifySignature">verifySignature(signature, address, signerAddress)</a> ⇒ <code>boolean</code></dt>
+<dd><p>Verifies if an address has been signed with the signer address</p>
 </dd>
 <dt><a href="#signAddress">signAddress(signer, address)</a> ⇒ <code>string</code></dt>
 <dd><p>Signs a address given an account</p>
@@ -59,10 +62,10 @@ Generates a new private key for signing the whitelist addresses
 | password | <code>string</code> | Password for encryption |
 | [entropy] | <code>string</code> | Add more entropy |
 
-<a name="getAccountFromPrivateKey"></a>
+<a name="getAddressFromAccount"></a>
 
-## getAccountFromPrivateKey(accountJson, password) ⇒ <code>string</code>
-Recovers an account given a private key
+## getAddressFromAccount(accountJson, password) ⇒ <code>string</code>
+Recovers an account given a json file
 
 **Kind**: global function  
 **Returns**: <code>string</code> - Address  
@@ -86,9 +89,9 @@ Signs an array of addresses. Will ignore malformed addresses.
 | accountJson | <code>string</code> | Account in a json format |
 | password | <code>string</code> | Password to unlock the account |
 
-<a name="signAddresses"></a>
+<a name="signAddressesWithSigner"></a>
 
-## signAddresses(addresses, signer) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
+## signAddressesWithSigner(addresses, signer) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
 Signs an array of addresses. Will ignore malformed addresses.
 
 **Kind**: global function  
@@ -111,6 +114,20 @@ Signs a message given an account
 | --- | --- | --- |
 | signer | [<code>Signer</code>](#Signer) | Signer |
 | message | <code>string</code> | String to sign |
+
+<a name="verifySignature"></a>
+
+## verifySignature(signature, address, signerAddress) ⇒ <code>boolean</code>
+Verifies if an address has been signed with the signer address
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - verified  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signature | <code>string</code> | Signature |
+| address | <code>string</code> | Address signed |
+| signerAddress | <code>string</code> | Address who signed the message |
 
 <a name="signAddress"></a>
 

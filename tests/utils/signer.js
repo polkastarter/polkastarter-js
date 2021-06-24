@@ -35,4 +35,29 @@ context('Signer', async () => {
         ]);
     }));
 
+    it('should verify signature', mochaAsync(async () => {
+        const verified = await signer.verifySignature(
+            '0xb8f7e7882bedabecefdffd01db6a6a4368e84fb9f7f4d1c7bfc203b35262da3a5cfe1022ee3ce3312f9df629a1df5be6b323b289cfe863831670940307f6e7dc1b',
+            '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
+            '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355'
+        );
+        expect(verified).to.equal(true);
+
+
+        const signedWithAnotherAccount = await signer.verifySignature(
+            '0x76d620690fbc5324ed1602e617cbb185c33e93b0e895587a9402a41faefc9dca2d2e40809da5a04707727665219574021517d827a83903e8c1dc220f7da876831c',
+            '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
+            '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355'
+        );
+        expect(signedWithAnotherAccount).to.equal(false);
+
+
+        const invalidSig = await signer.verifySignature(
+            '0x76d620690fbc5324ed1602e617cbb185c33e93b0e895587a9402a41faefc9dca2d2e40809da5a04707727665219574021517d827a83903e8c1dc220f7ba876831c',
+            '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
+            '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355'
+        );
+        expect(invalidSig).to.equal(false);
+    }));
+
 });

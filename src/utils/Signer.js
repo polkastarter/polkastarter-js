@@ -34,8 +34,8 @@ class Signer {
     }
 
     /**
-	 * @function getAccountFromPrivateKey
-	 * @description Recovers an account given a private key
+	 * @function getAddressFromAccount
+	 * @description Recovers an account given a json file
      * @param {string} accountJson Account in a json format
      * @param {string} password Password to unlock the account
      * @returns {string} Address
@@ -65,7 +65,7 @@ class Signer {
     }
 
     /**
-	 * @function signAddresses
+	 * @function signAddressesWithSigner
 	 * @description Signs an array of addresses. Will ignore malformed addresses.
 	 * @param {string[]} addresses List of addresses to sign
      * @param {Signer} signer Signer object
@@ -104,6 +104,23 @@ class Signer {
     }
 
     /**
+	 * @function verifySignature
+	 * @description Verifies if an address has been signed with the signer address
+     * @param {string} signature Signature
+	 * @param {string} address Address signed
+	 * @param {string} signerAddress Address who signed the message
+     * @returns {boolean} verified
+	 */
+    async verifySignature(signature, address, signerAddress) {
+        try {
+            const actualAddress = ethers.utils.verifyMessage(this._addressToBytes32(address), signature);
+            return signerAddress.toLowerCase() === actualAddress.toLowerCase();
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
 	 * @function signAddress
 	 * @description Signs a address given an account
      * @param {Signer} signer Signer object
@@ -111,10 +128,7 @@ class Signer {
      * @returns {string} signedString
 	 */
     async signAddress(signer, address) {
-        const messageBytes32 = new Uint8Array(32).fill(0); // create 32 bytes array, fill with '0'
-        const messageByteArray = ethers.utils.arrayify(address); // address is only 20 bytes
-        messageBytes32.set(messageByteArray, 12); // insert so that LSB = Uint8Array[31]
-        return await this.signMessage(signer, ethers.utils.arrayify(messageBytes32));
+        return await this.signMessage(signer, this._addressToBytes32(address));
     }
 
     async _trySignAddress(signer, address) {      
@@ -124,6 +138,13 @@ class Signer {
           console.error("address not valid - ignored :", address);
           return "";
         }
+    }
+
+    _addressToBytes32(address) {
+        const messageBytes32 = new Uint8Array(32).fill(0); // create 32 bytes array, fill with '0'
+        const messageByteArray = ethers.utils.arrayify(address); // address is only 20 bytes
+        messageBytes32.set(messageByteArray, 12); // insert so that LSB = Uint8Array[31]
+        return ethers.utils.arrayify(messageBytes32);
     }
 }
 
