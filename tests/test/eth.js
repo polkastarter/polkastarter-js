@@ -32,7 +32,7 @@ context('ETH Contract', async () => {
             individualMaximumAmount : tokenFundAmount,
             startDate : moment().add(4, 'minutes'),
             endDate : moment().add(8, 'minutes'),
-            hasWhitelisting : true,
+            hasWhitelisting : false,
             isETHTrade : true
         });
         contractAddress = swapContract.getAddress();
@@ -58,20 +58,6 @@ context('ETH Contract', async () => {
         expect(swapContract).to.not.equal(false);
     }));
 
-
-    it('SET - whitelisted Addresses', mochaAsync(async () => {        
-        let add = await swapContract.addWhitelistedAddress({addresses : ['0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB', '0x98c039e95e7c555534a53f12ae2ac2d3398d534b']});
-        expect(add).to.not.equal(false);
-    }));
-
-
-    it('SET - whitelisted Addresses (with repeated ones)', mochaAsync(async () => {        
-        let res = await swapContract.addWhitelistedAddress({addresses : ['0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB', '0x98c039e95e7c555534a53f12ae2ac2d3398d534b', '0x98c039e95e7c555534a53f12ae2ac2d3398d534c',]});
-        expect(res).to.not.equal(false);
-        res = await swapContract.getWhitelistedAddresses();
-        expect(res.length).to.equal(3);
-    }));
-
     it('GET - isPreFunded', mochaAsync(async () => {  
         let res = await swapContract.isPreStart();
         expect(res).to.equal(true);
@@ -90,11 +76,6 @@ context('ETH Contract', async () => {
     it('GET - tokensAvailable', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAvailable();
         expect(tokens).to.equal(Number(0).noExponents());
-    }));
-
-    it('GET - whitelisted Addresses', mochaAsync(async () => { 
-        let res = await swapContract.getWhitelistedAddresses();
-        expect(res.length).to.equal(3);
     }));
 
     it('GET - owner', mochaAsync(async () => { 
@@ -124,13 +105,10 @@ context('ETH Contract', async () => {
         expect(res).to.not.equal(true);
         res = await swapContract.fund({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
-    }));
-
-
-    it('GET - tokensAvailable', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAvailable();
         expect(tokens).to.equal(Number(tokenFundAmount).noExponents());
     }));
+
 
     it('GET - isFunded', mochaAsync(async () => {  
         let res = await swapContract.isFunded();
@@ -147,13 +125,7 @@ context('ETH Contract', async () => {
 
     it('GET - hasWhitelisting ', mochaAsync(async () => {        
         let res = await swapContract.hasWhitelisting();
-        expect(res).to.equal(true);
-    }));
-
-    it('GET - isWhitelisted ', mochaAsync(async () => {        
-        let res = await swapContract.isWhitelisted({ address : '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB' });
-        hasWhitelist = res;
-        expect(res).to.equal(true);
+        expect(res).to.equal(false);
     }));
 
     it('GET - startDate ', mochaAsync(async () => {        
@@ -162,7 +134,7 @@ context('ETH Contract', async () => {
         expect(res).to.equal(true);
     }));
 
-    it('GET - endDate ', mochaAsync(async () => {        
+    it('GET - endDate ', mochaAsync(async () => {
         let res = await swapContract.endDate();
         res = isDate(res);
         expect(res).to.equal(true);
@@ -194,7 +166,6 @@ context('ETH Contract', async () => {
         indivMaxAmount = Number(tokenPurchaseAmount).noExponents() <= Number(indivMaxAmount).noExponents() ? true : false;
         expect(isFunded).to.equal(true);
         expect(isSaleOpen).to.equal(true);
-        expect(hasWhitelist).to.equal(true);
         expect(amount).to.equal(true);
         expect(tokensLeft).to.equal(true);
         expect(indiviMinAmount).to.equal(true);

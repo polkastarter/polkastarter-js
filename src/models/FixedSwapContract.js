@@ -6,6 +6,7 @@ import _ from "lodash";
 import moment from 'moment';
 const RESIDUAL_ETH = 0.00001;
 import { Decimal } from 'decimal.js';
+import * as ethers from 'ethers';
 
 /**
  * Fixed Swap Object
@@ -841,6 +842,9 @@ class FixedSwapContract {
 
 		console.log("swap (amount in decimals) ", amountWithDecimals);
 		console.log("cost (amount in decimals) ", costToDecimals);
+		if (!signature) {
+			signature = '0x00';
+		}
 
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals, signature),
@@ -917,7 +921,7 @@ class FixedSwapContract {
 	 */
 	editIndividualMaximumAmount = async ( { individualMaximumAmount } ) => {
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.editIndividualMaximumAmount(
+			this.params.contract.getContract().methods.setIndividualMaximumAmount(
 				Numbers.toSmartContractDecimals(
 					individualMaximumAmount,
 					this.getDecimals()
