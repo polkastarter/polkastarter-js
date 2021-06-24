@@ -216,7 +216,6 @@ context('ETH Contract', async () => {
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
         let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
         const amountPurchase = Number(purchase.amount).noExponents();
-        console.log(purchase);
         expect(Number(amountPurchase).toFixed(2)).to.equal(Number(tokenPurchaseAmount).noExponents());
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.wasFinalized).to.equal(false);
@@ -248,7 +247,6 @@ context('ETH Contract', async () => {
     it('Redeem Sale (withdraw tokens)', mochaAsync(async () => {  
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
         let res = await swapContract.redeemTokens({purchase_id : purchases[0]})
-        console.log("res", res);
         expect(res).to.not.equal(false);
     }));
 
@@ -256,7 +254,6 @@ context('ETH Contract', async () => {
     it('GET - Purchase ID', mochaAsync(async () => {     
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
         let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
-        console.log(purchase);
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.wasFinalized).to.equal(true);
         expect(purchase.reverted).to.equal(false);
@@ -270,6 +267,45 @@ context('ETH Contract', async () => {
 
     it('Remove Unsold Tokens - Admin', mochaAsync(async () => {  
         let res = await swapContract.withdrawUnsoldTokens();
+        expect(res).to.not.equal(false);
+    }));
+
+    /* Whitelist */
+    
+    it('should deploy Fixed Swap Contract with whitelist and swap', mochaAsync(async () => {
+        app = new Application({test : true, mainnet : false, network : 'ETH'});
+
+        /* Create Contract */
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        /* Deploy */
+        let res = await swapContract.deploy({
+            tradeValue : tradeValue, 
+            tokensForSale : tokenFundAmount, 
+            isTokenSwapAtomic : false,
+            individualMaximumAmount : tokenFundAmount,
+            startDate : moment().add(3, 'minutes'),
+            endDate : moment().add(8, 'minutes'),
+            hasWhitelisting : true,
+            isETHTrade : true
+        });
+        contractAddress = swapContract.getAddress();
+        expect(res).to.not.equal(false);
+
+
+        const signer = app.getSigner();
+        const account = await signer.generateSignerAccount('test1234');
+
+        const signs = await signer.signAddresses([
+            '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB'
+        ], account, 'test1234');
+
+        await swapContract.setSignerPublicAddress({
+            address: ('0x' + JSON.parse(account).address).toLowerCase()
+        });
+        await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
+        await swapContract.fund({tokenAmount : tokenFundAmount});
+        await delay(3*60*1000);
+        res = await swapContract.swap({tokenAmount : tokenPurchaseAmount, signature: signs[0].signature});
         expect(res).to.not.equal(false);
     }));
 });
