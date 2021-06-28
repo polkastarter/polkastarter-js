@@ -27,7 +27,7 @@ class Signer {
 	 * @param {string=} entropy Add more entropy
      * @returns {string} JSON Account
 	 */
-    async generateSignerAccount(password, entropy) {
+    async generateSignerAccount({password, entropy}) {
         const wallet = ethers.Wallet.createRandom(entropy)
 
         return await wallet.encrypt(password);
@@ -40,7 +40,7 @@ class Signer {
      * @param {string} password Password to unlock the account
      * @returns {string} Address
 	 */
-     getAddressFromAccount(accountJson, password) {
+     getAddressFromAccount({accountJson, password}) {
         const signer = ethers.Wallet.fromEncryptedJsonSync(
             accountJson,
             password
@@ -56,12 +56,12 @@ class Signer {
      * @param {string} password Password to unlock the account
      * @returns {SignedAddress[]} signedAddresses
 	 */
-    async signAddresses(addresses, accountJson, password) {
+    async signAddresses({addresses, accountJson, password}) {
         const signer = ethers.Wallet.fromEncryptedJsonSync(
             accountJson,
             password
         );
-        return await this.signAddressesWithSigner(addresses, signer);
+        return await this.signAddressesWithSigner({addresses, signer});
     }
 
     /**
@@ -71,7 +71,7 @@ class Signer {
      * @param {Signer} signer Signer object
      * @returns {SignedAddress[]} signedAddresses
 	 */
-    async signAddressesWithSigner(addresses, signer) {
+    async signAddressesWithSigner({addresses, signer}) {
         const signedAddresses = [];
         let n = 0;
         let r = 0;
@@ -99,7 +99,7 @@ class Signer {
 	 * @param {string} message String to sign
      * @returns {string} signedString
 	 */
-    async signMessage(signer, message) {
+    async signMessage({signer, message}) {
         return await signer.signMessage(message);
     }
 
@@ -111,7 +111,7 @@ class Signer {
 	 * @param {string} signerAddress Address who signed the message
      * @returns {boolean} verified
 	 */
-    async verifySignature(signature, address, signerAddress) {
+    async verifySignature({signature, address, signerAddress}) {
         try {
             const actualAddress = ethers.utils.verifyMessage(this._addressToBytes32(address), signature);
             return signerAddress.toLowerCase() === actualAddress.toLowerCase();
@@ -127,13 +127,13 @@ class Signer {
 	 * @param {string} address Address to sign
      * @returns {string} signedString
 	 */
-    async signAddress(signer, address) {
-        return await this.signMessage(signer, this._addressToBytes32(address));
+    async signAddress({signer, address}) {
+        return await this.signMessage({signer, message: this._addressToBytes32(address)});
     }
 
     async _trySignAddress(signer, address) {      
         if (ethers.utils.isAddress(address) && ethers.BigNumber.from(address) != 0) {
-            return await this.signAddress(signer, address);
+            return await this.signAddress({signer, address});
         } else {
           console.error("address not valid - ignored :", address);
           return "";

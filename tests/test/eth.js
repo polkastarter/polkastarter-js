@@ -330,11 +330,12 @@ context('ETH Contract', async () => {
 
 
         const signer = app.getSigner();
-        const account = await signer.generateSignerAccount('test1234');
+        const account = await signer.generateSignerAccount({password: 'test1234'});
 
-        const signs = await signer.signAddresses([
+        const signs = await signer.signAddresses({
+            addresses: [
             '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB'
-        ], account, 'test1234');
+        ], accountJson: account, password: 'test1234'});
 
         await swapContract.setSignerPublicAddress({
             address: ('0x' + JSON.parse(account).address).toLowerCase()
