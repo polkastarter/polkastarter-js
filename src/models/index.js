@@ -35,7 +35,7 @@ const networksEnum = Object.freeze({
 });
 
 class Application {
-	constructor({test=false, mainnet=true, network='ETH'}) {
+	constructor({test=false, mainnet=true, network='ETH', web3=undefined}) {
 		this.test = test;
 		global.IS_TEST = !mainnet;
 		this.mainnet = mainnet;
@@ -45,7 +45,11 @@ class Application {
 		this.network = network;
 
 		if(this.test){
-			this.start();
+			if (!web3) {
+				this.start();
+			} else {
+				this.web3 = web3;
+			}
 			this.login();
 			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
 		}
