@@ -1,4 +1,4 @@
-import { fixedswap, fixedswap_test } from "../interfaces";
+import { fixedswap } from "../interfaces";
 import Contract from "./Contract";
 import ERC20TokenContract from "./ERC20TokenContract";
 import Numbers from "../utils/Numbers";
@@ -39,7 +39,7 @@ class FixedSwapContract {
 			this.params = {
 				web3: web3,
 				contractAddress: contractAddress,
-				contract: new Contract(web3, global.IS_TEST ? fixedswap_test : fixedswap, contractAddress),
+				contract: new Contract(web3, fixedswap, contractAddress),
 			};
 
 			
@@ -1071,7 +1071,7 @@ class FixedSwapContract {
 	};
 
 	__assert() {
-		this.params.contract.use(global.IS_TEST ? fixedswap_test : fixedswap, this.getAddress());
+		this.params.contract.use(fixedswap, this.getAddress());
 	}
 
 	getDecimals = () => this.decimals || 18;
