@@ -621,6 +621,9 @@ class FixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async getCurrentSchedule() {
+		if (!await this.hasFinalized()) {
+			return 0;
+		}
 		return parseInt(await this.params.contract
 			.getContract()
 			.methods.getCurrentSchedule()
