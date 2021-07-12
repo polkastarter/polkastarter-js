@@ -883,6 +883,33 @@ class FixedSwapContract {
 	};
 
 	/**
+	 * @function editIndividualMaximumAmount
+	 * @type admin
+	 * @description Modifies the max allocation
+	 */
+	editIndividualMaximumAmount = async ( { individualMaximumAmount } ) => {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.editIndividualMaximumAmount(
+				Numbers.toSmartContractDecimals(
+					individualMaximumAmount,
+					this.getDecimals()
+				)
+			)
+		);
+	};
+
+	/**
+	 * @function editEndDate
+	 * @type admin
+	 * @description Modifies the end date for the pool
+	 */
+	editEndDate = async ( { endDate } ) => {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.editEndDate(Numbers.timeToSmartContractTime(endDate))
+		);
+	};
+
+	/**
 	 * @function approveSwapERC20
 	 * @description Approve the investor to use approved tokens for the sale
 	 */
@@ -974,7 +1001,7 @@ class FixedSwapContract {
 		);
 	};
 
-		/**
+	/**
 	 * @function removeWhitelistedAddress
 	 * @description remove WhiteListed Address
 	 */

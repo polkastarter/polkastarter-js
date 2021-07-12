@@ -10,6 +10,10 @@ Use the package manager [npm] to install npm.
 npm i polkastarter-js
 ```
 
+## Docs
+
+[Docs](/docs)
+
 ## Usage
 
 ```javascript

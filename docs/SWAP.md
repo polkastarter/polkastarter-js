@@ -1,7 +1,7 @@
 ## Classes
 
 <dl>
-<dt><a href="#FixedSwapContract">FixedSwapContract</a> : <code>Object</code></dt>
+<dt><a href="#FixedSwapContract">FixedSwapContract</a></dt>
 <dd></dd>
 </dl>
 
@@ -20,6 +20,12 @@
 <dt><a href="#pauseContract">pauseContract()</a> ⇒ <code>admin</code></dt>
 <dd><p>Pause Contract</p>
 </dd>
+<dt><a href="#erc20">erc20()</a> ⇒ <code>Address</code></dt>
+<dd><p>Get Token Address</p>
+</dd>
+<dt><a href="#decimals">decimals()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Decimals</p>
+</dd>
 <dt><a href="#unpauseContract">unpauseContract()</a> ⇒ <code>admin</code></dt>
 <dd><p>Unpause Contract</p>
 </dd>
@@ -31,6 +37,9 @@
 </dd>
 <dt><a href="#endDate">endDate()</a> ⇒ <code>Date</code></dt>
 <dd><p>Get End Date of Pool</p>
+</dd>
+<dt><a href="#isFinalized">isFinalized()</a> ⇒ <code>Boolean</code></dt>
+<dd><p>To see if contract was finalized</p>
 </dd>
 <dt><a href="#individualMinimumAmount">individualMinimumAmount()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Individual Minimum Amount for each address</p>
@@ -47,14 +56,35 @@
 <dt><a href="#tokensForSale">tokensForSale()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens Allocated/In Sale for the Pool</p>
 </dd>
+<dt><a href="#hasMinimumRaise">hasMinimumRaise()</a> ⇒ <code>Boolea</code></dt>
+<dd><p>See if hasMinimumRaise</p>
+</dd>
+<dt><a href="#minimumReached">minimumReached()</a> ⇒ <code>Integer</code></dt>
+<dd><p>See if minimumRaise was Reached</p>
+</dd>
 <dt><a href="#tokensAvailable">tokensAvailable()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens owned by the Pool</p>
 </dd>
 <dt><a href="#tokensLeft">tokensLeft()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens available to be sold in the pool</p>
 </dd>
+<dt><a href="#withdrawableUnsoldTokens">withdrawableUnsoldTokens()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Total tokens available to be withdrawn by the admin</p>
+</dd>
+<dt><a href="#withdrawableFunds">withdrawableFunds()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Total funds raised to be withdrawn by the admin</p>
+</dd>
 <dt><a href="#isTokenSwapAtomic">isTokenSwapAtomic()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the Token Swap is atomic on this pool</p>
+</dd>
+<dt><a href="#hasWhitelisting">hasWhitelisting()</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Verify if swap has whitelisting</p>
+</dd>
+<dt><a href="#isWhitelisted">isWhitelisted()</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Verify if address is whitelisted</p>
+</dd>
+<dt><a href="#wereUnsoldTokensReedemed">wereUnsoldTokensReedemed()</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Verify if the admin already reemeded unsold tokens</p>
 </dd>
 <dt><a href="#isFunded">isFunded()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the Token Sale is Funded with all Tokens proposed in tokensForSale</p>
@@ -68,11 +98,35 @@
 <dt><a href="#hasFinalized">hasFinalized()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the Token Sale has finalized, if the current date is after endDate</p>
 </dd>
+<dt><a href="#isETHTrade">isETHTrade()</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Verify if Token Sale is against Ethereum</p>
+</dd>
+<dt><a href="#isPOLSWhitelisted">isPOLSWhitelisted()</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Verify if Token Sale is POLS Whitelisted</p>
+</dd>
+<dt><a href="#isAddressPOLSWhitelisted">isAddressPOLSWhitelisted()</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Verify if Address is Whitelisted by POLS (returns false if not needed)</p>
+</dd>
+<dt><a href="#getTradingDecimals">getTradingDecimals()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Trading Decimals (18 if isETHTrade, X if not)</p>
+</dd>
+<dt><a href="#getTradingERC20Address">getTradingERC20Address()</a> ⇒ <code>Address</code></dt>
+<dd><p>Get Trading Address if ERC20</p>
+</dd>
 <dt><a href="#isPreStart">isPreStart()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the Token Sale in not open yet, where the admin can fund the pool</p>
 </dd>
-<dt><a href="#getPurchase">getPurchase(purchase_id)</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Address</code> | <code>Integer</code> | <code>Date</code> | <code>Boolean</code> | <code>Boolean</code></dt>
+<dt><a href="#getCurrentSchedule">getCurrentSchedule()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Gets Current Schedule</p>
+</dd>
+<dt><a href="#getVestingSchedule">getVestingSchedule(Position)</a> ⇒ <code>Array</code> | <code>Integer</code></dt>
+<dd><p>Gets Vesting Schedule</p>
+</dd>
+<dt><a href="#getPurchase">getPurchase(purchase_id)</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Address</code> | <code>Integer</code> | <code>Date</code> | <code>Integer</code> | <code>Integer</code> | <code>Boolean</code> | <code>Boolean</code></dt>
 <dd><p>Get Purchase based on ID</p>
+</dd>
+<dt><a href="#getWhiteListedAddresses">getWhiteListedAddresses()</a> ⇒ <code>Array</code> | <code>Address</code></dt>
+<dd><p>Get Whitelisted Addresses</p>
 </dd>
 <dt><a href="#getBuyers">getBuyers()</a> ⇒ <code>Array</code> | <code>Integer</code></dt>
 <dd><p>Get Buyers</p>
@@ -83,11 +137,14 @@
 <dt><a href="#getPurchaseIds">getPurchaseIds(address)</a> ⇒ <code>Array</code> | <code>Integer</code></dt>
 <dd><p>Get All Purchase Ids filter by Address/Purchaser</p>
 </dd>
-<dt><a href="#getETHCostFromTokens">getETHCostFromTokens(tokenAmount)</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get ETH Cost from Tokens Amount</p>
+<dt><a href="#getCostFromTokens">getCostFromTokens(tokenAmount)</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Cost from Tokens Amount</p>
+</dd>
+<dt><a href="#getDistributionInformation">getDistributionInformation()</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Array</code> | <code>Integer</code></dt>
+<dd><p>Get Distribution Information</p>
 </dd>
 <dt><a href="#swap">swap(tokenAmount)</a></dt>
-<dd><p>Swap tokens by Ethereum</p>
+<dd><p>Swap tokens by Ethereum or ERC20</p>
 </dd>
 <dt><a href="#redeemTokens(isStandard)">redeemTokens(purchase_id)</a></dt>
 <dd><p>Reedem tokens bought</p>
@@ -95,35 +152,59 @@
 <dt><a href="#redeemGivenMinimumGoalNotAchieved(isStandard)">redeemGivenMinimumGoalNotAchieved(purchase_id)</a></dt>
 <dd><p>Reedem Ethereum from sale that did not achieve minimum goal</p>
 </dd>
-<dt><a href="#withdrawUnsoldTokens">withdrawUnsoldTokens()</a> ⇒ <code>admin</code></dt>
+<dt><a href="#withdrawUnsoldTokens">withdrawUnsoldTokens()</a></dt>
 <dd><p>Withdraw unsold tokens of sale</p>
 </dd>
-<dt><a href="#withdrawFunds">withdrawFunds()</a> ⇒ <code>admin</code></dt>
+<dt><a href="#withdrawFunds">withdrawFunds()</a></dt>
 <dd><p>Withdraw all funds from tokens sold</p>
 </dd>
-<dt><a href="#approveFundERC20">approveFundERC20()</a> ⇒ <code>admin</code></dt>
+<dt><a href="#approveFundERC20">approveFundERC20()</a></dt>
 <dd><p>Approve the pool to use approved tokens for sale</p>
 </dd>
-<dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>admin</code> | <code>Boolean</code></dt>
+<dt><a href="#editIndividualMaximumAmount">editIndividualMaximumAmount()</a> ⇒ <code>admin</code></dt>
+<dd><p>Modifies the max allocation</p>
+</dd>
+<dt><a href="#editEndDate">editEndDate()</a> ⇒ <code>admin</code></dt>
+<dd><p>Modifies the end date for the pool</p>
+</dd>
+<dt><a href="#approveSwapERC20">approveSwapERC20()</a></dt>
+<dd><p>Approve the investor to use approved tokens for the sale</p>
+</dd>
+<dt><a href="#isApprovedSwapERC20">isApprovedSwapERC20()</a></dt>
+<dd><p>Verify if it is approved to invest</p>
+</dd>
+<dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the Admin has approved the pool to use receive the tokens for sale</p>
 </dd>
-<dt><a href="#fund">fund(tokenAmount)</a> ⇒ <code>admin</code></dt>
+<dt><a href="#fund">fund(tokenAmount)</a></dt>
 <dd><p>Send tokens to pool for sale, fund the sale</p>
 </dd>
-<dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a> ⇒ <code>admin</code></dt>
+<dt><a href="#addWhitelistedAddress">addWhitelistedAddress(Addresses)</a></dt>
+<dd><p>add WhiteListed Address</p>
+</dd>
+<dt><a href="#removeWhitelistedAddress">removeWhitelistedAddress()</a></dt>
+<dd><p>remove WhiteListed Address</p>
+</dd>
+<dt><a href="#safePull">safePull()</a></dt>
+<dd><p>Safe Pull all tokens &amp; ETH</p>
+</dd>
+<dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a></dt>
 <dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
 </dd>
-<dt><a href="#deploy">deploy(tradeValue, tokensForSale, startDate, endDate, individualMinimumAmount, individualMaximumAmount, isTokenSwapAtomic, minimumRaise, feeAmount)</a> ⇒ <code>admin</code></dt>
+<dt><a href="#deploy">deploy()</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
-<dt><a href="#getOwner">getOwner(Address)</a> ⇒ <code>admin</code></dt>
+<dt><a href="#getOwner">getOwner(Address)</a></dt>
 <dd><p>Get owner address of contract</p>
+</dd>
+<dt><a href="#getBalance">getBalance(Balance)</a></dt>
+<dd><p>Get Balance of Contract</p>
 </dd>
 </dl>
 
 <a name="FixedSwapContract"></a>
 
-## FixedSwapContract : <code>Object</code>
+## FixedSwapContract
 **Kind**: global class  
 <a name="new_FixedSwapContract_new"></a>
 
@@ -168,6 +249,20 @@ Get Owner of the Contract
 Pause Contract
 
 **Kind**: global function  
+<a name="erc20"></a>
+
+## erc20() ⇒ <code>Address</code>
+Get Token Address
+
+**Kind**: global function  
+**Returns**: <code>Address</code> - Token Address  
+<a name="decimals"></a>
+
+## decimals() ⇒ <code>Integer</code>
+Get Decimals
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - Integer  
 <a name="unpauseContract"></a>
 
 ## unpauseContract() ⇒ <code>admin</code>
@@ -191,6 +286,12 @@ Get Start Date of Pool
 
 ## endDate() ⇒ <code>Date</code>
 Get End Date of Pool
+
+**Kind**: global function  
+<a name="isFinalized"></a>
+
+## isFinalized() ⇒ <code>Boolean</code>
+To see if contract was finalized
 
 **Kind**: global function  
 <a name="individualMinimumAmount"></a>
@@ -226,6 +327,18 @@ Get Total tokens Allocated/In Sale for the Pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="hasMinimumRaise"></a>
+
+## hasMinimumRaise() ⇒ <code>Boolea</code>
+See if hasMinimumRaise
+
+**Kind**: global function  
+<a name="minimumReached"></a>
+
+## minimumReached() ⇒ <code>Integer</code>
+See if minimumRaise was Reached
+
+**Kind**: global function  
 <a name="tokensAvailable"></a>
 
 ## tokensAvailable() ⇒ <code>Integer</code>
@@ -240,10 +353,42 @@ Get Total tokens available to be sold in the pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="withdrawableUnsoldTokens"></a>
+
+## withdrawableUnsoldTokens() ⇒ <code>Integer</code>
+Get Total tokens available to be withdrawn by the admin
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="withdrawableFunds"></a>
+
+## withdrawableFunds() ⇒ <code>Integer</code>
+Get Total funds raised to be withdrawn by the admin
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - Amount in ETH  
 <a name="isTokenSwapAtomic"></a>
 
 ## isTokenSwapAtomic() ⇒ <code>Boolean</code>
 Verify if the Token Swap is atomic on this pool
+
+**Kind**: global function  
+<a name="hasWhitelisting"></a>
+
+## hasWhitelisting() ⇒ <code>Boolean</code>
+Verify if swap has whitelisting
+
+**Kind**: global function  
+<a name="isWhitelisted"></a>
+
+## isWhitelisted() ⇒ <code>Boolean</code>
+Verify if address is whitelisted
+
+**Kind**: global function  
+<a name="wereUnsoldTokensReedemed"></a>
+
+## wereUnsoldTokensReedemed() ⇒ <code>Boolean</code>
+Verify if the admin already reemeded unsold tokens
 
 **Kind**: global function  
 <a name="isFunded"></a>
@@ -270,24 +415,78 @@ Verify if the Token Sale has started the Swap
 Verify if the Token Sale has finalized, if the current date is after endDate
 
 **Kind**: global function  
+<a name="isETHTrade"></a>
+
+## isETHTrade() ⇒ <code>Boolean</code>
+Verify if Token Sale is against Ethereum
+
+**Kind**: global function  
+<a name="isPOLSWhitelisted"></a>
+
+## isPOLSWhitelisted() ⇒ <code>Boolean</code>
+Verify if Token Sale is POLS Whitelisted
+
+**Kind**: global function  
+<a name="isAddressPOLSWhitelisted"></a>
+
+## isAddressPOLSWhitelisted() ⇒ <code>Boolean</code>
+Verify if Address is Whitelisted by POLS (returns false if not needed)
+
+**Kind**: global function  
+<a name="getTradingDecimals"></a>
+
+## getTradingDecimals() ⇒ <code>Integer</code>
+Get Trading Decimals (18 if isETHTrade, X if not)
+
+**Kind**: global function  
+<a name="getTradingERC20Address"></a>
+
+## getTradingERC20Address() ⇒ <code>Address</code>
+Get Trading Address if ERC20
+
+**Kind**: global function  
 <a name="isPreStart"></a>
 
 ## isPreStart() ⇒ <code>Boolean</code>
 Verify if the Token Sale in not open yet, where the admin can fund the pool
 
 **Kind**: global function  
+<a name="getCurrentSchedule"></a>
+
+## getCurrentSchedule() ⇒ <code>Integer</code>
+Gets Current Schedule
+
+**Kind**: global function  
+<a name="getVestingSchedule"></a>
+
+## getVestingSchedule(Position) ⇒ <code>Array</code> \| <code>Integer</code>
+Gets Vesting Schedule
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| Position | <code>Integer</code> | Get Position of Integer |
+
 <a name="getPurchase"></a>
 
-## getPurchase(purchase_id) ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Address</code> \| <code>Integer</code> \| <code>Date</code> \| <code>Boolean</code> \| <code>Boolean</code>
+## getPurchase(purchase_id) ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Address</code> \| <code>Integer</code> \| <code>Date</code> \| <code>Integer</code> \| <code>Integer</code> \| <code>Boolean</code> \| <code>Boolean</code>
 Get Purchase based on ID
 
 **Kind**: global function  
-**Returns**: <code>Integer</code> - _id<code>Integer</code> - amount<code>Address</code> - purchaser<code>Integer</code> - ethAmount<code>Date</code> - timestamp<code>Boolean</code> - wasFinalized<code>Boolean</code> - reverted  
+**Returns**: <code>Integer</code> - _id<code>Integer</code> - amount<code>Address</code> - purchaser<code>Integer</code> - costAmount<code>Date</code> - timestamp<code>Integer</code> - amountReedemed<code>Integer</code> - lastTrancheSent<code>Boolean</code> - wasFinalized<code>Boolean</code> - reverted  
 
 | Param | Type |
 | --- | --- |
 | purchase_id | <code>Integer</code> | 
 
+<a name="getWhiteListedAddresses"></a>
+
+## getWhiteListedAddresses() ⇒ <code>Array</code> \| <code>Address</code>
+Get Whitelisted Addresses
+
+**Kind**: global function  
+**Returns**: <code>Array</code> \| <code>Address</code> - addresses  
 <a name="getBuyers"></a>
 
 ## getBuyers() ⇒ <code>Array</code> \| <code>Integer</code>
@@ -314,22 +513,29 @@ Get All Purchase Ids filter by Address/Purchaser
 | --- | --- |
 | address | <code>Address</code> | 
 
-<a name="getETHCostFromTokens"></a>
+<a name="getCostFromTokens"></a>
 
-## getETHCostFromTokens(tokenAmount) ⇒ <code>Integer</code>
-Get ETH Cost from Tokens Amount
+## getCostFromTokens(tokenAmount) ⇒ <code>Integer</code>
+Get Cost from Tokens Amount
 
 **Kind**: global function  
-**Returns**: <code>Integer</code> - ethAmount  
+**Returns**: <code>Integer</code> - costAmount  
 
 | Param | Type |
 | --- | --- |
 | tokenAmount | <code>Integer</code> | 
 
+<a name="getDistributionInformation"></a>
+
+## getDistributionInformation() ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Array</code> \| <code>Integer</code>
+Get Distribution Information
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - currentSchedule (Ex : 1)<code>Integer</code> - vestingTime (Ex : 1)<code>Array</code> \| <code>Integer</code> - vestingSchedule (Ex : [100])  
 <a name="swap"></a>
 
 ## swap(tokenAmount)
-Swap tokens by Ethereum
+Swap tokens by Ethereum or ERC20
 
 **Kind**: global function  
 
@@ -361,25 +567,49 @@ Reedem Ethereum from sale that did not achieve minimum goal
 
 <a name="withdrawUnsoldTokens"></a>
 
-## withdrawUnsoldTokens() ⇒ <code>admin</code>
+## withdrawUnsoldTokens()
 Withdraw unsold tokens of sale
 
 **Kind**: global function  
 <a name="withdrawFunds"></a>
 
-## withdrawFunds() ⇒ <code>admin</code>
+## withdrawFunds()
 Withdraw all funds from tokens sold
 
 **Kind**: global function  
 <a name="approveFundERC20"></a>
 
-## approveFundERC20() ⇒ <code>admin</code>
+## approveFundERC20()
 Approve the pool to use approved tokens for sale
+
+**Kind**: global function  
+<a name="editIndividualMaximumAmount"></a>
+
+## editIndividualMaximumAmount() ⇒ <code>admin</code>
+Modifies the max allocation
+
+**Kind**: global function  
+<a name="editEndDate"></a>
+
+## editEndDate() ⇒ <code>admin</code>
+Modifies the end date for the pool
+
+**Kind**: global function  
+<a name="approveSwapERC20"></a>
+
+## approveSwapERC20()
+Approve the investor to use approved tokens for the sale
+
+**Kind**: global function  
+<a name="isApprovedSwapERC20"></a>
+
+## isApprovedSwapERC20()
+Verify if it is approved to invest
 
 **Kind**: global function  
 <a name="isApproved"></a>
 
-## isApproved(tokenAmount, address) ⇒ <code>admin</code> \| <code>Boolean</code>
+## isApproved(tokenAmount, address) ⇒ <code>Boolean</code>
 Verify if the Admin has approved the pool to use receive the tokens for sale
 
 **Kind**: global function  
@@ -391,7 +621,7 @@ Verify if the Admin has approved the pool to use receive the tokens for sale
 
 <a name="fund"></a>
 
-## fund(tokenAmount) ⇒ <code>admin</code>
+## fund(tokenAmount)
 Send tokens to pool for sale, fund the sale
 
 **Kind**: global function  
@@ -400,9 +630,32 @@ Send tokens to pool for sale, fund the sale
 | --- | --- |
 | tokenAmount | <code>Integer</code> | 
 
+<a name="addWhitelistedAddress"></a>
+
+## addWhitelistedAddress(Addresses)
+add WhiteListed Address
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| Addresses | <code>Array</code> \| <code>Addresses</code> | 
+
+<a name="removeWhitelistedAddress"></a>
+
+## removeWhitelistedAddress()
+remove WhiteListed Address
+
+**Kind**: global function  
+<a name="safePull"></a>
+
+## safePull()
+Safe Pull all tokens & ETH
+
+**Kind**: global function  
 <a name="removeOtherERC20Tokens"></a>
 
-## removeOtherERC20Tokens(tokenAddress, toAddress) ⇒ <code>admin</code>
+## removeOtherERC20Tokens(tokenAddress, toAddress)
 Remove Tokens from other ERC20 Address (in case of accident)
 
 **Kind**: global function  
@@ -414,26 +667,13 @@ Remove Tokens from other ERC20 Address (in case of accident)
 
 <a name="deploy"></a>
 
-## deploy(tradeValue, tokensForSale, startDate, endDate, individualMinimumAmount, individualMaximumAmount, isTokenSwapAtomic, minimumRaise, feeAmount) ⇒ <code>admin</code>
+## deploy()
 Deploy the Pool Contract
 
 **Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| tradeValue | <code>Integer</code> | 
-| tokensForSale | <code>Integer</code> | 
-| startDate | <code>Date</code> | 
-| endDate | <code>Date</code> | 
-| individualMinimumAmount | <code>Integer</code> | 
-| individualMaximumAmount | <code>Integer</code> | 
-| isTokenSwapAtomic | <code>Boolean</code> | 
-| minimumRaise | <code>Integer</code> | 
-| feeAmount | <code>Integer</code> | 
-
 <a name="getOwner"></a>
 
-## getOwner(Address) ⇒ <code>admin</code>
+## getOwner(Address)
 Get owner address of contract
 
 **Kind**: global function  
@@ -441,4 +681,15 @@ Get owner address of contract
 | Param | Type |
 | --- | --- |
 | Address | <code>Address</code> | 
+
+<a name="getBalance"></a>
+
+## getBalance(Balance)
+Get Balance of Contract
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| Balance | <code>Integer</code> | 
 
