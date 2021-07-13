@@ -1,10 +1,10 @@
 {
     "name": "polkastarter-js",
-    "version": "1.2.7-beta2",
+    "version": "1.2.7-beta4",
     "description": "",
     "main": "index.js",
     "engines": {
-        "node": "10.13.0"
+        "node": ">=10.13.0 <=14.17.0"
     },
     "directories": {
         "test": "test"
