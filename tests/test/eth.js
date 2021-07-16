@@ -65,9 +65,12 @@ context('ETH Contract', async () => {
                     ERC20TokenAddress = receipt.contractAddress;
                     resolve();
                 }).on('error', console.log);
+
+            
               
         });
     }));
+
    
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
         /* Create Contract */
@@ -87,6 +90,9 @@ context('ETH Contract', async () => {
         expect(res).to.not.equal(false);
     }));
 
+    it('should get the correct smart contract version', mochaAsync(async () => {
+        expect(await swapContract.getSmartContractVersion()).to.equal(2500000);
+    }));
 
     it('should get a Fixed Swap Contract From contractAddress - 2.0', mochaAsync(async () => {
         /* Get Contract */

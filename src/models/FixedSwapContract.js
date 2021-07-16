@@ -740,9 +740,14 @@ class FixedSwapContract {
 	getPurchaseIds = async () => {
 		let res = await this.params.contract
 			.getContract()
-			.methods.getPurchaseIds()
+			.methods.getPurchasesCount()
 			.call();
-		return res.map((id) => Numbers.fromHex(id));
+		let ids = [];
+		for (let i = 0; i < res; i++) {
+			ids.push(i);
+		}
+		return ids;
+		// return res.map((id) => Numbers.fromHex(id));
 	};
 
 	/**
@@ -1218,6 +1223,15 @@ class FixedSwapContract {
 	getOwner = async () => {
 		return await this.params.contract.getContract().methods.owner().call();
 	};
+
+	/**
+	 * @function getSmartContractVersion
+	 * @description Returns the version of the smart contract that is currently inside psjs
+	 * @param {Address} Address
+	 */
+	getSmartContractVersion = async () => {
+		return await this.params.contract.getContract().methods.getAPIVersion().call();
+	}
 
 	/**
 	 * @function getBalance
