@@ -346,4 +346,87 @@ context('ETH Contract', async () => {
         res = await swapContract.swap({tokenAmount : tokenPurchaseAmount, signature: signs[0].signature});
         expect(res).to.not.equal(false);
     }));
+
+    /* Vesting */
+    
+    it('should deploy Fixed Swap Contract with vesting and swap', mochaAsync(async () => {
+        /* Create Contract */
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        /* Deploy */
+        let res = await swapContract.deploy({
+            tradeValue : tradeValue, 
+            tokensForSale : tokenFundAmount, 
+            isTokenSwapAtomic : false,
+            individualMaximumAmount : tokenFundAmount,
+            startDate : new Date((currentTime + (3 * 60)) * 1000), // 3 mins
+            endDate : new Date((currentTime + (8 * 60)) * 1000), // 8 mins
+            hasWhitelisting : false,
+            isETHTrade : true,
+		    vestingSchedule : [50, 50]
+        });
+        contractAddress = swapContract.getAddress();
+        expect(res).to.not.equal(false);
+
+
+        await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
+        await swapContract.fund({tokenAmount : tokenFundAmount});
+        await forwardTime(3*60);
+        res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
+        expect(res).to.not.equal(false);
+
+        await forwardTime(6*60);
+
+        let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
+
+        let failed = false;
+        try {
+            res = await swapContract.redeemTokens({purchase_id : purchases[0]})
+            expect(res).to.not.equal(false);
+        } catch (e) {
+            failed = true;
+        }
+        expect(failed).to.equal(true);
+
+        await forwardTime(5*60);
+
+        res = await swapContract.redeemTokens({purchase_id : purchases[0]})
+        expect(res).to.not.equal(false);
+
+
+        let tokens = await swapContract.tokensLeft();
+        tokens = Number(tokens).noExponents();
+        tokensLeft = Number(tokenFundAmount-(tokenPurchaseAmount/2)).noExponents();
+        expect(Number(tokens).toFixed(2)).to.equal(Number(tokensLeft).toFixed(2));
+
+        failed = false;
+        try {
+            res = await swapContract.redeemTokens({purchase_id : purchases[0]})
+            expect(res).to.not.equal(false);
+        } catch (e) {
+            failed = true;
+        }
+        expect(failed).to.equal(true);
+
+        await forwardTime(6*60);
+
+        res = await swapContract.redeemTokens({purchase_id : purchases[0]})
+        expect(res).to.not.equal(false);
+
+
+        tokens = await swapContract.tokensLeft();
+        tokens = Number(tokens).noExponents();
+        tokensLeft = Number(tokenFundAmount-tokenPurchaseAmount).noExponents();
+        expect(Number(tokens).toFixed(2)).to.equal(Number(tokensLeft).toFixed(2));
+
+        await forwardTime(6*60);
+
+        failed = false;
+        try {
+            res = await swapContract.redeemTokens({purchase_id : purchases[0]})
+            expect(res).to.not.equal(false);
+        } catch (e) {
+            failed = true;
+        }
+        expect(failed).to.equal(true);
+    }));
 });

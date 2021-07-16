@@ -1,4 +1,4 @@
-import { fixedswap, fixedswap_test } from "../interfaces";
+import { fixedswap } from "../interfaces";
 import Contract from "./Contract";
 import ERC20TokenContract from "./ERC20TokenContract";
 import Numbers from "../utils/Numbers";
@@ -39,7 +39,7 @@ class FixedSwapContract {
 			this.params = {
 				web3: web3,
 				contractAddress: contractAddress,
-				contract: new Contract(web3, global.IS_TEST ? fixedswap_test : fixedswap, contractAddress),
+				contract: new Contract(web3, fixedswap, contractAddress),
 			};
 
 			
@@ -613,10 +613,7 @@ class FixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async getTradingDecimals(){
-		return parseInt(await this.params.contract
-		.getContract()
-		.methods.tradingDecimals()
-		.call());
+		return 18;
 	}
 
 	/**
@@ -1071,7 +1068,7 @@ class FixedSwapContract {
 	};
 
 	__assert() {
-		this.params.contract.use(global.IS_TEST ? fixedswap_test : fixedswap, this.getAddress());
+		this.params.contract.use(fixedswap, this.getAddress());
 	}
 
 	getDecimals = () => this.decimals || 18;
@@ -1097,9 +1094,8 @@ class FixedSwapContract {
 		isPOLSWhitelist = false,
 		isETHTrade = true,
 		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
-		vestingTime = 1,
-		vestingSchedule=[100]
-		//firstUnlock = 100
+		vestingTime = 1, // Unused, we keep it to mantain the interface
+		vestingSchedule=[]
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -1149,32 +1145,25 @@ class FixedSwapContract {
 		if(individualMaximumAmount == 0){
 			individualMaximumAmount = tokensForSale; /* Set Max Amount to Unlimited if 0 */
 		}
-
-		if(vestingTime < 1){
-			throw new Error("'vestingTime' has to be at least 1")
-		}
-
-		//if((firstUnlock > 100) || (firstUnlock < 0)){
-		//	throw new Error("'firstUnlock' has to be between 0 and 100 (inclusive)")
-		//}
-
-		//let vestingSchedule = [firstUnlock];
 		
-		//for(var i = 1; i <= vestingTime; i++){
-		//	vestingSchedule.push(parseInt((100-firstUnlock)/(vestingTime-1)))
-		//}
-
-		
-		if(vestingTime != vestingSchedule.length){
-			throw new Error("'vestingTime' has to be equal to 'vestingSchedule' length")
-		}
-		
-		if(vestingSchedule.reduce((a, b) => a + b, 0) != 100){
+		if(vestingSchedule.length > 0 && vestingSchedule.reduce((a, b) => a + b, 0) != 100){
 			throw new Error("'vestingSchedule' sum has to be equal to 100")
 		}
 		
 		vestingSchedule = vestingSchedule.map( a => String(new Decimal(a).mul(100)).toString());
 
+		const FLAG_isTokenSwapAtomic = 1; // Bit 0
+		const FLAG_hasWhitelisting = 2; // Bit 1
+		const FLAG_isPOLSWhitelisted = 4; // Bit 2 - true => user must have a certain amount of POLS staked to participate
+
+		const vestingStart = Numbers.timeToSmartContractTime(endDate);
+		const DAYS = 24 * 60 * 60; // 1 Day in Seconds
+		const fiveMins = 5 * 60;
+		let vestingCliff = global.IS_TEST ? fiveMins : 30 * DAYS;
+		if (vestingSchedule.length == 0) {
+			vestingCliff = 0;
+		}
+		const vestingDuration = global.IS_TEST ? fiveMins * vestingSchedule.length : (30 * DAYS) * vestingSchedule.length;
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
@@ -1189,15 +1178,16 @@ class FixedSwapContract {
 				individualMaximumAmount,
 				this.getDecimals()
 			),
-			isTokenSwapAtomic,
+			true, // ignored
 			Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()),
 			parseInt(feeAmount),
-			hasWhitelisting,
+			(isTokenSwapAtomic ? FLAG_isTokenSwapAtomic : 0) | (hasWhitelisting ? FLAG_hasWhitelisting : 0) | (isPOLSWhitelist ? FLAG_isPOLSWhitelisted : 0), // Flags
 			ERC20TradingAddress,
-			isETHTrade,
-			isPOLSWhitelist,
-			vestingTime,
-			vestingSchedule
+			vestingStart,
+			vestingCliff,
+			vestingDuration,
+			vestingSchedule,
+			
 		];
 		console.log("params", params);
 		let res = await this.__deploy(params, callback);
