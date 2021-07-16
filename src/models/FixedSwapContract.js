@@ -1081,8 +1081,19 @@ class FixedSwapContract {
 	/**
 	* @function deploy
 	* @description Deploy the Pool Contract
+	* @param {Float} tradeValue Buy price
+	* @param {Float} tokensForSale Tokens for sale
+	* @param {String} endDate End date
+	* @param {String} startDate Start date
+	* @param {Float=} individualMinimumAmount Min cap per wallet. 0 to disable it. (Default: 0)
+	* @param {Float=} individualMaximumAmount Max cap per wallet. 0 to disable it. (Default: 0)
+	* @param {Boolean=} isTokenSwapAtomic Receive tokens right after the swap. (Default: true)
+	* @param {Float=} minimumRaise Soft cap (Default: 0)
+	* @param {Float=} feeAmount Fee amount (Default: 1)
+	* @param {Boolean=} hasWhitelisting Has White Listing. (Default: false)
+	* @param {Boolean=} isPOLSWhitelist Has White Listing. (Default: false)
+	* @param {Array<Integer>=} vestingSchedule Vesting schedule in %
 	*/
-	
 	deploy = async ({
 		tradeValue,
 		tokensForSale,

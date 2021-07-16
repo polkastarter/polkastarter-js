@@ -197,11 +197,14 @@
 <dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a></dt>
 <dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
 </dd>
-<dt><a href="#deploy">deploy()</a></dt>
+<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule])</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
 <dt><a href="#getOwner">getOwner(Address)</a></dt>
 <dd><p>Get owner address of contract</p>
+</dd>
+<dt><a href="#getSmartContractVersion">getSmartContractVersion(Address)</a></dt>
+<dd><p>Returns the version of the smart contract that is currently inside psjs</p>
 </dd>
 <dt><a href="#getBalance">getBalance(Balance)</a></dt>
 <dd><p>Get Balance of Contract</p>
@@ -692,14 +695,41 @@ Remove Tokens from other ERC20 Address (in case of accident)
 
 <a name="deploy"></a>
 
-## deploy()
+## deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule])
 Deploy the Pool Contract
 
 **Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| tradeValue | <code>Float</code> | Buy price |
+| tokensForSale | <code>Float</code> | Tokens for sale |
+| endDate | <code>String</code> | End date |
+| startDate | <code>String</code> | Start date |
+| [individualMinimumAmount] | <code>Float</code> | Min cap per wallet. 0 to disable it. (Default: 0) |
+| [individualMaximumAmount] | <code>Float</code> | Max cap per wallet. 0 to disable it. (Default: 0) |
+| [isTokenSwapAtomic] | <code>Boolean</code> | Receive tokens right after the swap. (Default: true) |
+| [minimumRaise] | <code>Float</code> | Soft cap (Default: 0) |
+| [feeAmount] | <code>Float</code> | Fee amount (Default: 1) |
+| [hasWhitelisting] | <code>Boolean</code> | Has White Listing. (Default: false) |
+| [isPOLSWhitelist] | <code>Boolean</code> | Has White Listing. (Default: false) |
+| [vestingSchedule] | <code>Array.&lt;Integer&gt;</code> | Vesting schedule in % |
+
 <a name="getOwner"></a>
 
 ## getOwner(Address)
 Get owner address of contract
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| Address | <code>Address</code> | 
+
+<a name="getSmartContractVersion"></a>
+
+## getSmartContractVersion(Address)
+Returns the version of the smart contract that is currently inside psjs
 
 **Kind**: global function  
 
