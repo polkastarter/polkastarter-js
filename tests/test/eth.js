@@ -379,10 +379,14 @@ context('ETH Contract', async () => {
         await forwardTime(3*60);
         res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
         expect(res).to.not.equal(false);
+        let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
+
+        let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
+        expect(purchase.amountReedemed).to.equal('0');
+        expect(purchase.amountLeftToRedeem).to.equal(0.01);
 
         await forwardTime(6*60);
 
-        let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
 
         let failed = false;
         try {
@@ -403,6 +407,11 @@ context('ETH Contract', async () => {
         tokens = Number(tokens).noExponents();
         tokensLeft = Number(tokenFundAmount-(tokenPurchaseAmount/2)).noExponents();
         expect(Number(tokens).toFixed(2)).to.equal(Number(tokensLeft).toFixed(2));
+
+
+        purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
+        expect(purchase.amountReedemed).to.equal('0.005');
+        expect(purchase.amountLeftToRedeem).to.equal(0.005);
 
         failed = false;
         try {

@@ -685,32 +685,28 @@ class FixedSwapContract {
 			.getContract()
 			.methods.getPurchase(purchase_id)
 			.call();
-			
-		let currentSchedule = await this.getCurrentSchedule();
-		let lastTrancheSent = parseInt(res[5]);
-		let amount = Numbers.fromDecimals(res[0], this.getDecimals());
-		let costAmount = Numbers.fromDecimals(res[2], await this.getTradingDecimals());
-		let amountReedemed = Numbers.fromDecimals(res[4], this.getDecimals());
+		let amount = Numbers.fromDecimals(res.amount, this.getDecimals());
+		let costAmount = Numbers.fromDecimals(res.costAmount, await this.getTradingDecimals());
+		let amountReedemed = Numbers.fromDecimals(res.amountRedeemed, this.getDecimals());
 		let amountLeftToRedeem = amount-amountReedemed;
-		let amountToReedemNow = 0;
-		for(var i = lastTrancheSent+1; i <= currentSchedule; i++){
-			amountToReedemNow = amountToReedemNow + amount*(await this.getVestingSchedule({position: i}))/10000
-		}
 
 		let isFinalized = await this.hasFinalized();
 
+		// ToDo add a test for amountToReedemNow
 		return {
 			_id: purchase_id,
 			amount: amount,
-			purchaser: res[1],
+			purchaser: res.purchaser,
 			costAmount: costAmount,
-			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
+			timestamp: Numbers.fromSmartContractTimeToMinutes(res.timestamp),
 			amountReedemed : amountReedemed,
 			amountLeftToRedeem : amountLeftToRedeem,
-			amountToReedemNow : isFinalized ? amountToReedemNow : 0,
-			lastTrancheSent :  lastTrancheSent,
-			wasFinalized: res[6],
-			reverted: res[7],
+			amountToReedemNow : isFinalized ? (await this.params.contract
+				.getContract()
+				.methods.getRedeemableTokensAmount(purchase_id).call()).amount : 0,
+			lastTrancheSent :  0, // Unused
+			wasFinalized: res.wasFinalized,
+			reverted: res.reverted,
 		};
 	};
 
@@ -1166,7 +1162,8 @@ class FixedSwapContract {
 			throw new Error("'vestingSchedule' sum has to be equal to 100")
 		}
 		
-		vestingSchedule = vestingSchedule.map( a => String(new Decimal(a).mul(100)).toString());
+		const DECIMALS_PERCENT_MUL = 10**12;
+		vestingSchedule = vestingSchedule.map( a => String(new Decimal(a).mul(DECIMALS_PERCENT_MUL)).toString());
 
 		const FLAG_isTokenSwapAtomic = 1; // Bit 0
 		const FLAG_hasWhitelisting = 2; // Bit 1
