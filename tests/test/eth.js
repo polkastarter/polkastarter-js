@@ -315,6 +315,16 @@ context('ETH Contract', async () => {
         expect(res).to.not.equal(false);
     }));
 
+    it('Add to blacklist - Admin', mochaAsync(async () => {  
+        let res = await swapContract.addToBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
+        expect(res).to.not.equal(false);
+    }));
+
+    it('Remove from blacklist - Admin', mochaAsync(async () => {  
+        let res = await swapContract.removeFromBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
+        expect(res).to.not.equal(false);
+    }));
+
     /* Whitelist */
     
     it('should deploy Fixed Swap Contract with whitelist and swap', mochaAsync(async () => {
