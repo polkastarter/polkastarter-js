@@ -11,6 +11,15 @@
 <dt><a href="#setNewOwner">setNewOwner(address)</a></dt>
 <dd><p>Set New Owner of the Contract</p>
 </dd>
+<dt><a href="#addToBlacklist">addToBlacklist(address)</a></dt>
+<dd><p>Adds an address to the blacklist</p>
+</dd>
+<dt><a href="#removeFromBlacklist">removeFromBlacklist(address)</a></dt>
+<dd><p>Removes an address from the blacklist</p>
+</dd>
+<dt><a href="#isBlackListed">isBlackListed(address)</a> ⇒ <code>boolean</code></dt>
+<dd><p>Returns true if the address is in the blacklist</p>
+</dd>
 <dt><a href="#owner">owner()</a> ⇒ <code>string</code></dt>
 <dd><p>Get Owner of the Contract</p>
 </dd>
@@ -234,6 +243,40 @@ Fixed Swap Object
 Set New Owner of the Contract
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="addToBlacklist"></a>
+
+## addToBlacklist(address)
+Adds an address to the blacklist
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="removeFromBlacklist"></a>
+
+## removeFromBlacklist(address)
+Removes an address from the blacklist
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="isBlackListed"></a>
+
+## isBlackListed(address) ⇒ <code>boolean</code>
+Returns true if the address is in the blacklist
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - isBlackListed  
 
 | Param | Type |
 | --- | --- |

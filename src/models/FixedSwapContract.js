@@ -166,6 +166,50 @@ class FixedSwapContract {
 	};
 
 	/**
+	 * @function addToBlacklist
+	 * @description Adds an address to the blacklist
+	 * @param {string} address
+	 */
+	 addToBlacklist = async ({ address }) => {
+		try {
+			return await this.__sendTx(
+				this.params.contract
+					.getContract()
+					.methods.addToBlacklist(address)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	/**
+	 * @function removeFromBlacklist
+	 * @description Removes an address from the blacklist
+	 * @param {string} address
+	 */
+	 removeFromBlacklist = async ({ address }) => {
+		try {
+			return await this.__sendTx(
+				this.params.contract
+					.getContract()
+					.methods.removeFromBlacklist(address)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	/**
+	 * @function isBlackListed
+	 * @description Returns true if the address is in the blacklist
+	 * @param {string} address
+	 * @returns {boolean} isBlackListed
+	 */
+	isBlacklisted = async ({address}) => {
+		return await this.params.contract.getContract().methods.isBlacklisted(address).call();
+	}
+
+	/**
 	 * @function owner
 	 * @description Get Owner of the Contract
 	 * @returns {string} address
