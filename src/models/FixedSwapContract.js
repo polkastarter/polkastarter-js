@@ -200,6 +200,16 @@ class FixedSwapContract {
 	};
 
 	/**
+	 * @function isBlackListed
+	 * @description Returns true if the address is in the blacklist
+	 * @param {string} address
+	 * @returns {boolean} isBlackListed
+	 */
+	isBlacklisted = async ({address}) => {
+		return await this.params.contract.getContract().methods.isBlacklisted(address).call();
+	}
+
+	/**
 	 * @function owner
 	 * @description Get Owner of the Contract
 	 * @returns {string} address

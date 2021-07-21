@@ -318,11 +318,13 @@ context('ETH Contract', async () => {
     it('Add to blacklist - Admin', mochaAsync(async () => {  
         let res = await swapContract.addToBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
         expect(res).to.not.equal(false);
+        expect(await swapContract.isBlacklisted({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'})).to.equal(true);
     }));
 
     it('Remove from blacklist - Admin', mochaAsync(async () => {  
         let res = await swapContract.removeFromBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
         expect(res).to.not.equal(false);
+        expect(await swapContract.isBlacklisted({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'})).to.equal(false);
     }));
 
     /* Whitelist */
