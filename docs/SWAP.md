@@ -11,6 +11,15 @@
 <dt><a href="#setNewOwner">setNewOwner(address)</a></dt>
 <dd><p>Set New Owner of the Contract</p>
 </dd>
+<dt><a href="#addToBlacklist">addToBlacklist(address)</a></dt>
+<dd><p>Adds an address to the blacklist</p>
+</dd>
+<dt><a href="#removeFromBlacklist">removeFromBlacklist(address)</a></dt>
+<dd><p>Removes an address from the blacklist</p>
+</dd>
+<dt><a href="#isBlackListed">isBlackListed(address)</a> ⇒ <code>boolean</code></dt>
+<dd><p>Returns true if the address is in the blacklist</p>
+</dd>
 <dt><a href="#owner">owner()</a> ⇒ <code>string</code></dt>
 <dd><p>Get Owner of the Contract</p>
 </dd>
@@ -67,6 +76,12 @@
 </dd>
 <dt><a href="#tokensLeft">tokensLeft()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens available to be sold in the pool</p>
+</dd>
+<dt><a href="#setSignerPublicAddress">setSignerPublicAddress(address)</a></dt>
+<dd><p>Set the public address of the signer</p>
+</dd>
+<dt><a href="#signerPublicAddress">signerPublicAddress()</a> ⇒ <code>string</code></dt>
+<dd><p>Get the public address of the signer</p>
 </dd>
 <dt><a href="#withdrawableUnsoldTokens">withdrawableUnsoldTokens()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens available to be withdrawn by the admin</p>
@@ -143,7 +158,7 @@
 <dt><a href="#getDistributionInformation">getDistributionInformation()</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Array</code> | <code>Integer</code></dt>
 <dd><p>Get Distribution Information</p>
 </dd>
-<dt><a href="#swap">swap(tokenAmount)</a></dt>
+<dt><a href="#swap">swap(tokenAmount, [signature])</a></dt>
 <dd><p>Swap tokens by Ethereum or ERC20</p>
 </dd>
 <dt><a href="#redeemTokens(isStandard)">redeemTokens(purchase_id)</a></dt>
@@ -191,11 +206,14 @@
 <dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a></dt>
 <dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
 </dd>
-<dt><a href="#deploy">deploy()</a></dt>
+<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule])</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
 <dt><a href="#getOwner">getOwner(Address)</a></dt>
 <dd><p>Get owner address of contract</p>
+</dd>
+<dt><a href="#getSmartContractVersion">getSmartContractVersion(Address)</a></dt>
+<dd><p>Returns the version of the smart contract that is currently inside psjs</p>
 </dd>
 <dt><a href="#getBalance">getBalance(Balance)</a></dt>
 <dd><p>Get Balance of Contract</p>
@@ -225,6 +243,40 @@ Fixed Swap Object
 Set New Owner of the Contract
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="addToBlacklist"></a>
+
+## addToBlacklist(address)
+Adds an address to the blacklist
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="removeFromBlacklist"></a>
+
+## removeFromBlacklist(address)
+Removes an address from the blacklist
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="isBlackListed"></a>
+
+## isBlackListed(address) ⇒ <code>boolean</code>
+Returns true if the address is in the blacklist
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - isBlackListed  
 
 | Param | Type |
 | --- | --- |
@@ -353,6 +405,24 @@ Get Total tokens available to be sold in the pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="setSignerPublicAddress"></a>
+
+## setSignerPublicAddress(address)
+Set the public address of the signer
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="signerPublicAddress"></a>
+
+## signerPublicAddress() ⇒ <code>string</code>
+Get the public address of the signer
+
+**Kind**: global function  
+**Returns**: <code>string</code> - address  
 <a name="withdrawableUnsoldTokens"></a>
 
 ## withdrawableUnsoldTokens() ⇒ <code>Integer</code>
@@ -534,14 +604,15 @@ Get Distribution Information
 **Returns**: <code>Integer</code> - currentSchedule (Ex : 1)<code>Integer</code> - vestingTime (Ex : 1)<code>Array</code> \| <code>Integer</code> - vestingSchedule (Ex : [100])  
 <a name="swap"></a>
 
-## swap(tokenAmount)
+## swap(tokenAmount, [signature])
 Swap tokens by Ethereum or ERC20
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| tokenAmount | <code>Integer</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| tokenAmount | <code>Integer</code> |  |
+| [signature] | <code>string</code> | Signature for the offchain whitelist |
 
 <a name="redeemTokens(isStandard)"></a>
 
@@ -667,14 +738,41 @@ Remove Tokens from other ERC20 Address (in case of accident)
 
 <a name="deploy"></a>
 
-## deploy()
+## deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule])
 Deploy the Pool Contract
 
 **Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| tradeValue | <code>Float</code> | Buy price |
+| tokensForSale | <code>Float</code> | Tokens for sale |
+| endDate | <code>String</code> | End date |
+| startDate | <code>String</code> | Start date |
+| [individualMinimumAmount] | <code>Float</code> | Min cap per wallet. 0 to disable it. (Default: 0) |
+| [individualMaximumAmount] | <code>Float</code> | Max cap per wallet. 0 to disable it. (Default: 0) |
+| [isTokenSwapAtomic] | <code>Boolean</code> | Receive tokens right after the swap. (Default: true) |
+| [minimumRaise] | <code>Float</code> | Soft cap (Default: 0) |
+| [feeAmount] | <code>Float</code> | Fee amount (Default: 1) |
+| [hasWhitelisting] | <code>Boolean</code> | Has White Listing. (Default: false) |
+| [isPOLSWhitelist] | <code>Boolean</code> | Has White Listing. (Default: false) |
+| [vestingSchedule] | <code>Array.&lt;Integer&gt;</code> | Vesting schedule in % |
+
 <a name="getOwner"></a>
 
 ## getOwner(Address)
 Get owner address of contract
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| Address | <code>Address</code> | 
+
+<a name="getSmartContractVersion"></a>
+
+## getSmartContractVersion(Address)
+Returns the version of the smart contract that is currently inside psjs
 
 **Kind**: global function  
 

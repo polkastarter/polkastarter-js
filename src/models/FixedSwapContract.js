@@ -1,4 +1,4 @@
-import { fixedswap, fixedswap_test } from "../interfaces";
+import { fixedswap } from "../interfaces";
 import Contract from "./Contract";
 import ERC20TokenContract from "./ERC20TokenContract";
 import Numbers from "../utils/Numbers";
@@ -6,6 +6,7 @@ import _ from "lodash";
 import moment from 'moment';
 const RESIDUAL_ETH = 0.00001;
 import { Decimal } from 'decimal.js';
+import * as ethers from 'ethers';
 
 /**
  * Fixed Swap Object
@@ -38,7 +39,7 @@ class FixedSwapContract {
 			this.params = {
 				web3: web3,
 				contractAddress: contractAddress,
-				contract: new Contract(web3, global.IS_TEST ? fixedswap_test : fixedswap, contractAddress),
+				contract: new Contract(web3, fixedswap, contractAddress),
 			};
 
 			
@@ -163,6 +164,50 @@ class FixedSwapContract {
 			throw err;
 		}
 	};
+
+	/**
+	 * @function addToBlacklist
+	 * @description Adds an address to the blacklist
+	 * @param {string} address
+	 */
+	 addToBlacklist = async ({ address }) => {
+		try {
+			return await this.__sendTx(
+				this.params.contract
+					.getContract()
+					.methods.addToBlacklist(address)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	/**
+	 * @function removeFromBlacklist
+	 * @description Removes an address from the blacklist
+	 * @param {string} address
+	 */
+	 removeFromBlacklist = async ({ address }) => {
+		try {
+			return await this.__sendTx(
+				this.params.contract
+					.getContract()
+					.methods.removeFromBlacklist(address)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	/**
+	 * @function isBlackListed
+	 * @description Returns true if the address is in the blacklist
+	 * @param {string} address
+	 * @returns {boolean} isBlackListed
+	 */
+	isBlacklisted = async ({address}) => {
+		return await this.params.contract.getContract().methods.isBlacklisted(address).call();
+	}
 
 	/**
 	 * @function owner
@@ -413,6 +458,33 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function setSignerPublicAddress
+	 * @description Set the public address of the signer
+	 * @param {string} address
+	 */
+	 setSignerPublicAddress = async ({ address }) => {
+		try {
+			return await this.__sendTx(
+				this.params.contract
+					.getContract()
+					.methods.setSignerPublicAddress(address)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	/**
+	 * @function signerPublicAddress
+	 * @description Get the public address of the signer
+	 * @returns {string} address
+	 */
+
+	async signerPublicAddress() {
+		return await this.params.contract.getContract().methods.signerPublicAddress().call();
+	}
+
+	/**
 	 * @function withdrawableUnsoldTokens
 	 * @description Get Total tokens available to be withdrawn by the admin
 	 * @returns {Integer} Amount in Tokens
@@ -585,10 +657,7 @@ class FixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async getTradingDecimals(){
-		return parseInt(await this.params.contract
-		.getContract()
-		.methods.tradingDecimals()
-		.call());
+		return 18;
 	}
 
 	/**
@@ -660,32 +729,28 @@ class FixedSwapContract {
 			.getContract()
 			.methods.getPurchase(purchase_id)
 			.call();
-			
-		let currentSchedule = await this.getCurrentSchedule();
-		let lastTrancheSent = parseInt(res[5]);
-		let amount = Numbers.fromDecimals(res[0], this.getDecimals());
-		let costAmount = Numbers.fromDecimals(res[2], await this.getTradingDecimals());
-		let amountReedemed = Numbers.fromDecimals(res[4], this.getDecimals());
+		let amount = Numbers.fromDecimals(res.amount, this.getDecimals());
+		let costAmount = Numbers.fromDecimals(res.costAmount, await this.getTradingDecimals());
+		let amountReedemed = Numbers.fromDecimals(res.amountRedeemed, this.getDecimals());
 		let amountLeftToRedeem = amount-amountReedemed;
-		let amountToReedemNow = 0;
-		for(var i = lastTrancheSent+1; i <= currentSchedule; i++){
-			amountToReedemNow = amountToReedemNow + amount*(await this.getVestingSchedule({position: i}))/10000
-		}
 
 		let isFinalized = await this.hasFinalized();
 
+		// ToDo add a test for amountToReedemNow
 		return {
 			_id: purchase_id,
 			amount: amount,
-			purchaser: res[1],
+			purchaser: res.purchaser,
 			costAmount: costAmount,
-			timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
+			timestamp: Numbers.fromSmartContractTimeToMinutes(res.timestamp),
 			amountReedemed : amountReedemed,
 			amountLeftToRedeem : amountLeftToRedeem,
-			amountToReedemNow : isFinalized ? amountToReedemNow : 0,
-			lastTrancheSent :  lastTrancheSent,
-			wasFinalized: res[6],
-			reverted: res[7],
+			amountToReedemNow : isFinalized ? (await this.params.contract
+				.getContract()
+				.methods.getRedeemableTokensAmount(purchase_id).call()).amount : 0,
+			lastTrancheSent :  0, // Unused
+			wasFinalized: res.wasFinalized,
+			reverted: res.reverted,
 		};
 	};
 
@@ -715,9 +780,14 @@ class FixedSwapContract {
 	getPurchaseIds = async () => {
 		let res = await this.params.contract
 			.getContract()
-			.methods.getPurchaseIds()
+			.methods.getPurchasesCount()
 			.call();
-		return res.map((id) => Numbers.fromHex(id));
+		let ids = [];
+		for (let i = 0; i < res; i++) {
+			ids.push(i);
+		}
+		return ids;
+		// return res.map((id) => Numbers.fromHex(id));
 	};
 
 	/**
@@ -795,9 +865,10 @@ class FixedSwapContract {
 	 * @function swap
 	 * @description Swap tokens by Ethereum or ERC20
 	 * @param {Integer} tokenAmount
+	 * @param {string=} signature Signature for the offchain whitelist
 	 */
 
-	swap = async ({ tokenAmount, callback }) => {
+	swap = async ({ tokenAmount, callback, signature }) => {
 		console.log("swap (tokens Amount)", tokenAmount);
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
@@ -813,9 +884,12 @@ class FixedSwapContract {
 
 		console.log("swap (amount in decimals) ", amountWithDecimals);
 		console.log("cost (amount in decimals) ", costToDecimals);
+		if (!signature) {
+			signature = '0x00';
+		}
 
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.swap(amountWithDecimals),
+			this.params.contract.getContract().methods.swap(amountWithDecimals, signature),
 			false,
 			await this.isETHTrade() ? costToDecimals : 0,
 			callback
@@ -889,7 +963,7 @@ class FixedSwapContract {
 	 */
 	editIndividualMaximumAmount = async ( { individualMaximumAmount } ) => {
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.editIndividualMaximumAmount(
+			this.params.contract.getContract().methods.setIndividualMaximumAmount(
 				Numbers.toSmartContractDecimals(
 					individualMaximumAmount,
 					this.getDecimals()
@@ -1039,7 +1113,7 @@ class FixedSwapContract {
 	};
 
 	__assert() {
-		this.params.contract.use(global.IS_TEST ? fixedswap_test : fixedswap, this.getAddress());
+		this.params.contract.use(fixedswap, this.getAddress());
 	}
 
 	getDecimals = () => this.decimals || 18;
@@ -1047,8 +1121,19 @@ class FixedSwapContract {
 	/**
 	* @function deploy
 	* @description Deploy the Pool Contract
+	* @param {Float} tradeValue Buy price
+	* @param {Float} tokensForSale Tokens for sale
+	* @param {String} endDate End date
+	* @param {String} startDate Start date
+	* @param {Float=} individualMinimumAmount Min cap per wallet. 0 to disable it. (Default: 0)
+	* @param {Float=} individualMaximumAmount Max cap per wallet. 0 to disable it. (Default: 0)
+	* @param {Boolean=} isTokenSwapAtomic Receive tokens right after the swap. (Default: true)
+	* @param {Float=} minimumRaise Soft cap (Default: 0)
+	* @param {Float=} feeAmount Fee amount (Default: 1)
+	* @param {Boolean=} hasWhitelisting Has White Listing. (Default: false)
+	* @param {Boolean=} isPOLSWhitelist Has White Listing. (Default: false)
+	* @param {Array<Integer>=} vestingSchedule Vesting schedule in %
 	*/
-	
 	deploy = async ({
 		tradeValue,
 		tokensForSale,
@@ -1065,9 +1150,8 @@ class FixedSwapContract {
 		isPOLSWhitelist = false,
 		isETHTrade = true,
 		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
-		vestingTime = 1,
-		vestingSchedule=[100]
-		//firstUnlock = 100
+		vestingTime = 1, // Unused, we keep it to mantain the interface
+		vestingSchedule=[]
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -1117,32 +1201,26 @@ class FixedSwapContract {
 		if(individualMaximumAmount == 0){
 			individualMaximumAmount = tokensForSale; /* Set Max Amount to Unlimited if 0 */
 		}
-
-		if(vestingTime < 1){
-			throw new Error("'vestingTime' has to be at least 1")
-		}
-
-		//if((firstUnlock > 100) || (firstUnlock < 0)){
-		//	throw new Error("'firstUnlock' has to be between 0 and 100 (inclusive)")
-		//}
-
-		//let vestingSchedule = [firstUnlock];
 		
-		//for(var i = 1; i <= vestingTime; i++){
-		//	vestingSchedule.push(parseInt((100-firstUnlock)/(vestingTime-1)))
-		//}
-
-		
-		if(vestingTime != vestingSchedule.length){
-			throw new Error("'vestingTime' has to be equal to 'vestingSchedule' length")
-		}
-		
-		if(vestingSchedule.reduce((a, b) => a + b, 0) != 100){
+		if(vestingSchedule.length > 0 && vestingSchedule.reduce((a, b) => a + b, 0) != 100){
 			throw new Error("'vestingSchedule' sum has to be equal to 100")
 		}
 		
-		vestingSchedule = vestingSchedule.map( a => String(new Decimal(a).mul(100)).toString());
+		const DECIMALS_PERCENT_MUL = 10**12;
+		vestingSchedule = vestingSchedule.map( a => String(new Decimal(a).mul(DECIMALS_PERCENT_MUL)).toString());
 
+		const FLAG_isTokenSwapAtomic = 1; // Bit 0
+		const FLAG_hasWhitelisting = 2; // Bit 1
+		const FLAG_isPOLSWhitelisted = 4; // Bit 2 - true => user must have a certain amount of POLS staked to participate
+
+		const vestingStart = Numbers.timeToSmartContractTime(endDate);
+		const DAYS = 24 * 60 * 60; // 1 Day in Seconds
+		const fiveMins = 5 * 60;
+		let vestingCliff = global.IS_TEST ? fiveMins : 30 * DAYS;
+		if (vestingSchedule.length == 0) {
+			vestingCliff = 0;
+		}
+		const vestingDuration = global.IS_TEST ? fiveMins * vestingSchedule.length : (30 * DAYS) * vestingSchedule.length;
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
@@ -1157,15 +1235,16 @@ class FixedSwapContract {
 				individualMaximumAmount,
 				this.getDecimals()
 			),
-			isTokenSwapAtomic,
+			true, // ignored
 			Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()),
 			parseInt(feeAmount),
-			hasWhitelisting,
+			(isTokenSwapAtomic ? FLAG_isTokenSwapAtomic : 0) | (hasWhitelisting ? FLAG_hasWhitelisting : 0) | (isPOLSWhitelist ? FLAG_isPOLSWhitelisted : 0), // Flags
 			ERC20TradingAddress,
-			isETHTrade,
-			isPOLSWhitelist,
-			vestingTime,
-			vestingSchedule
+			vestingStart,
+			vestingCliff,
+			vestingDuration,
+			vestingSchedule,
+			
 		];
 		console.log("params", params);
 		let res = await this.__deploy(params, callback);
@@ -1196,6 +1275,15 @@ class FixedSwapContract {
 	getOwner = async () => {
 		return await this.params.contract.getContract().methods.owner().call();
 	};
+
+	/**
+	 * @function getSmartContractVersion
+	 * @description Returns the version of the smart contract that is currently inside psjs
+	 * @param {Address} Address
+	 */
+	getSmartContractVersion = async () => {
+		return await this.params.contract.getContract().methods.getAPIVersion().call();
+	}
 
 	/**
 	 * @function getBalance
