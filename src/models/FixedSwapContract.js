@@ -719,7 +719,6 @@ class FixedSwapContract {
 	 * @returns {Integer} costAmount
 	 * @returns {Date} timestamp
 	 * @returns {Integer} amountReedemed
-	 * @returns {Integer} lastTrancheSent
 	 * @returns {Boolean} wasFinalized
 	 * @returns {Boolean} reverted
 	 */
@@ -748,7 +747,6 @@ class FixedSwapContract {
 			amountToReedemNow : isFinalized ? (await this.params.contract
 				.getContract()
 				.methods.getRedeemableTokensAmount(purchase_id).call()).amount : 0,
-			lastTrancheSent :  0, // Unused
 			wasFinalized: res.wasFinalized,
 			reverted: res.reverted,
 		};
@@ -1133,6 +1131,9 @@ class FixedSwapContract {
 	* @param {Boolean=} hasWhitelisting Has White Listing. (Default: false)
 	* @param {Boolean=} isPOLSWhitelist Has White Listing. (Default: false)
 	* @param {Array<Integer>=} vestingSchedule Vesting schedule in %
+	* @param {String=} vestingStart Vesting start date (Default: endDate)
+	* @param {Number=} vestingCliff Seconds between every vesting schedule (Default: 0)
+	* @param {Number=} vestingDuration Vesting duration (Default: 0)
 	*/
 	deploy = async ({
 		tradeValue,
@@ -1150,8 +1151,10 @@ class FixedSwapContract {
 		isPOLSWhitelist = false,
 		isETHTrade = true,
 		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
-		vestingTime = 1, // Unused, we keep it to mantain the interface
-		vestingSchedule=[]
+		vestingSchedule=[],
+		vestingStart,
+		vestingCliff = 0,
+		vestingDuration = 0
 	}) => {
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
@@ -1213,14 +1216,12 @@ class FixedSwapContract {
 		const FLAG_hasWhitelisting = 2; // Bit 1
 		const FLAG_isPOLSWhitelisted = 4; // Bit 2 - true => user must have a certain amount of POLS staked to participate
 
-		const vestingStart = Numbers.timeToSmartContractTime(endDate);
-		const DAYS = 24 * 60 * 60; // 1 Day in Seconds
-		const fiveMins = 5 * 60;
-		let vestingCliff = global.IS_TEST ? fiveMins : 30 * DAYS;
 		if (vestingSchedule.length == 0) {
 			vestingCliff = 0;
 		}
-		const vestingDuration = global.IS_TEST ? fiveMins * vestingSchedule.length : (30 * DAYS) * vestingSchedule.length;
+		if (!vestingStart) {
+			vestingStart = endDate;
+		}
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
@@ -1240,7 +1241,7 @@ class FixedSwapContract {
 			parseInt(feeAmount),
 			(isTokenSwapAtomic ? FLAG_isTokenSwapAtomic : 0) | (hasWhitelisting ? FLAG_hasWhitelisting : 0) | (isPOLSWhitelist ? FLAG_isPOLSWhitelisted : 0), // Flags
 			ERC20TradingAddress,
-			vestingStart,
+			Numbers.timeToSmartContractTime(vestingStart),
 			vestingCliff,
 			vestingDuration,
 			vestingSchedule,

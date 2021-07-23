@@ -137,7 +137,7 @@
 <dt><a href="#getVestingSchedule">getVestingSchedule(Position)</a> ⇒ <code>Array</code> | <code>Integer</code></dt>
 <dd><p>Gets Vesting Schedule</p>
 </dd>
-<dt><a href="#getPurchase">getPurchase(purchase_id)</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Address</code> | <code>Integer</code> | <code>Date</code> | <code>Integer</code> | <code>Integer</code> | <code>Boolean</code> | <code>Boolean</code></dt>
+<dt><a href="#getPurchase">getPurchase(purchase_id)</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Address</code> | <code>Integer</code> | <code>Date</code> | <code>Integer</code> | <code>Boolean</code> | <code>Boolean</code></dt>
 <dd><p>Get Purchase based on ID</p>
 </dd>
 <dt><a href="#getWhiteListedAddresses">getWhiteListedAddresses()</a> ⇒ <code>Array</code> | <code>Address</code></dt>
@@ -206,7 +206,7 @@
 <dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a></dt>
 <dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
 </dd>
-<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule])</a></dt>
+<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
 <dt><a href="#getOwner">getOwner(Address)</a></dt>
@@ -540,11 +540,11 @@ Gets Vesting Schedule
 
 <a name="getPurchase"></a>
 
-## getPurchase(purchase_id) ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Address</code> \| <code>Integer</code> \| <code>Date</code> \| <code>Integer</code> \| <code>Integer</code> \| <code>Boolean</code> \| <code>Boolean</code>
+## getPurchase(purchase_id) ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Address</code> \| <code>Integer</code> \| <code>Date</code> \| <code>Integer</code> \| <code>Boolean</code> \| <code>Boolean</code>
 Get Purchase based on ID
 
 **Kind**: global function  
-**Returns**: <code>Integer</code> - _id<code>Integer</code> - amount<code>Address</code> - purchaser<code>Integer</code> - costAmount<code>Date</code> - timestamp<code>Integer</code> - amountReedemed<code>Integer</code> - lastTrancheSent<code>Boolean</code> - wasFinalized<code>Boolean</code> - reverted  
+**Returns**: <code>Integer</code> - _id<code>Integer</code> - amount<code>Address</code> - purchaser<code>Integer</code> - costAmount<code>Date</code> - timestamp<code>Integer</code> - amountReedemed<code>Boolean</code> - wasFinalized<code>Boolean</code> - reverted  
 
 | Param | Type |
 | --- | --- |
@@ -738,7 +738,7 @@ Remove Tokens from other ERC20 Address (in case of accident)
 
 <a name="deploy"></a>
 
-## deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule])
+## deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])
 Deploy the Pool Contract
 
 **Kind**: global function  
@@ -757,6 +757,9 @@ Deploy the Pool Contract
 | [hasWhitelisting] | <code>Boolean</code> | Has White Listing. (Default: false) |
 | [isPOLSWhitelist] | <code>Boolean</code> | Has White Listing. (Default: false) |
 | [vestingSchedule] | <code>Array.&lt;Integer&gt;</code> | Vesting schedule in % |
+| [vestingStart] | <code>String</code> | Vesting start date (Default: endDate) |
+| [vestingCliff] | <code>Number</code> | Seconds between every vesting schedule (Default: 0) |
+| [vestingDuration] | <code>Number</code> | Vesting duration (Default: 0) |
 
 <a name="getOwner"></a>
 
