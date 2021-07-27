@@ -200,7 +200,7 @@
 <dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a></dt>
 <dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
 </dd>
-<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
+<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
 <dt><a href="#getSmartContractVersion">getSmartContractVersion(Address)</a></dt>
@@ -711,7 +711,7 @@ Remove Tokens from other ERC20 Address (in case of accident)
 
 <a name="deploy"></a>
 
-## deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])
+## deploy(tradeValue, tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])
 Deploy the Pool Contract
 
 **Kind**: global function  
@@ -722,11 +722,13 @@ Deploy the Pool Contract
 | tokensForSale | <code>Float</code> | Tokens for sale |
 | endDate | <code>String</code> | End date |
 | startDate | <code>String</code> | Start date |
+| [ERC20TradingAddress] | <code>String</code> | Token to use in the swap (Default: 0x0000000000000000000000000000000000000000) |
 | [individualMinimumAmount] | <code>Float</code> | Min cap per wallet. 0 to disable it. (Default: 0) |
 | [individualMaximumAmount] | <code>Float</code> | Max cap per wallet. 0 to disable it. (Default: 0) |
-| [isTokenSwapAtomic] | <code>Boolean</code> | Receive tokens right after the swap. (Default: true) |
+| [isTokenSwapAtomic] | <code>Boolean</code> | Receive tokens right after the swap. (Default: false) |
 | [minimumRaise] | <code>Float</code> | Soft cap (Default: 0) |
 | [feeAmount] | <code>Float</code> | Fee amount (Default: 1) |
+| [tradingDecimals] | <code>Number</code> | To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) (Default: 0) |
 | [hasWhitelisting] | <code>Boolean</code> | Has White Listing. (Default: false) |
 | [isPOLSWhitelist] | <code>Boolean</code> | Has White Listing. (Default: false) |
 | [vestingSchedule] | <code>Array.&lt;Integer&gt;</code> | Vesting schedule in % |

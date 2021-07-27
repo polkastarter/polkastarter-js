@@ -1106,11 +1106,13 @@ class FixedSwapContract {
 	* @param {Float} tokensForSale Tokens for sale
 	* @param {String} endDate End date
 	* @param {String} startDate Start date
+	* @param {String=} ERC20TradingAddress Token to use in the swap (Default: 0x0000000000000000000000000000000000000000)
 	* @param {Float=} individualMinimumAmount Min cap per wallet. 0 to disable it. (Default: 0)
 	* @param {Float=} individualMaximumAmount Max cap per wallet. 0 to disable it. (Default: 0)
-	* @param {Boolean=} isTokenSwapAtomic Receive tokens right after the swap. (Default: true)
+	* @param {Boolean=} isTokenSwapAtomic Receive tokens right after the swap. (Default: false)
 	* @param {Float=} minimumRaise Soft cap (Default: 0)
 	* @param {Float=} feeAmount Fee amount (Default: 1)
+	* @param {Number=} tradingDecimals To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) (Default: 0)
 	* @param {Boolean=} hasWhitelisting Has White Listing. (Default: false)
 	* @param {Boolean=} isPOLSWhitelist Has White Listing. (Default: false)
 	* @param {Array<Integer>=} vestingSchedule Vesting schedule in %
@@ -1125,14 +1127,13 @@ class FixedSwapContract {
 		endDate,
 		individualMinimumAmount = 0,
 		individualMaximumAmount = 0,
-		isTokenSwapAtomic = true,
+		isTokenSwapAtomic = false,
 		minimumRaise = 0,
 		feeAmount = 1,
 		hasWhitelisting = false,
 		callback,
 		ERC20TradingAddress = '0x0000000000000000000000000000000000000000',
 		isPOLSWhitelist = false,
-		isETHTrade = true,
 		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
 		vestingSchedule=[],
 		vestingStart,
@@ -1177,7 +1178,7 @@ class FixedSwapContract {
 			}
 		}
 
-		if(!isETHTrade && (tradingDecimals == 0)){
+		if(ERC20TradingAddress != '0x0000000000000000000000000000000000000000' && (tradingDecimals == 0)){
 			throw new Error("If an ERC20 Trading Address please add the 'tradingDecimals' field to the trading address (Ex : USDT -> 6)");
 		}else{
 			/* is ETH Trade */
