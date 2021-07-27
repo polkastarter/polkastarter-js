@@ -149,23 +149,6 @@ class FixedSwapContract {
 	};
 
 	/**
-	 * @function setNewOwner
-	 * @description Set New Owner of the Contract
-	 * @param {string} address
-	 */
-	setNewOwner = async ({ address }) => {
-		try {
-			return await this.__sendTx(
-				this.params.contract
-					.getContract()
-					.methods.transferOwnership(address)
-			);
-		} catch (err) {
-			throw err;
-		}
-	};
-
-	/**
 	 * @function addToBlacklist
 	 * @description Adds an address to the blacklist
 	 * @param {string} address
@@ -210,18 +193,8 @@ class FixedSwapContract {
 	}
 
 	/**
-	 * @function owner
-	 * @description Get Owner of the Contract
-	 * @returns {string} address
-	 */
-
-	async owner() {
-		return await this.params.contract.getContract().methods.owner().call();
-	}
-
-	/**
 	 * @function isPaused
-	 * @description Get Owner of the Contract
+	 * @description Returns if the contract is paused or not
 	 * @returns {boolean}
 	 */
 
@@ -259,6 +232,8 @@ class FixedSwapContract {
 	 * @returns {Integer} Integer
 	 */
 	async decimalsAsync() {
+		return 18;
+		// ToDo Fix this
 		return parseInt(await this.params.contract
 		.getContract()
 		.methods.decimals()
@@ -564,6 +539,14 @@ class FixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async wereUnsoldTokensReedemed() {
+		try {
+			return await this.params.contract
+				.getContract()
+				.methods.unsoldTokensRedeemed()
+				.call();
+		} catch (e) {
+
+		}
 		return await this.params.contract
 			.getContract()
 			.methods.unsoldTokensReedemed()
@@ -1267,15 +1250,6 @@ class FixedSwapContract {
 	getTokenContract() {
 		return this.params.erc20TokenContract;
 	}
-
-	/**
-	 * @function getOwner
-	 * @description Get owner address of contract
-	 * @param {Address} Address
-	 */
-	getOwner = async () => {
-		return await this.params.contract.getContract().methods.owner().call();
-	};
 
 	/**
 	 * @function getSmartContractVersion

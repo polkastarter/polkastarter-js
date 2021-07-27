@@ -8,9 +8,6 @@
 ## Functions
 
 <dl>
-<dt><a href="#setNewOwner">setNewOwner(address)</a></dt>
-<dd><p>Set New Owner of the Contract</p>
-</dd>
 <dt><a href="#addToBlacklist">addToBlacklist(address)</a></dt>
 <dd><p>Adds an address to the blacklist</p>
 </dd>
@@ -20,11 +17,8 @@
 <dt><a href="#isBlackListed">isBlackListed(address)</a> ⇒ <code>boolean</code></dt>
 <dd><p>Returns true if the address is in the blacklist</p>
 </dd>
-<dt><a href="#owner">owner()</a> ⇒ <code>string</code></dt>
-<dd><p>Get Owner of the Contract</p>
-</dd>
 <dt><a href="#isPaused">isPaused()</a> ⇒ <code>boolean</code></dt>
-<dd><p>Get Owner of the Contract</p>
+<dd><p>Returns if the contract is paused or not</p>
 </dd>
 <dt><a href="#pauseContract">pauseContract()</a> ⇒ <code>admin</code></dt>
 <dd><p>Pause Contract</p>
@@ -209,9 +203,6 @@
 <dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
-<dt><a href="#getOwner">getOwner(Address)</a></dt>
-<dd><p>Get owner address of contract</p>
-</dd>
 <dt><a href="#getSmartContractVersion">getSmartContractVersion(Address)</a></dt>
 <dd><p>Returns the version of the smart contract that is currently inside psjs</p>
 </dd>
@@ -236,17 +227,6 @@ Fixed Swap Object
 | tokenAddress | <code>Address</code> |  |
 | decimals | <code>Integer</code> |  |
 | contractAddress | <code>Address</code> | ? (opt) |
-
-<a name="setNewOwner"></a>
-
-## setNewOwner(address)
-Set New Owner of the Contract
-
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| address | <code>string</code> | 
 
 <a name="addToBlacklist"></a>
 
@@ -282,17 +262,10 @@ Returns true if the address is in the blacklist
 | --- | --- |
 | address | <code>string</code> | 
 
-<a name="owner"></a>
-
-## owner() ⇒ <code>string</code>
-Get Owner of the Contract
-
-**Kind**: global function  
-**Returns**: <code>string</code> - address  
 <a name="isPaused"></a>
 
 ## isPaused() ⇒ <code>boolean</code>
-Get Owner of the Contract
+Returns if the contract is paused or not
 
 **Kind**: global function  
 <a name="pauseContract"></a>
@@ -760,17 +733,6 @@ Deploy the Pool Contract
 | [vestingStart] | <code>String</code> | Vesting start date (Default: endDate) |
 | [vestingCliff] | <code>Number</code> | Seconds between every vesting schedule (Default: 0) |
 | [vestingDuration] | <code>Number</code> | Vesting duration (Default: 0) |
-
-<a name="getOwner"></a>
-
-## getOwner(Address)
-Get owner address of contract
-
-**Kind**: global function  
-
-| Param | Type |
-| --- | --- |
-| Address | <code>Address</code> | 
 
 <a name="getSmartContractVersion"></a>
 

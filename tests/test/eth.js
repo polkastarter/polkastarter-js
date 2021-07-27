@@ -91,7 +91,7 @@ context('ETH Contract', async () => {
     }));
 
     it('should get the correct smart contract version', mochaAsync(async () => {
-        expect(await swapContract.getSmartContractVersion()).to.equal(2500000);
+        expect(await swapContract.getSmartContractVersion()).to.equal(2700000);
     }));
 
     it('should get a Fixed Swap Contract From contractAddress - 2.0', mochaAsync(async () => {
@@ -121,11 +121,6 @@ context('ETH Contract', async () => {
     it('GET - tokensAvailable', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAvailable();
         expect(tokens).to.equal(Number(0).noExponents());
-    }));
-
-    it('GET - owner', mochaAsync(async () => { 
-        let res = await swapContract.owner();
-        expect(res).to.equal('0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB');
     }));
 
     it('GET - tokensForSale', mochaAsync(async () => {        
@@ -251,6 +246,11 @@ context('ETH Contract', async () => {
         expect(purchases.length).to.equal(1);
     }));
 
+    it('GET - Distribution Information', mochaAsync(async () => {    
+        // ToDo        
+        let info = await swapContract.getDistributionInformation();
+        console.log(info);
+    }));
 
     it('GET - My Purchases', mochaAsync(async () => {        
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()});
@@ -288,6 +288,11 @@ context('ETH Contract', async () => {
         res = await swapContract.isOpen();
         expect(res).to.equal(false);
     }));
+
+    it('should return withdrawable unsold amount', mochaAsync(async () => {
+        const res = await swapContract.withdrawableUnsoldTokens();
+        console.log(res);
+    }))
 
     it('Redeem Sale (withdraw tokens)', mochaAsync(async () => {  
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
