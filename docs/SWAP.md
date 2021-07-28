@@ -89,7 +89,7 @@
 <dt><a href="#hasWhitelisting">hasWhitelisting()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if swap has whitelisting</p>
 </dd>
-<dt><a href="#isWhitelisted">isWhitelisted()</a> ⇒ <code>Boolean</code></dt>
+<dt><a href="#isWhitelisted">isWhitelisted(address)</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if address is whitelisted</p>
 </dd>
 <dt><a href="#wereUnsoldTokensReedemed">wereUnsoldTokensReedemed()</a> ⇒ <code>Boolean</code></dt>
@@ -167,19 +167,19 @@
 <dt><a href="#withdrawFunds">withdrawFunds()</a></dt>
 <dd><p>Withdraw all funds from tokens sold</p>
 </dd>
-<dt><a href="#approveFundERC20">approveFundERC20()</a></dt>
+<dt><a href="#approveFundERC20">approveFundERC20(tokenAmount)</a></dt>
 <dd><p>Approve the pool to use approved tokens for sale</p>
 </dd>
-<dt><a href="#editIndividualMaximumAmount">editIndividualMaximumAmount()</a> ⇒ <code>admin</code></dt>
+<dt><a href="#editIndividualMaximumAmount">editIndividualMaximumAmount(individualMaximumAmount)</a> ⇒ <code>admin</code></dt>
 <dd><p>Modifies the max allocation</p>
 </dd>
-<dt><a href="#editEndDate">editEndDate()</a> ⇒ <code>admin</code></dt>
+<dt><a href="#editEndDate">editEndDate(endDate)</a> ⇒ <code>admin</code></dt>
 <dd><p>Modifies the end date for the pool</p>
 </dd>
-<dt><a href="#approveSwapERC20">approveSwapERC20()</a></dt>
+<dt><a href="#approveSwapERC20">approveSwapERC20(tokenAmount)</a></dt>
 <dd><p>Approve the investor to use approved tokens for the sale</p>
 </dd>
-<dt><a href="#isApprovedSwapERC20">isApprovedSwapERC20()</a></dt>
+<dt><a href="#isApprovedSwapERC20">isApprovedSwapERC20(tokenAmount, address)</a></dt>
 <dd><p>Verify if it is approved to invest</p>
 </dd>
 <dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
@@ -191,7 +191,7 @@
 <dt><a href="#addWhitelistedAddress">addWhitelistedAddress(Addresses)</a></dt>
 <dd><p>add WhiteListed Address</p>
 </dd>
-<dt><a href="#removeWhitelistedAddress">removeWhitelistedAddress()</a></dt>
+<dt><a href="#removeWhitelistedAddress">removeWhitelistedAddress(addresses, index)</a></dt>
 <dd><p>remove WhiteListed Address</p>
 </dd>
 <dt><a href="#safePull">safePull()</a></dt>
@@ -424,10 +424,15 @@ Verify if swap has whitelisting
 **Kind**: global function  
 <a name="isWhitelisted"></a>
 
-## isWhitelisted() ⇒ <code>Boolean</code>
+## isWhitelisted(address) ⇒ <code>Boolean</code>
 Verify if address is whitelisted
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
 <a name="wereUnsoldTokensReedemed"></a>
 
 ## wereUnsoldTokensReedemed() ⇒ <code>Boolean</code>
@@ -623,34 +628,60 @@ Withdraw all funds from tokens sold
 **Kind**: global function  
 <a name="approveFundERC20"></a>
 
-## approveFundERC20()
+## approveFundERC20(tokenAmount)
 Approve the pool to use approved tokens for sale
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| tokenAmount | <code>Integer</code> | 
+
 <a name="editIndividualMaximumAmount"></a>
 
-## editIndividualMaximumAmount() ⇒ <code>admin</code>
+## editIndividualMaximumAmount(individualMaximumAmount) ⇒ <code>admin</code>
 Modifies the max allocation
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| individualMaximumAmount | <code>Integer</code> | 
+
 <a name="editEndDate"></a>
 
-## editEndDate() ⇒ <code>admin</code>
+## editEndDate(endDate) ⇒ <code>admin</code>
 Modifies the end date for the pool
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| endDate | <code>Date</code> | 
+
 <a name="approveSwapERC20"></a>
 
-## approveSwapERC20()
+## approveSwapERC20(tokenAmount)
 Approve the investor to use approved tokens for the sale
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| tokenAmount | <code>Integer</code> | 
+
 <a name="isApprovedSwapERC20"></a>
 
-## isApprovedSwapERC20()
+## isApprovedSwapERC20(tokenAmount, address)
 Verify if it is approved to invest
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| tokenAmount | <code>Integer</code> | 
+| address | <code>Address</code> | 
+
 <a name="isApproved"></a>
 
 ## isApproved(tokenAmount, address) ⇒ <code>Boolean</code>
@@ -687,10 +718,16 @@ add WhiteListed Address
 
 <a name="removeWhitelistedAddress"></a>
 
-## removeWhitelistedAddress()
+## removeWhitelistedAddress(addresses, index)
 remove WhiteListed Address
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| addresses | <code>Array</code> \| <code>Addresses</code> | 
+| index | <code>Integer</code> | 
+
 <a name="safePull"></a>
 
 ## safePull()

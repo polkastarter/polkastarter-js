@@ -523,6 +523,7 @@ class FixedSwapContract {
 	/**
 	 * @function isWhitelisted
 	 * @description Verify if address is whitelisted
+	 * @param {string} address
 	 * @returns {Boolean}
 	 */
 	async isWhitelisted({address}) {
@@ -927,6 +928,7 @@ class FixedSwapContract {
 
 	/**
 	 * @function approveFundERC20
+	 * @param {Integer} tokenAmount
 	 * @description Approve the pool to use approved tokens for sale
 	 */
 	approveFundERC20 = async ({ tokenAmount, callback }) => {
@@ -940,6 +942,7 @@ class FixedSwapContract {
 	/**
 	 * @function editIndividualMaximumAmount
 	 * @type admin
+	 * @param {Integer} individualMaximumAmount
 	 * @description Modifies the max allocation
 	 */
 	editIndividualMaximumAmount = async ( { individualMaximumAmount } ) => {
@@ -956,6 +959,7 @@ class FixedSwapContract {
 	/**
 	 * @function editEndDate
 	 * @type admin
+	 * @param {Date} endDate
 	 * @description Modifies the end date for the pool
 	 */
 	editEndDate = async ( { endDate } ) => {
@@ -966,6 +970,7 @@ class FixedSwapContract {
 
 	/**
 	 * @function approveSwapERC20
+	 * @param {Integer} tokenAmount
 	 * @description Approve the investor to use approved tokens for the sale
 	 */
 	approveSwapERC20 = async ({ tokenAmount, callback }) => {
@@ -979,6 +984,8 @@ class FixedSwapContract {
 
 	/**
 	 * @function isApprovedSwapERC20
+	 * @param {Integer} tokenAmount
+	 * @param {Address} address
 	 * @description Verify if it is approved to invest
 	 */
 	isApprovedSwapERC20 = async ({ tokenAmount, address, callback }) => {
@@ -1058,6 +1065,8 @@ class FixedSwapContract {
 
 	/**
 	 * @function removeWhitelistedAddress
+	 * @param { Array | Addresses} addresses
+	 * @param {Integer} index
 	 * @description remove WhiteListed Address
 	 */
 	removeWhitelistedAddress = async ({address, index}) => {
