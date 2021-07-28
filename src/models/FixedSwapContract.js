@@ -617,7 +617,16 @@ class FixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async getTradingDecimals(){
-		return 18; // To Do
+		const tradeAddress = await this.getTradingERC20Address();
+		if (tradeAddress == '0x0000000000000000000000000000000000000000') {
+			return 18;
+		}
+		const contract = new ERC20TokenContract({
+			web3: this.web3,
+			contractAddress: tradeAddress,
+			acc : this.acc
+		});
+		return await contract.getDecimals();
 	}
 
 	/**
@@ -628,7 +637,7 @@ class FixedSwapContract {
 	async getTradingERC20Address(){
 		return await this.params.contract
 		.getContract()
-		.methods.erc20TradeAddress()
+		.methods.erc20TradeIn()
 		.call();
 	}
 

@@ -64,10 +64,7 @@ context('ETH Contract', async () => {
                 .on('confirmation', function(confirmationNumber, receipt){ 
                     ERC20TokenAddress = receipt.contractAddress;
                     resolve();
-                }).on('error', console.log);
-
-            
-              
+                }).on('error', console.log);              
         });
     }));
 
@@ -88,6 +85,8 @@ context('ETH Contract', async () => {
         });
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
+
+        expect(await swapContract.getTradingDecimals()).to.equal(18);
     }));
 
     it('should get the correct smart contract version', mochaAsync(async () => {
