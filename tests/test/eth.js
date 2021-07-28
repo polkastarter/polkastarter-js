@@ -74,7 +74,7 @@ context('ETH Contract', async () => {
    
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
         /* Create Contract */
-        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
         /* Deploy */
         let res = await swapContract.deploy({
             tradeValue : tradeValue, 
@@ -336,7 +336,7 @@ context('ETH Contract', async () => {
     
     it('should deploy Fixed Swap Contract with whitelist and swap', mochaAsync(async () => {
         /* Create Contract */
-        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
         /* Deploy */
         let res = await swapContract.deploy({
             tradeValue : tradeValue, 
@@ -374,7 +374,7 @@ context('ETH Contract', async () => {
     
     it('should deploy Fixed Swap Contract with vesting and swap', mochaAsync(async () => {
         /* Create Contract */
-        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress, decimals : 18});
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
         tokenPurchaseAmount = 0.015;
         const testSwapWithVesting = async (cliff, schedule) => {
             /* Deploy */

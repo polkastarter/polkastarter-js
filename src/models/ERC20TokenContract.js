@@ -4,10 +4,7 @@ import Numbers from "../utils/Numbers";
 let self;
 
 class ERC20TokenContract {
-	constructor({decimals, contractAddress, web3, acc}) {
-		if(!decimals){
-			throw new Error("Please provide the ERC20 decimals");
-		}
+	constructor({contractAddress, web3, acc}) {
 		if(acc){
 			this.acc = acc;
 		}
@@ -15,7 +12,7 @@ class ERC20TokenContract {
 			web3 : web3,
 			contractAddress : contractAddress,
 			contract: new contract(web3, ierc20, contractAddress),
-			decimals : decimals
+			decimals : null
 		};
 		self = {
 			contract: new contract(web3, ierc20, contractAddress)
@@ -88,7 +85,7 @@ class ERC20TokenContract {
 	async transferTokenAmount({ toAddress, tokenAmount}) {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
-			this.getDecimals()
+			await this.getDecimals()
 		);
 		return await this.__sendTx( 
 			this.params.contract
@@ -100,7 +97,7 @@ class ERC20TokenContract {
 	async getTokenAmount(address) {
 		return Numbers.fromDecimals(
 			await this.getContract().methods.balanceOf(address).call(),
-			this.getDecimals()
+			await this.getDecimals()
 		);
 	}
 
@@ -112,7 +109,10 @@ class ERC20TokenContract {
 		return self.contract;
 	}
 
-	getDecimals(){
+	async getDecimals(){
+		if (!this.params.decimals) {
+			this.params.decimals = parseInt(await this.getContract().methods.decimals().call());
+		}
 		return this.params.decimals;
 	}
 
@@ -127,7 +127,7 @@ class ERC20TokenContract {
 				callback
 			);
 
-			let approvedAmount = Numbers.fromDecimals(res, this.getDecimals());
+			let approvedAmount = Numbers.fromDecimals(res, await this.getDecimals());
 			return (approvedAmount >= amount);
 		} catch (err) {
 			throw err;
@@ -138,7 +138,7 @@ class ERC20TokenContract {
 		try {
 			let amountWithDecimals = Numbers.toSmartContractDecimals(
 				amount,
-				this.getDecimals()
+				await this.getDecimals()
 			);
 			return await this.__sendTx( 
 				this.params.contract

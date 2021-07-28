@@ -118,15 +118,13 @@ class Application {
 	}
 
 	/* getFixedSwapContract */
-	getFixedSwapContract = async ({tokenAddress, decimals, contractAddress=null}) => {
+	getFixedSwapContract = async ({tokenAddress, contractAddress=null}) => {
 		let contract;
-		
 		if(!contractAddress){
 			// Not deployed
 			return new FixedSwapContract({
 				web3: this.web3,
 				tokenAddress: tokenAddress,
-				decimals : decimals,
 				contractAddress: contractAddress,
 				acc : this.test ? this.account : null
 			});
@@ -136,7 +134,6 @@ class Application {
 				contract = new FixedSwapContract({
 					web3: this.web3,
 					tokenAddress: tokenAddress,
-					decimals : decimals,
 					contractAddress: contractAddress,
 					acc : this.test ? this.account : null
 				});
@@ -146,7 +143,6 @@ class Application {
 					contract = new FixedSwapContractLegacy({
 						web3: this.web3,
 						tokenAddress: tokenAddress,
-						decimals : decimals, 
 						contractAddress: contractAddress,
 						acc : this.test ? this.account : null
 					});
@@ -161,12 +157,11 @@ class Application {
 	};
 
 	/* getERC20TokenContract */
-	getERC20TokenContract =  ({tokenAddress, decimals}) => {
+	getERC20TokenContract =  ({tokenAddress}) => {
 		try{
 			return new ERC20TokenContract({
 				web3: this.web3,
 				contractAddress: tokenAddress,
-				decimals : decimals,
 				acc : this.test ? this.account : null
 			});
 		}catch(err){

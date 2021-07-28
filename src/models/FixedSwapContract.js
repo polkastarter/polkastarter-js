@@ -13,14 +13,12 @@ import * as ethers from 'ethers';
  * @constructor FixedSwapContract
  * @param {Web3} web3
  * @param {Address} tokenAddress
- * @param {Integer} decimals
  * @param {Address} contractAddress ? (opt)
  */
 class FixedSwapContract {
 	constructor({
 		web3,
 		tokenAddress,
-		decimals,
 		contractAddress = null /* If not deployed */,
 		acc,
 	}) {
@@ -34,8 +32,6 @@ class FixedSwapContract {
 				this.acc = acc;
 			}
 
-			console.log("Is Testnet?", global.IS_TEST);
-
 			this.params = {
 				web3: web3,
 				contractAddress: contractAddress,
@@ -43,14 +39,12 @@ class FixedSwapContract {
 			};
 
 			
-			if(tokenAddress && decimals){
+			if(tokenAddress){
 				this.params.erc20TokenContract = new ERC20TokenContract({
 					web3: web3,
-					decimals: decimals,
 					contractAddress: tokenAddress,
 					acc
 				});
-				this.decimals = decimals;
 			}else{
 				if(!contractAddress){throw new Error("Please provide a contractAddress if already deployed")}
 			}
@@ -72,23 +66,19 @@ class FixedSwapContract {
 	};
 
 	assertERC20Info = async () => {
-		let decimals = await this.decimalsAsync();
 		let tokenAddress = await this.erc20();
 		this.params.erc20TokenContract = new ERC20TokenContract({
 			web3: this.web3,
-			decimals: decimals,
 			contractAddress: tokenAddress,
 			acc : this.acc
 		});
 		if(!(await this.isETHTrade())){
 			this.params.tradingERC20Contract = new ERC20TokenContract({
 				web3: this.web3,
-				decimals: await this.getTradingDecimals(),
 				contractAddress: await this.getTradingERC20Address(),
 				acc : this.acc
 			});	
 		};
-		this.decimals = decimals;
 	}
 
 	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
@@ -227,20 +217,6 @@ class FixedSwapContract {
 	}
 
 	/**
-	 * @function decimals
-	 * @description Get Decimals
-	 * @returns {Integer} Integer
-	 */
-	async decimalsAsync() {
-		return 18;
-		// ToDo Fix this
-		return parseInt(await this.params.contract
-		.getContract()
-		.methods.decimals()
-		.call());
-	}
-
-	/**
 	 * @function unpauseContract
 	 * @type admin
 	 * @description Unpause Contract
@@ -310,7 +286,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.individualMinimumAmount()
 				.call(),
-			this.getDecimals()
+			await this.getDecimals()
 		);
 	}
 
@@ -325,7 +301,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.individualMaximumAmount()
 				.call()),
-			this.getDecimals()
+			await this.getDecimals()
 		);
 	}
 
@@ -340,7 +316,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.minimumRaise()
 				.call()),
-			this.getDecimals()
+			await this.getDecimals()
 		);
 	}
 
@@ -355,7 +331,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.tokensAllocated()
 				.call()),
-			this.getDecimals()
+			await this.getDecimals()
 		);
 	}
 
@@ -370,7 +346,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.tokensForSale()
 				.call(),
-			this.getDecimals()
+			await this.getDecimals()
 		);
 	}
 
@@ -413,7 +389,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.availableTokens()
 				.call(),
-			this.getDecimals()
+			await this.getDecimals()
 		);
 	}
 
@@ -428,7 +404,7 @@ class FixedSwapContract {
 				.getContract()
 				.methods.tokensLeft()
 				.call(),
-			this.getDecimals()
+			await this.getDecimals()
 		);
 	}
 
@@ -641,7 +617,7 @@ class FixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async getTradingDecimals(){
-		return 18;
+		return 18; // To Do
 	}
 
 	/**
@@ -712,9 +688,9 @@ class FixedSwapContract {
 			.getContract()
 			.methods.getPurchase(purchase_id)
 			.call();
-		let amount = Numbers.fromDecimals(res.amount, this.getDecimals());
+		let amount = Numbers.fromDecimals(res.amount, await this.getDecimals());
 		let costAmount = Numbers.fromDecimals(res.costAmount, await this.getTradingDecimals());
-		let amountReedemed = Numbers.fromDecimals(res.amountRedeemed, this.getDecimals());
+		let amountReedemed = Numbers.fromDecimals(res.amountRedeemed, await this.getDecimals());
 		let amountLeftToRedeem = amount-amountReedemed;
 
 		let isFinalized = await this.hasFinalized();
@@ -793,10 +769,9 @@ class FixedSwapContract {
 	 * @returns {Integer} costAmount
 	 */
 	getCostFromTokens = async ({ tokenAmount }) => {
-		console.log("getCostFromTokens", tokenAmount);
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
-			this.getDecimals()
+			await this.getDecimals()
 		);
 
 		return Numbers.fromDecimals(
@@ -851,21 +826,17 @@ class FixedSwapContract {
 	 */
 
 	swap = async ({ tokenAmount, callback, signature }) => {
-		console.log("swap (tokens Amount)", tokenAmount);
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
-			this.getDecimals()
+			await this.getDecimals()
 		);
 
 		let cost = await this.getCostFromTokens({
 			tokenAmount,
 		});
-		console.log("cost in ETH (after getCostFromTokens) ", cost);
 
 		let costToDecimals = Numbers.toSmartContractDecimals(cost, await this.getTradingDecimals());
 
-		console.log("swap (amount in decimals) ", amountWithDecimals);
-		console.log("cost (amount in decimals) ", costToDecimals);
 		if (!signature) {
 			signature = '0x00';
 		}
@@ -946,13 +917,12 @@ class FixedSwapContract {
 	 * @description Modifies the max allocation
 	 */
 	editIndividualMaximumAmount = async ( { individualMaximumAmount } ) => {
+		const maxAmount = Numbers.toSmartContractDecimals(
+			individualMaximumAmount,
+			await this.getDecimals()
+		);
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.setIndividualMaximumAmount(
-				Numbers.toSmartContractDecimals(
-					individualMaximumAmount,
-					this.getDecimals()
-				)
-			)
+			this.params.contract.getContract().methods.setIndividualMaximumAmount(maxAmount)
 		);
 	};
 
@@ -1021,7 +991,7 @@ class FixedSwapContract {
 	fund = async ({ tokenAmount, callback }) => {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
-			this.getDecimals()
+			await this.getDecimals()
 		);
 
 		return await this.__sendTx(
@@ -1106,7 +1076,9 @@ class FixedSwapContract {
 		this.params.contract.use(fixedswap, this.getAddress());
 	}
 
-	getDecimals = () => this.decimals || 18;
+	getDecimals = async () => {
+		return await this.getTokenContract().getDecimals();
+	}
 
 	/**
 	* @function deploy
@@ -1218,19 +1190,19 @@ class FixedSwapContract {
 		let params = [
 			this.getTokenAddress(),
 			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
-			Numbers.toSmartContractDecimals(tokensForSale, this.getDecimals()),
+			Numbers.toSmartContractDecimals(tokensForSale, await this.getDecimals()),
 			Numbers.timeToSmartContractTime(startDate),
 			Numbers.timeToSmartContractTime(endDate),
 			Numbers.toSmartContractDecimals(
 				individualMinimumAmount,
-				this.getDecimals()
+				await this.getDecimals()
 			),
 			Numbers.toSmartContractDecimals(
 				individualMaximumAmount,
-				this.getDecimals()
+				await this.getDecimals()
 			),
 			true, // ignored
-			Numbers.toSmartContractDecimals(minimumRaise, this.getDecimals()),
+			Numbers.toSmartContractDecimals(minimumRaise, await this.getDecimals()),
 			parseInt(feeAmount),
 			(isTokenSwapAtomic ? FLAG_isTokenSwapAtomic : 0) | (hasWhitelisting ? FLAG_hasWhitelisting : 0) | (isPOLSWhitelist ? FLAG_isPOLSWhitelisted : 0), // Flags
 			ERC20TradingAddress,
@@ -1240,7 +1212,6 @@ class FixedSwapContract {
 			vestingSchedule,
 			
 		];
-		console.log("params", params);
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */

@@ -41,7 +41,6 @@ class FixedSwapContractLegacy {
 			if(tokenAddress && decimals){
 				this.params.erc20TokenContract = new ERC20TokenContract({
 					web3: web3,
-					decimals: decimals,
 					contractAddress: tokenAddress,
 					acc
 				});
@@ -72,7 +71,6 @@ class FixedSwapContractLegacy {
 
 		this.params.erc20TokenContract = new ERC20TokenContract({
 			web3: this.web3,
-			decimals: decimals,
 			contractAddress: tokenAddress,
 			acc : this.acc
 		});

@@ -26,9 +26,6 @@
 <dt><a href="#erc20">erc20()</a> ⇒ <code>Address</code></dt>
 <dd><p>Get Token Address</p>
 </dd>
-<dt><a href="#decimals">decimals()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get Decimals</p>
-</dd>
 <dt><a href="#unpauseContract">unpauseContract()</a> ⇒ <code>admin</code></dt>
 <dd><p>Unpause Contract</p>
 </dd>
@@ -217,7 +214,7 @@
 **Kind**: global class  
 <a name="new_FixedSwapContract_new"></a>
 
-### new FixedSwapContract(web3, tokenAddress, decimals, contractAddress)
+### new FixedSwapContract(web3, tokenAddress, contractAddress)
 Fixed Swap Object
 
 
@@ -225,7 +222,6 @@ Fixed Swap Object
 | --- | --- | --- |
 | web3 | <code>Web3</code> |  |
 | tokenAddress | <code>Address</code> |  |
-| decimals | <code>Integer</code> |  |
 | contractAddress | <code>Address</code> | ? (opt) |
 
 <a name="addToBlacklist"></a>
@@ -281,13 +277,6 @@ Get Token Address
 
 **Kind**: global function  
 **Returns**: <code>Address</code> - Token Address  
-<a name="decimals"></a>
-
-## decimals() ⇒ <code>Integer</code>
-Get Decimals
-
-**Kind**: global function  
-**Returns**: <code>Integer</code> - Integer  
 <a name="unpauseContract"></a>
 
 ## unpauseContract() ⇒ <code>admin</code>
