@@ -173,6 +173,15 @@
 <dt><a href="#editEndDate">editEndDate(endDate)</a> ⇒ <code>admin</code></dt>
 <dd><p>Modifies the end date for the pool</p>
 </dd>
+<dt><a href="#editStartDate">editStartDate(startDate)</a> ⇒ <code>admin</code></dt>
+<dd><p>Modifies the start date for the pool</p>
+</dd>
+<dt><a href="#setHasWhitelisting">setHasWhitelisting(hasWhitelist)</a> ⇒ <code>admin</code></dt>
+<dd><p>Modifies if the pool has whitelisting or not</p>
+</dd>
+<dt><a href="#setVesting">setVesting([vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a> ⇒ <code>admin</code></dt>
+<dd><p>Modifies the current vesting config</p>
+</dd>
 <dt><a href="#approveSwapERC20">approveSwapERC20(tokenAmount)</a></dt>
 <dd><p>Approve the investor to use approved tokens for the sale</p>
 </dd>
@@ -647,6 +656,42 @@ Modifies the end date for the pool
 | Param | Type |
 | --- | --- |
 | endDate | <code>Date</code> | 
+
+<a name="editStartDate"></a>
+
+## editStartDate(startDate) ⇒ <code>admin</code>
+Modifies the start date for the pool
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| startDate | <code>Date</code> | 
+
+<a name="setHasWhitelisting"></a>
+
+## setHasWhitelisting(hasWhitelist) ⇒ <code>admin</code>
+Modifies if the pool has whitelisting or not
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| hasWhitelist | <code>boolean</code> | 
+
+<a name="setVesting"></a>
+
+## setVesting([vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration]) ⇒ <code>admin</code>
+Modifies the current vesting config
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [vestingSchedule] | <code>Array.&lt;Integer&gt;</code> | Vesting schedule in % |
+| [vestingStart] | <code>String</code> | Vesting start date (Default: endDate) |
+| [vestingCliff] | <code>Number</code> | Seconds between every vesting schedule (Default: 0) |
+| [vestingDuration] | <code>Number</code> | Vesting duration (Default: 0) |
 
 <a name="approveSwapERC20"></a>
 
