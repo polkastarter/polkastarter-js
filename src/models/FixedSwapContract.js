@@ -943,9 +943,63 @@ class FixedSwapContract {
 	 */
 	editEndDate = async ( { endDate } ) => {
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.editEndDate(Numbers.timeToSmartContractTime(endDate))
+			this.params.contract.getContract().methods.setEndDate(Numbers.timeToSmartContractTime(endDate))
 		);
 	};
+
+	/**
+	 * @function editStartDate
+	 * @type admin
+	 * @param {Date} startDate
+	 * @description Modifies the start date for the pool
+	 */
+	editStartDate = async ( { startDate } ) => {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.setStartDate(Numbers.timeToSmartContractTime(startDate))
+		);
+	}
+
+	/**
+	 * @function setHasWhitelisting
+	 * @type admin
+	 * @param {boolean} hasWhitelist
+	 * @description Modifies if the pool has whitelisting or not
+	 */
+	setHasWhitelisting = async ( { hasWhitelist } ) => {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.setHasWhitelisting(hasWhitelist)
+		);
+	}
+
+	/**
+	 * @function setVesting
+	 * @type admin
+	* @param {Array<Integer>=} vestingSchedule Vesting schedule in %
+	* @param {String=} vestingStart Vesting start date (Default: endDate)
+	* @param {Number=} vestingCliff Seconds between every vesting schedule (Default: 0)
+	* @param {Number=} vestingDuration Vesting duration (Default: 0)
+	 * @description Modifies the current vesting config
+	 */
+	 setVesting = async ( { 
+		vestingSchedule=[],
+		vestingStart,
+		vestingCliff = 0,
+		vestingDuration = 0 
+	} ) => {
+
+		if(vestingSchedule.length > 0 && vestingSchedule.reduce((a, b) => a + b, 0) != 100){
+			throw new Error("'vestingSchedule' sum has to be equal to 100")
+		}
+		
+		const DECIMALS_PERCENT_MUL = 10**12;
+		vestingSchedule = vestingSchedule.map( a => String(new Decimal(a).mul(DECIMALS_PERCENT_MUL)).toString());
+
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.setVesting(
+				Numbers.timeToSmartContractTime(vestingStart), vestingCliff, vestingDuration, vestingSchedule
+			)
+		);
+	}
 
 	/**
 	 * @function approveSwapERC20

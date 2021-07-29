@@ -375,23 +375,29 @@ context('ETH Contract', async () => {
         /* Create Contract */
         swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
         tokenPurchaseAmount = 0.015;
-        const testSwapWithVesting = async (cliff, schedule) => {
+        const testSwapWithVesting = async (duration, schedule, editVesting = false) => {
+            const startDate = new Date((currentTime + (3 * 60)) * 1000);
+            const endDate = new Date((currentTime + (8 * 60)) * 1000);
             /* Deploy */
             let res = await swapContract.deploy({
                 tradeValue : tradeValue, 
                 tokensForSale : tokenFundAmount, 
                 isTokenSwapAtomic : false,
                 individualMaximumAmount : tokenFundAmount,
-                startDate : new Date((currentTime + (3 * 60)) * 1000), // 3 mins
-                endDate : new Date((currentTime + (8 * 60)) * 1000), // 8 mins
+                startDate : startDate, // 3 mins
+                endDate : endDate, // 8 mins
                 hasWhitelisting : false,
                 isETHTrade : true,
-                vestingSchedule : schedule,
+                vestingSchedule : !editVesting ? schedule : [],
                 vestingCliff : 0,
-                vestingDuration: cliff
+                vestingDuration: !editVesting ? duration : 0
             });
             contractAddress = swapContract.getAddress();
             expect(res).to.not.equal(false);
+
+            if (editVesting) {
+                await swapContract.setVesting({vestingSchedule: schedule, vestingStart: endDate, cliff: 0, vestingDuration: duration});
+            }
 
 
             await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
@@ -433,10 +439,10 @@ context('ETH Contract', async () => {
                 console.log((tokenPurchaseAmount * schedule / 100) * i);
                 expect(parseFloat(purchase.amountReedemed)).to.equal(((tokenPurchaseAmount * schedule / 100) * i));
                 expect(purchase.amountLeftToRedeem).to.equal(tokenPurchaseAmount-((tokenPurchaseAmount * schedule / 100) * i));
-                await forwardTime(cliff);
+                await forwardTime(duration);
             }
 
-            await forwardTime(cliff + 1);
+            await forwardTime(duration + 1);
 
             failed = false;
             try {
@@ -449,12 +455,13 @@ context('ETH Contract', async () => {
         };
 
         const fiveMins = 5 * 60;
-        await testSwapWithVesting(fiveMins, [50, 50]);
-
-
         const oneDay = 24 * 60 * 60;
+        // Vesting in deploy
+        await testSwapWithVesting(fiveMins, [50, 50]);
         await testSwapWithVesting(oneDay, [50, 50]);
-
         await testSwapWithVesting(fiveMins, [25, 25, 25, 25]);
+        // Edit vesting
+        await testSwapWithVesting(fiveMins, [50, 50], true);
+        await testSwapWithVesting(fiveMins, [25, 25, 25, 25], true);
     }));
 });
