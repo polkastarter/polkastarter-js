@@ -224,7 +224,7 @@ context('ETH Contract', async () => {
 
     it('Edit max allocation - Admin', mochaAsync(async () => {
         let newMax = 500;
-        let res = await swapContract.editIndividualMaximumAmount({individualMaximumAmount: newMax});
+        let res = await swapContract.setIndividualMaximumAmount({individualMaximumAmount: newMax});
         expect(res).to.not.equal(false);
         expect(await swapContract.individualMaximumAmount()).to.equal(newMax+'');
     }));

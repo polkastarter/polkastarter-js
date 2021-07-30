@@ -167,13 +167,13 @@
 <dt><a href="#approveFundERC20">approveFundERC20(tokenAmount)</a></dt>
 <dd><p>Approve the pool to use approved tokens for sale</p>
 </dd>
-<dt><a href="#editIndividualMaximumAmount">editIndividualMaximumAmount(individualMaximumAmount)</a> ⇒ <code>admin</code></dt>
+<dt><a href="#setIndividualMaximumAmount">setIndividualMaximumAmount(individualMaximumAmount)</a> ⇒ <code>admin</code></dt>
 <dd><p>Modifies the max allocation</p>
 </dd>
-<dt><a href="#editEndDate">editEndDate(endDate)</a> ⇒ <code>admin</code></dt>
+<dt><a href="#setEndDate">setEndDate(endDate)</a> ⇒ <code>admin</code></dt>
 <dd><p>Modifies the end date for the pool</p>
 </dd>
-<dt><a href="#editStartDate">editStartDate(startDate)</a> ⇒ <code>admin</code></dt>
+<dt><a href="#setStartDate">setStartDate(startDate)</a> ⇒ <code>admin</code></dt>
 <dd><p>Modifies the start date for the pool</p>
 </dd>
 <dt><a href="#setHasWhitelisting">setHasWhitelisting(hasWhitelist)</a> ⇒ <code>admin</code></dt>
@@ -635,9 +635,9 @@ Approve the pool to use approved tokens for sale
 | --- | --- |
 | tokenAmount | <code>Integer</code> | 
 
-<a name="editIndividualMaximumAmount"></a>
+<a name="setIndividualMaximumAmount"></a>
 
-## editIndividualMaximumAmount(individualMaximumAmount) ⇒ <code>admin</code>
+## setIndividualMaximumAmount(individualMaximumAmount) ⇒ <code>admin</code>
 Modifies the max allocation
 
 **Kind**: global function  
@@ -646,9 +646,9 @@ Modifies the max allocation
 | --- | --- |
 | individualMaximumAmount | <code>Integer</code> | 
 
-<a name="editEndDate"></a>
+<a name="setEndDate"></a>
 
-## editEndDate(endDate) ⇒ <code>admin</code>
+## setEndDate(endDate) ⇒ <code>admin</code>
 Modifies the end date for the pool
 
 **Kind**: global function  
@@ -657,9 +657,9 @@ Modifies the end date for the pool
 | --- | --- |
 | endDate | <code>Date</code> | 
 
-<a name="editStartDate"></a>
+<a name="setStartDate"></a>
 
-## editStartDate(startDate) ⇒ <code>admin</code>
+## setStartDate(startDate) ⇒ <code>admin</code>
 Modifies the start date for the pool
 
 **Kind**: global function  

@@ -920,12 +920,12 @@ class FixedSwapContract {
 	};
 
 	/**
-	 * @function editIndividualMaximumAmount
+	 * @function setIndividualMaximumAmount
 	 * @type admin
 	 * @param {Integer} individualMaximumAmount
 	 * @description Modifies the max allocation
 	 */
-	editIndividualMaximumAmount = async ( { individualMaximumAmount } ) => {
+	 setIndividualMaximumAmount = async ( { individualMaximumAmount } ) => {
 		const maxAmount = Numbers.toSmartContractDecimals(
 			individualMaximumAmount,
 			await this.getDecimals()
@@ -936,24 +936,24 @@ class FixedSwapContract {
 	};
 
 	/**
-	 * @function editEndDate
+	 * @function setEndDate
 	 * @type admin
 	 * @param {Date} endDate
 	 * @description Modifies the end date for the pool
 	 */
-	editEndDate = async ( { endDate } ) => {
+	 setEndDate = async ( { endDate } ) => {
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.setEndDate(Numbers.timeToSmartContractTime(endDate))
 		);
 	};
 
 	/**
-	 * @function editStartDate
+	 * @function setStartDate
 	 * @type admin
 	 * @param {Date} startDate
 	 * @description Modifies the start date for the pool
 	 */
-	editStartDate = async ( { startDate } ) => {
+	 setStartDate = async ( { startDate } ) => {
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.setStartDate(Numbers.timeToSmartContractTime(startDate))
 		);
