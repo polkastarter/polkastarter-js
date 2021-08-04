@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "@openzeppelin/contracts": "^3.2.0",
+        "@walletconnect/web3-provider": "^1.5.2",
         "abi-decoder": "^1.2.0",
         "accounting": "^0.4.1",
         "axios": "^0.21.1",
