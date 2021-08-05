@@ -1161,8 +1161,8 @@ class FixedSwapContract {
 	* @param {Boolean=} isPOLSWhitelist Has White Listing. (Default: false)
 	* @param {Array<Integer>=} vestingSchedule Vesting schedule in %
 	* @param {String=} vestingStart Vesting start date (Default: endDate)
-	* @param {Number=} vestingCliff Seconds between every vesting schedule (Default: 0)
-	* @param {Number=} vestingDuration Vesting duration (Default: 0)
+	* @param {Number=} vestingCliff Seconds to wait for the first unlock after the vesting start (Default: 0)
+	* @param {Number=} vestingDuration Seconds to wait between every unlock (Default: 0)
 	*/
 	deploy = async ({
 		tradeValue,

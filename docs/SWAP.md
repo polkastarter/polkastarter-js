@@ -804,8 +804,8 @@ Deploy the Pool Contract
 | [isPOLSWhitelist] | <code>Boolean</code> | Has White Listing. (Default: false) |
 | [vestingSchedule] | <code>Array.&lt;Integer&gt;</code> | Vesting schedule in % |
 | [vestingStart] | <code>String</code> | Vesting start date (Default: endDate) |
-| [vestingCliff] | <code>Number</code> | Seconds between every vesting schedule (Default: 0) |
-| [vestingDuration] | <code>Number</code> | Vesting duration (Default: 0) |
+| [vestingCliff] | <code>Number</code> | Seconds to wait for the first unlock after the vesting start (Default: 0) |
+| [vestingDuration] | <code>Number</code> | Seconds to wait between every unlock (Default: 0) |
 
 <a name="getSmartContractVersion"></a>
 
