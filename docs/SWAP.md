@@ -32,6 +32,9 @@
 <dt><a href="#tradeValue">tradeValue()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get swapratio for the pool</p>
 </dd>
+<dt><a href="#vestingStart">vestingStart()</a> ⇒ <code>Date</code></dt>
+<dd><p>Get Start Date of the Vesting</p>
+</dd>
 <dt><a href="#startDate">startDate()</a> ⇒ <code>Date</code></dt>
 <dd><p>Get Start Date of Pool</p>
 </dd>
@@ -146,7 +149,7 @@
 <dt><a href="#getCostFromTokens">getCostFromTokens(tokenAmount)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Cost from Tokens Amount</p>
 </dd>
-<dt><a href="#getDistributionInformation">getDistributionInformation()</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Array</code> | <code>Integer</code></dt>
+<dt><a href="#getDistributionInformation">getDistributionInformation()</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Array</code> | <code>Integer</code> | <code>Date</code></dt>
 <dd><p>Get Distribution Information</p>
 </dd>
 <dt><a href="#swap">swap(tokenAmount, [signature])</a></dt>
@@ -299,6 +302,12 @@ Get swapratio for the pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - trade value against ETH  
+<a name="vestingStart"></a>
+
+## vestingStart() ⇒ <code>Date</code>
+Get Start Date of the Vesting
+
+**Kind**: global function  
 <a name="startDate"></a>
 
 ## startDate() ⇒ <code>Date</code>
@@ -573,11 +582,11 @@ Get Cost from Tokens Amount
 
 <a name="getDistributionInformation"></a>
 
-## getDistributionInformation() ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Array</code> \| <code>Integer</code>
+## getDistributionInformation() ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Array</code> \| <code>Integer</code> \| <code>Date</code>
 Get Distribution Information
 
 **Kind**: global function  
-**Returns**: <code>Integer</code> - currentSchedule (Ex : 1)<code>Integer</code> - vestingTime (Ex : 1)<code>Array</code> \| <code>Integer</code> - vestingSchedule (Ex : [100])  
+**Returns**: <code>Integer</code> - currentSchedule (Ex : 1)<code>Integer</code> - vestingTime (Ex : 1)<code>Array</code> \| <code>Integer</code> - vestingSchedule (Ex : [100])<code>Date</code> - vestingStart  
 <a name="swap"></a>
 
 ## swap(tokenAmount, [signature])

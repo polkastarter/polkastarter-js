@@ -244,6 +244,17 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function vestingStart
+	 * @description Get Start Date of the Vesting
+	 * @returns {Date}
+	 */
+	 async vestingStart() {
+		return Numbers.fromSmartContractTimeToMinutes(
+			await this.params.contract.getContract().methods.vestingStart().call()
+		);
+	}
+
+	/**
 	 * @function startDate
 	 * @description Get Start Date of Pool
 	 * @returns {Date}
@@ -798,6 +809,7 @@ class FixedSwapContract {
 	 * @returns {Integer} currentSchedule (Ex : 1)
 	 * @returns {Integer} vestingTime (Ex : 1)
 	 * @returns {Array | Integer} vestingSchedule (Ex : [100])
+	 * @returns {Date} vestingStart
 	 */
 	getDistributionInformation = async () => {
 		
@@ -813,10 +825,13 @@ class FixedSwapContract {
 			vestingSchedule.push(a);
 		}
 
+		const vestingStart = await this.vestingStart();
+
 		return {
 			currentSchedule,
 			vestingTime,
-			vestingSchedule
+			vestingSchedule,
+			vestingStart
 		}
 	}
 
