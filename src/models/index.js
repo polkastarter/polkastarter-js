@@ -4,7 +4,6 @@ import Signer from "../utils/Signer";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
-import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
@@ -86,42 +85,7 @@ class Application {
 			this.web3 = window.web3;
 		}else{
 			if(!this.test){
-				let chainId;
-				if (this.network == 'DOT') {
-					chainId = 1287;
-				} else if (this.network == 'BSC') {
-					if (this.mainnet == true) {
-						chainId = 56;
-					} else {
-						chainId = 97;
-					}
-				} else if (this.network == 'MATIC') {
-					if (this.mainnet == true) {
-						chainId = 137;
-					} else {
-						chainId = 80001;
-					}
-				} else {
-					if (this.mainnet == true) {
-						chainId = 1;
-					} else {
-						chainId = 42;
-					}
-				}
-				this.walletConnectProvider = new WalletConnectProvider({
-					rpc: {
-						1: ETH_URL_MAINNET,
-						56: BINANCE_CHAIN_URL,
-						97: BINANCE_CHAIN_TESTNET_URL,
-						42: ETH_URL_TESTNET,
-						137: POLYGON_CHAIN_URL,
-						80001: POLYGON_CHAIN_TESTNET_URL,
-						1287: MOONBEAM_TESTNET_URL
-					},
-					chainId,
-				});
-				window.web3 = new Web3(this.walletConnectProvider);
-				this.web3 = window.web3;
+				throw new Error("Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet");
 			}
 		}
 	}
@@ -131,15 +95,7 @@ class Application {
 	login = async () => {
 		try{
 			console.log("Login being done")
-			if (typeof window === "undefined" && !this.walletConnectProvider) { return false; }
-
-			if (this.walletConnectProvider) {
-				window.web3 = new Web3(this.walletConnectProvider);
-				this.web3 = window.web3;
-				await this.walletConnectProvider.enable();
-				return true;
-			}
-
+			if (typeof window === "undefined") { return false; }
 			if (window.ethereum) {
 				window.web3 = new Web3(window.ethereum);
 				this.web3 = window.web3;
