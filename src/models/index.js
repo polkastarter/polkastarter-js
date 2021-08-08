@@ -4,6 +4,7 @@ import Signer from "../utils/Signer";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
+import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const ETH_URL_MAINNET =
@@ -108,19 +109,27 @@ class Application {
 						chainId = 42;
 					}
 				}
-				this.walletConnectProvider = new WalletConnectProvider({
-					rpc: {
-						1: ETH_URL_MAINNET,
-						56: BINANCE_CHAIN_URL,
-						97: BINANCE_CHAIN_TESTNET_URL,
-						42: ETH_URL_TESTNET,
-						137: POLYGON_CHAIN_URL,
-						80001: POLYGON_CHAIN_TESTNET_URL,
-						1287: MOONBEAM_TESTNET_URL
-					},
-					chainId,
-				});
-				window.web3 = new Web3(this.walletConnectProvider);
+
+				this.web3ModalProvider = new Web3Modal({
+					providerOptions: {
+						walletconnect: {
+							package: WalletConnectProvider, // required
+							options: {
+								rpc: {
+									1: ETH_URL_MAINNET,
+									56: BINANCE_CHAIN_URL,
+									97: BINANCE_CHAIN_TESTNET_URL,
+									42: ETH_URL_TESTNET,
+									137: POLYGON_CHAIN_URL,
+									80001: POLYGON_CHAIN_TESTNET_URL,
+									1287: MOONBEAM_TESTNET_URL
+								},
+								chainId
+							}
+						}
+					}
+				})
+				window.web3 = new Web3(this.web3ModalProvider);
 				this.web3 = window.web3;
 			}
 		}
@@ -131,12 +140,12 @@ class Application {
 	login = async () => {
 		try{
 			console.log("Login being done")
-			if (typeof window === "undefined" && !this.walletConnectProvider) { return false; }
+			if (typeof window === "undefined") { return false; }
 
-			if (this.walletConnectProvider) {
-				window.web3 = new Web3(this.walletConnectProvider);
+			if (this.web3ModalProvider) {
+				window.web3 = new Web3(this.web3ModalProvider);
 				this.web3 = window.web3;
-				await this.walletConnectProvider.enable();
+				await this.web3ModalProvider.connect();
 				return true;
 			}
 

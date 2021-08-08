@@ -43,7 +43,8 @@
         "moment": "^2.21.0",
         "mongoose": "^5.9.5",
         "randomhex": "^0.1.5",
-        "web3": "1.0.0-beta.55"
+        "web3": "1.0.0-beta.55",
+        "web3modal": "^1.9.4"
     },
     "scripts": {
         "test": "nyc ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
