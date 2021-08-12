@@ -4,6 +4,7 @@ import Signer from "../utils/Signer";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
+import Web3Modal from "web3modal";
 
 const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
@@ -50,7 +51,7 @@ class Application {
 			} else {
 				this.web3 = web3;
 			}
-			this.login();
+			// this.login();
 			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
 		}
 	}
@@ -78,15 +79,13 @@ class Application {
 			);
 		}else if(this.network == 'ETH'){
 			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
+		}else if(this.network == 'MATIC'){
+			this.web3 = new Web3((this.mainnet == true) ? POLYGON_CHAIN_URL : POLYGON_CHAIN_TESTNET_URL);
 		}
 
 		if((typeof window !== "undefined") && window.ethereum) {
 			window.web3 = new Web3(window.ethereum);
 			this.web3 = window.web3;
-		}else{
-			if(!this.test){
-				throw new Error("Please Use an Ethereum Enabled Browser like Metamask or Coinbase Wallet");
-			}
 		}
 	}
 
@@ -96,13 +95,64 @@ class Application {
 		try{
 			console.log("Login being done")
 			if (typeof window === "undefined") { return false; }
-			if (window.ethereum) {
-				window.web3 = new Web3(window.ethereum);
+
+		
+			let chainId;
+			if (this.network == 'DOT') {
+				chainId = 1287;
+			} else if (this.network == 'BSC') {
+				if (this.mainnet == true) {
+					chainId = 56;
+				} else {
+					chainId = 97;
+				}
+			} else if (this.network == 'MATIC') {
+				if (this.mainnet == true) {
+					chainId = 137;
+				} else {
+					chainId = 80001;
+				}
+			} else {
+				if (this.mainnet == true) {
+					chainId = 1;
+				} else {
+					chainId = 42;
+				}
+			}
+
+			let WalletConnectProvider;
+			if (window.WalletConnectProvider) {
+				WalletConnectProvider = window.WalletConnectProvider.default;
+			} else {
+				WalletConnectProvider = require("@walletconnect/web3-provider");
+			}
+			this.web3ModalProvider = new Web3Modal({
+				cacheProvider: true,
+				providerOptions: {
+					walletconnect: {
+						package: WalletConnectProvider, // required
+						options: {
+							rpc: {
+								1: ETH_URL_MAINNET,
+								56: BINANCE_CHAIN_URL,
+								97: BINANCE_CHAIN_TESTNET_URL,
+								42: ETH_URL_TESTNET,
+								137: POLYGON_CHAIN_URL,
+								80001: POLYGON_CHAIN_TESTNET_URL,
+								1287: MOONBEAM_TESTNET_URL
+							},
+							chainId
+						}
+					}
+				}
+			})
+
+			if (this.web3ModalProvider) {
+				// this.web3ModalProvider.clearCachedProvider();
+				window.web3 = new Web3(await this.web3ModalProvider.connect());
 				this.web3 = window.web3;
-				await window.ethereum.enable();
 				return true;
 			}
-			return false;
 		}catch(err){
 			throw err;
 		}
