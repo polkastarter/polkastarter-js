@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import FixedSwapContract from "./FixedSwapContract";
 import Signer from "../utils/Signer";
+import Network from "../utils/Network";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
@@ -35,6 +36,14 @@ const networksEnum = Object.freeze({
 	80001: "Mumbai",
 });
 
+/**
+ * Polkastarter Application Object
+ * @constructor Application
+ * @param {(ETH|BSC|MATIC|DOT)=} network Current network (Default = ETH)
+ * @param {Boolean=} mainnet Specifies if we're on mainnet or tesnet (Default = true);
+ * @param {Boolean=} test ? Specifies if we're on test env
+ * @param {Web3=} web3 Custom Web3 instance. If not provided the Application will instance it for you. (Default: undefined)
+ */
 class Application {
 	constructor({test=false, mainnet=true, network='ETH', web3=undefined}) {
 		this.test = test;
@@ -56,6 +65,10 @@ class Application {
 		}
 	}
 
+	/**
+	 * @function startWithoutMetamask
+	 * @description Starts an instance of web3 for read-only methods
+	 */
 	startWithoutMetamask = () => {
 		if(this.network == 'DOT'){
 			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
@@ -70,6 +83,10 @@ class Application {
 		}
 	}
 	
+	/**
+	 * @function start
+	 * @description Starts an instance of web3
+	 */
 	start = () => {
 		if(this.network == 'DOT'){
 			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
@@ -89,8 +106,10 @@ class Application {
 		}
 	}
 
-	
-
+	/**
+	 * @function login
+	 * @description Prompts a modal for user to login with his wallet. 
+	*/
 	login = async () => {
 		try{
 			console.log("Login being done")
@@ -163,11 +182,28 @@ class Application {
 		return new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(privateKey));
 	}
 
+	/**
+	 * @function getSigner
+	 * @description Returns the Signer instance. 
+	*/
 	getSigner = () => {
 		return new Signer();
 	}
 
-	/* getFixedSwapContract */
+	/**
+	 * @function getNetworkUtils
+	 * @description Returns the Network Utils instance. 
+	*/
+	getNetworkUtils = () => {
+		return new Network(this.network);
+	}
+
+	/**
+	 * @function getFixedSwapContract
+	 * @param {string} tokenAddress The token address we want to trade
+	 * @param {string=} contractAddress The swap contract address, in case t hat has already been instanced. (Default = null)
+	 * @description Returns Fixed Swap instance
+	*/
 	getFixedSwapContract = async ({tokenAddress, contractAddress=null}) => {
 		let contract;
 		if(!contractAddress){
@@ -205,8 +241,12 @@ class Application {
 			return contract;
 		}
 	};
-
-	/* getERC20TokenContract */
+	
+	/**
+	 * @function getERC20TokenContract
+	 * @param {string} tokenAddress The token address
+	 * @description Returns ERC20 instance
+	*/
 	getERC20TokenContract =  ({tokenAddress}) => {
 		try{
 			return new ERC20TokenContract({
@@ -219,7 +259,10 @@ class Application {
 		}
 	};
 
-	/* Get Network of Platform Web3 */
+	/**
+	 * @function getETHNetwork
+	 * @description Returns the current network
+	*/
 	getETHNetwork = async () => {
 		const netId = await this.web3.eth.net.getId();
 		const networkName = networksEnum.hasOwnProperty(netId)
@@ -228,13 +271,20 @@ class Application {
 		return networkName;
 	};
 
-	/* Get User Address */
+	/**
+	 * @function getAddress
+	 * @description Returns the connected user address
+	*/
 	getAddress = async () => {
 		const accounts = await this.web3.eth.getAccounts();
 		return accounts[0];
 	};
 
-	/* Get User Balance in Ethereum */
+
+	/**
+	 * @function getETHBalance
+	 * @description Returns the native currency of the connected user wallet.
+	*/
 	getETHBalance = async () => {
 		let wei = await this.web3.eth.getBalance(await this.getAddress());
 		return this.web3.utils.fromWei(wei, "ether");
