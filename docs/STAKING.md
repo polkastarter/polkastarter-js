@@ -11,6 +11,12 @@
 <dt><a href="#stake">stake(amount)</a></dt>
 <dd><p>Stakes tokens inside the stake contract</p>
 </dd>
+<dt><a href="#approveStakeERC20">approveStakeERC20(tokenAmount)</a></dt>
+<dd><p>Approve the stake to use approved tokens</p>
+</dd>
+<dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Verify if the address has approved the staking to deposit</p>
+</dd>
 <dt><a href="#withdraw">withdraw()</a></dt>
 <dd><p>Withdraw tokens from the stake contract</p>
 </dd>
@@ -37,7 +43,7 @@
 **Kind**: global class  
 <a name="new_Staking_new"></a>
 
-### new Staking(web3, [contractAddress], acc)
+### new Staking(web3, [contractAddress], acc, [tokenAddress])
 Staking Object
 
 
@@ -46,6 +52,7 @@ Staking Object
 | web3 | <code>Web3</code> |  |
 | [contractAddress] | <code>string</code> | The staking contract address. (Default: Predefined addresses depending on the network) |
 | acc | <code>Account</code> |  |
+| [tokenAddress] | <code>string</code> | The staking token address. (Default: Predefined addresses depending on the network) |
 
 <a name="stake"></a>
 
@@ -57,6 +64,29 @@ Stakes tokens inside the stake contract
 | Param | Type | Description |
 | --- | --- | --- |
 | amount | <code>Integer</code> | Amount |
+
+<a name="approveStakeERC20"></a>
+
+## approveStakeERC20(tokenAmount)
+Approve the stake to use approved tokens
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| tokenAmount | <code>Integer</code> | 
+
+<a name="isApproved"></a>
+
+## isApproved(tokenAmount, address) ⇒ <code>Boolean</code>
+Verify if the address has approved the staking to deposit
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| tokenAmount | <code>Integer</code> | 
+| address | <code>Address</code> | 
 
 <a name="withdraw"></a>
 

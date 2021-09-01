@@ -23,7 +23,7 @@
 <dt><a href="#getNetworkUtils">getNetworkUtils()</a></dt>
 <dd><p>Returns the Network Utils instance.</p>
 </dd>
-<dt><a href="#getStaking">getStaking([contractAddress])</a></dt>
+<dt><a href="#getStaking">getStaking([contractAddress], [tokenAddress])</a></dt>
 <dd><p>Returns the Staking Model instance.</p>
 </dd>
 <dt><a href="#getFixedSwapContract">getFixedSwapContract(tokenAddress, [contractAddress])</a></dt>
@@ -92,7 +92,7 @@ Returns the Network Utils instance.
 **Kind**: global function  
 <a name="getStaking"></a>
 
-## getStaking([contractAddress])
+## getStaking([contractAddress], [tokenAddress])
 Returns the Staking Model instance.
 
 **Kind**: global function  
@@ -100,6 +100,7 @@ Returns the Staking Model instance.
 | Param | Type | Description |
 | --- | --- | --- |
 | [contractAddress] | <code>string</code> | The staking contract address. (Default: Predefined addresses depending on the network) |
+| [tokenAddress] | <code>string</code> | The staking token address. (Default: Predefined addresses depending on the network) |
 
 <a name="getFixedSwapContract"></a>
 
