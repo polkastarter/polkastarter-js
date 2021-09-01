@@ -989,10 +989,10 @@ class FixedSwapContract {
 	/**
 	 * @function setVesting
 	 * @type admin
-	* @param {Array<Integer>=} vestingSchedule Vesting schedule in %
-	* @param {String=} vestingStart Vesting start date (Default: endDate)
-	* @param {Number=} vestingCliff Seconds between every vesting schedule (Default: 0)
-	* @param {Number=} vestingDuration Vesting duration (Default: 0)
+	 * @param {Array<Integer>=} vestingSchedule Vesting schedule in %
+	 * @param {String=} vestingStart Vesting start date (Default: endDate)
+	 * @param {Number=} vestingCliff Seconds between every vesting schedule (Default: 0)
+	 * @param {Number=} vestingDuration Vesting duration (Default: 0)
 	 * @description Modifies the current vesting config
 	 */
 	 setVesting = async ( { 

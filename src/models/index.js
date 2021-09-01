@@ -4,6 +4,7 @@ import Signer from "../utils/Signer";
 import Network from "../utils/Network";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
+import Staking from "./Staking";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
 import Web3Modal from "web3modal";
 
@@ -196,6 +197,21 @@ class Application {
 	*/
 	getNetworkUtils = () => {
 		return new Network(this.network);
+	}
+
+	/**
+	 * @function getStaking
+	 * @param {string=} contractAddress The staking contract address. (Default: Predefined addresses depending on the network)
+	 * @param {string=} tokenAddress The staking token address. (Default: Predefined addresses depending on the network)
+	 * @description Returns the Staking Model instance. 
+	*/
+	getStaking = ({contractAddress=null, tokenAddress=null}) => {
+		return new Staking({
+			web3: this.web3,
+			acc : this.test ? this.account : null,
+			contractAddress: contractAddress,
+			tokenAddress: tokenAddress
+		});
 	}
 
 	/**

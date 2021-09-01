@@ -11,3 +11,5 @@ Welcome to the Polkastarter JS doc to integrate Polkastarter.
 #### [Signer](/docs/SIGNER.md)
 
 #### [Network Utils](/docs/NETWORK.md)
+
+#### [STaking](/docs/STAKING.md)
