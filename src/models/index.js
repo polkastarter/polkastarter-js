@@ -210,7 +210,9 @@ class Application {
 			web3: this.web3,
 			acc : this.test ? this.account : null,
 			contractAddress: contractAddress,
-			tokenAddress: tokenAddress
+			tokenAddress: tokenAddress,
+			network: this.network,
+			test: this.test
 		});
 	}
 

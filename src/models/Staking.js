@@ -10,17 +10,34 @@ import ERC20TokenContract from "./ERC20TokenContract";
  * @param {string=} contractAddress The staking contract address. (Default: Predefined addresses depending on the network)
  * @param {Account} acc
  * @param {string=} tokenAddress The staking token address. (Default: Predefined addresses depending on the network)
+ * @param {(ETH|BSC|MATIC|DOT)=} network The network where the staking contract is. (Default: ETH)
+ * @param {Boolean=} test ? Specifies if we're on test env (Default: false)
  */
  class Staking {
+
+    stakingAddresses = {};
+    tokenAddresses = {};
+    stakingTestAddresses = {
+        'BSC': '0x20c48C19Ca7079Ed8E7CD317829d4ebf75125390'
+    };
+    tokenTestAddresses = {
+        'BSC': '0xcfd314B14cAB8c3e36852A249EdcAa1D3Dd05055'
+    };
+
 	constructor({
 		web3,
 		contractAddress,
 		acc,
-        tokenAddress
+        tokenAddress,
+        network = 'ETH',
+        test = false
 	}) {
         if (!web3) {
             throw new Error("Please provide a valid web3 provider");
         }
+        if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC')){
+			throw new Error("Network has to be ETH or DOT or BSC or MATIC");
+		}
         this.web3 = web3;
         this.version = "2.0";
         if (acc) {
@@ -28,7 +45,14 @@ import ERC20TokenContract from "./ERC20TokenContract";
         }
 
         if (!contractAddress) {
-            // ToDo get from ENUM with networks => addresses (BSC AND ETH)
+            let stakingAddresses = this.stakingAddresses;
+            if (test) {
+                stakingAddresses = this.stakingTestAddresses;
+            }
+            contractAddress = stakingAddresses[network];
+            if (!contractAddress) {
+                throw new Error('Staking not available on the network ' + network);
+            }
         }
 
         this.params = {
@@ -38,7 +62,14 @@ import ERC20TokenContract from "./ERC20TokenContract";
         };
 
         if (!tokenAddress) {
-            // ToDo get from ENUM with networks => addresses (BSC AND ETH)
+            let tokenAddresses = this.tokenAddresses;
+            if (test) {
+                tokenAddresses = this.tokenTestAddresses;
+            }
+            tokenAddress = tokenAddresses[network];
+            if (!tokenAddress) {
+                throw new Error('Token not available on the network ' + network);
+            }
         }
 
         this.params.erc20TokenContract = new ERC20TokenContract({

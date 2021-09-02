@@ -45,7 +45,7 @@ context('Staking Contract', async () => {
                     }
                 ]
             });
-            app = new Application({test : true, mainnet : false, network : 'ETH', web3:
+            app = new Application({test : true, mainnet : false, network : 'BSC', web3:
                 new Web3(ganacheProvider)
             });
             app.web3.eth.transactionConfirmationBlocks = 1;
@@ -79,6 +79,13 @@ context('Staking Contract', async () => {
     }));
 
    
+    it('should automatically get addresses', mochaAsync(async () => {
+        let stakeContract = await app.getStaking({});
+        expect(stakeContract).to.not.equal(false);
+        expect(stakeContract.params.contractAddress).to.equal('0x20c48C19Ca7079Ed8E7CD317829d4ebf75125390');
+        expect(stakeContract.params.erc20TokenContract.params.contractAddress).to.equal('0xcfd314B14cAB8c3e36852A249EdcAa1D3Dd05055');
+    }));
+
     it('should get deployed contract', mochaAsync(async () => {
         stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
         expect(stakeContract).to.not.equal(false);

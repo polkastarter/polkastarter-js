@@ -43,7 +43,7 @@
 **Kind**: global class  
 <a name="new_Staking_new"></a>
 
-### new Staking(web3, [contractAddress], acc, [tokenAddress])
+### new Staking(web3, [contractAddress], acc, [tokenAddress], [network], [test])
 Staking Object
 
 
@@ -53,6 +53,8 @@ Staking Object
 | [contractAddress] | <code>string</code> | The staking contract address. (Default: Predefined addresses depending on the network) |
 | acc | <code>Account</code> |  |
 | [tokenAddress] | <code>string</code> | The staking token address. (Default: Predefined addresses depending on the network) |
+| [network] | <code>ETH</code> \| <code>BSC</code> \| <code>MATIC</code> \| <code>DOT</code> | The network where the staking contract is. (Default: ETH) |
+| [test] | <code>Boolean</code> | ? Specifies if we're on test env (Default: false) |
 
 <a name="stake"></a>
 
