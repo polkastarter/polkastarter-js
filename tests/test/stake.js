@@ -101,6 +101,10 @@ context('Staking Contract', async () => {
         await stakeContract.stake({amount: 1000});
         const res = await stakeContract.stakeAmount({address: app.account.getAddress()});
         expect(Number(res).noExponents()).to.equal(Number(1000).noExponents());
+
+        let unlockTime = parseInt(await stakeContract.stakeTime({address: app.account.getAddress()})) + parseInt(await stakeContract.getLockTimePeriod())
+
+        expect(Number(await stakeContract.getUnlockTime({address: app.account.getAddress()})).noExponents()).to.equal(Number(unlockTime).noExponents())
     }));
 
 

@@ -198,6 +198,25 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	}
 
     /**
+	 * @function lockTimePeriod
+	 * @description Returns the lock time perdio
+	 * @returns {Integer} lockTimePeriod
+	*/
+    getLockTimePeriod = async () => {
+		return await this.params.contract.getContract().methods.lockTimePeriod().call();
+	}
+    
+    /**
+	 * @function getUnlockTime
+	 * @description Returns the stake time for a wallet
+	 * @param {string} address
+	 * @returns {Integer} unlockTime
+	*/
+    getUnlockTime = async ({address}) => {
+		return await this.params.contract.getContract().methods.getUnlockTime(address).call();
+	}
+
+    /**
 	 * @function stakeAmount
 	 * @description Returns the stake amount for a wallet
 	 * @param {string} address

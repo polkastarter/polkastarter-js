@@ -193,11 +193,23 @@ class FixedSwapContract {
 	}
 
 	/**
+	 * @function setStakingRewards
+	 * @type admin
+	 * @description Sets the staking rewards address
+	 * @param {string} address
+	 */
+	async setStakingRewards({address}) {
+		return await this.__sendTx(
+			this.params.contract.getContract().methods.setStakingRewards(address)
+		);
+	}
+
+	/**
 	 * @function pauseContract
 	 * @type admin
 	 * @description Pause Contract
 	 */
-	async pauseContract() {
+	 async pauseContract() {
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.pause()
 		);

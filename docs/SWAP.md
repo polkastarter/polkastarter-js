@@ -20,6 +20,9 @@
 <dt><a href="#isPaused">isPaused()</a> ⇒ <code>boolean</code></dt>
 <dd><p>Returns if the contract is paused or not</p>
 </dd>
+<dt><a href="#setStakingRewards">setStakingRewards(address)</a> ⇒ <code>admin</code></dt>
+<dd><p>Sets the staking rewards address</p>
+</dd>
 <dt><a href="#pauseContract">pauseContract()</a> ⇒ <code>admin</code></dt>
 <dd><p>Pause Contract</p>
 </dd>
@@ -276,6 +279,17 @@ Returns true if the address is in the blacklist
 Returns if the contract is paused or not
 
 **Kind**: global function  
+<a name="setStakingRewards"></a>
+
+## setStakingRewards(address) ⇒ <code>admin</code>
+Sets the staking rewards address
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
 <a name="pauseContract"></a>
 
 ## pauseContract() ⇒ <code>admin</code>

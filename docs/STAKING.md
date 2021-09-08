@@ -32,6 +32,12 @@
 <dt><a href="#stakeTime">stakeTime(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the stake time for a wallet</p>
 </dd>
+<dt><a href="#lockTimePeriod">lockTimePeriod()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns the lock time perdio</p>
+</dd>
+<dt><a href="#getUnlockTime">getUnlockTime(address)</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns the stake time for a wallet</p>
+</dd>
 <dt><a href="#stakeAmount">stakeAmount(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the stake amount for a wallet</p>
 </dd>
@@ -132,6 +138,25 @@ Returns the stake time for a wallet
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - stakeTime  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="lockTimePeriod"></a>
+
+## lockTimePeriod() ⇒ <code>Integer</code>
+Returns the lock time perdio
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - lockTimePeriod  
+<a name="getUnlockTime"></a>
+
+## getUnlockTime(address) ⇒ <code>Integer</code>
+Returns the stake time for a wallet
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - unlockTime  
 
 | Param | Type |
 | --- | --- |
