@@ -163,23 +163,6 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	};
 
     /**
-	 * @function setTokenSaleContract
-	 * @description Changes the token sale contract
-	 * @param {string} address
-	 */
-	 setTokenSaleContract = async ({ address }) => {
-		try {
-			return await this.__sendTx(
-				this.params.contract
-					.getContract()
-					.methods.setTokenSaleContract(address)
-			);
-		} catch (err) {
-			throw err;
-		}
-	};
-
-    /**
 	 * @function userAccumulatedRewards
 	 * @description Returns the accumulated rewards
 	 * @param {string} address

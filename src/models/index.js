@@ -162,7 +162,7 @@ class Application {
 			contractAddress: contractAddress,
 			tokenAddress: tokenAddress,
 			network: this.network,
-			test: this.test
+			test: !this.mainnet
 		});
 	}
 
