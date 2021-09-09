@@ -1,6 +1,7 @@
 import { fixedswap } from "../interfaces";
 import Contract from "./Contract";
 import ERC20TokenContract from "./ERC20TokenContract";
+import IDOStaking from "./IDOStaking";
 import Numbers from "../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
@@ -202,6 +203,23 @@ class FixedSwapContract {
 		return await this.__sendTx(
 			this.params.contract.getContract().methods.setStakingRewards(address)
 		);
+	}
+
+	/**
+	 * @function getIDOStaking
+	 * @description Returns the contract for the ido staking
+	 * @returns {IDOStaking}
+	 */
+	async getIDOStaking() {
+		const contractAddr = await this.params.contract.getContract().methods.stakingRewardsAddress().call();
+		if (contractAddr == '0x0000000000000000000000000000000000000000') {
+			throw new Error('This pool doesn\'t have a staking contract');
+		}
+		return new IDOStaking({
+			acc: this.acc,
+			web3: this.web3,
+			contractAddress: contractAddr
+		});
 	}
 
 	/**
@@ -890,11 +908,11 @@ class FixedSwapContract {
 	 * @variation isStandard
 	 * @description Reedem tokens bought
 	 * @param {Integer} purchase_id
+	 * @param {Boolean=} stake If true send token to the ido staking contract
 	 */
-
-	redeemTokens = async ({ purchase_id }) => {
+	redeemTokens = async ({ purchase_id, stake = false }) => {
 		return await this.__sendTx(
-			this.params.contract.getContract().methods.redeemTokens(purchase_id)
+			this.params.contract.getContract().methods.transferTokens(purchase_id, stake)
 		);
 	};
 
