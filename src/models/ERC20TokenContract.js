@@ -128,6 +128,9 @@ class ERC20TokenContract {
 			);
 
 			let approvedAmount = Numbers.fromDecimals(res, await this.getDecimals());
+			if (typeof amount === 'string' || amount instanceof String) {
+				amount = parseFloat(amount);
+			}
 			return (approvedAmount >= amount);
 		} catch (err) {
 			throw err;
