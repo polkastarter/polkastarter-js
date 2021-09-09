@@ -97,7 +97,9 @@ context('Staking Contract', async () => {
     }));
 
     it('should stake after approve', mochaAsync(async () => {
+        expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: 1000})).to.equal(false);
         await stakeContract.approveStakeERC20({tokenAmount: 1000});
+        expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: 1000})).to.equal(true);
         await stakeContract.stake({amount: 1000});
         const res = await stakeContract.stakeAmount({address: app.account.getAddress()});
         expect(Number(res).noExponents()).to.equal(Number(1000).noExponents());
