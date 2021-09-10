@@ -17,8 +17,11 @@
 <dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the address has approved the staking to deposit</p>
 </dd>
-<dt><a href="#withdraw">withdraw()</a></dt>
+<dt><a href="#withdraw">withdraw(amount)</a></dt>
 <dd><p>Withdraw tokens from the stake contract</p>
+</dd>
+<dt><a href="#withdrawAll">withdrawAll()</a></dt>
+<dd><p>Withdraw all the tokens from the stake contract</p>
 </dd>
 <dt><a href="#claim">claim()</a></dt>
 <dd><p>Claim rewards from the staking contract</p>
@@ -95,8 +98,19 @@ Verify if the address has approved the staking to deposit
 
 <a name="withdraw"></a>
 
-## withdraw()
+## withdraw(amount)
 Withdraw tokens from the stake contract
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| amount | <code>Integer</code> | 
+
+<a name="withdrawAll"></a>
+
+## withdrawAll()
+Withdraw all the tokens from the stake contract
 
 **Kind**: global function  
 <a name="claim"></a>

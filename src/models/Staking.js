@@ -132,14 +132,36 @@ import ERC20TokenContract from "./ERC20TokenContract";
 
     /**
 	 * @function withdraw
+	 * @param {Integer} amount
 	 * @description Withdraw tokens from the stake contract
 	 */
-	 withdraw = async () => {
+	 withdraw = async ({amount}) => {
+
+        amount = Numbers.toSmartContractDecimals(
+			amount,
+			await this.getDecimals()
+		)
 		try {
 			return await this.__sendTx(
 				this.params.contract
 					.getContract()
-					.methods.withdraw()
+					.methods.withdraw(amount)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+    /**
+	 * @function withdrawAll
+	 * @description Withdraw all the tokens from the stake contract
+	 */
+	 withdrawAll = async () => {
+		try {
+			return await this.__sendTx(
+				this.params.contract
+					.getContract()
+					.methods.withdrawAll()
 			);
 		} catch (err) {
 			throw err;

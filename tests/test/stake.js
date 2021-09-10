@@ -114,7 +114,7 @@ context('Staking Contract', async () => {
     it('should fail withdraw if we didnt reach time', mochaAsync(async () => {
         let failed = false;
         try {
-            res = await stakeContract.withdraw()
+            res = await stakeContract.withdrawAll()
             expect(res).to.not.equal(false);
         } catch (e) {
             failed = true;
@@ -124,8 +124,11 @@ context('Staking Contract', async () => {
 
     it('should withdraw after stake', mochaAsync(async () => {
         await forwardTime(lockTime + 30);
-        await stakeContract.withdraw();
-        const res = await stakeContract.stakeAmount({address: app.account.getAddress()});
+        await stakeContract.withdraw({amount: 400});
+        let res = await stakeContract.stakeAmount({address: app.account.getAddress()});
+        expect(Number(res).noExponents()).to.equal(Number(600).noExponents());
+        await stakeContract.withdrawAll();
+        res = await stakeContract.stakeAmount({address: app.account.getAddress()});
         expect(Number(res).noExponents()).to.equal(Number(0).noExponents());
     }));
 });
