@@ -1,84 +1,36 @@
 import Contract from "./Contract";
-import { staking } from "../interfaces";
+import { idostaking } from "../interfaces";
 import Numbers from "../utils/Numbers";
 import ERC20TokenContract from "./ERC20TokenContract";
 
 /**
- * Staking Object
- * @constructor Staking
+ * IDO Staking Object
+ * @constructor IDOStaking
  * @param {Web3} web3
- * @param {string=} contractAddress The staking contract address. (Default: Predefined addresses depending on the network)
+ * @param {string} contractAddress The staking contract address.
  * @param {Account} acc
- * @param {string=} tokenAddress The staking token address. (Default: Predefined addresses depending on the network)
- * @param {(ETH|BSC|MATIC|DOT)=} network The network where the staking contract is. (Default: ETH)
- * @param {Boolean=} test ? Specifies if we're on test env (Default: false)
  */
- class Staking {
-
-    stakingAddresses = {};
-    tokenAddresses = {};
-    stakingTestAddresses = {
-        'BSC': '0x20c48C19Ca7079Ed8E7CD317829d4ebf75125390',
-        'ETH': '0x2F5E00fB8d2cd712Cc64343c6E13eD0dD966AFDD'
-    };
-    tokenTestAddresses = {
-        'BSC': '0xcfd314B14cAB8c3e36852A249EdcAa1D3Dd05055',
-        'ETH': '0x03EF180c07D30E46CAc83e5b9E282a9B295ca8A9'
-    };
+ class IDOStaking {
 
 	constructor({
 		web3,
 		contractAddress,
 		acc,
-        tokenAddress,
-        network = 'ETH',
-        test = false
 	}) {
         if (!web3) {
             throw new Error("Please provide a valid web3 provider");
         }
-        if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC')){
-			throw new Error("Network has to be ETH or DOT or BSC or MATIC");
-		}
         this.web3 = web3;
         this.version = "2.0";
         if (acc) {
             this.acc = acc;
         }
 
-        if (!contractAddress) {
-            let stakingAddresses = this.stakingAddresses;
-            if (test) {
-                stakingAddresses = this.stakingTestAddresses;
-            }
-            contractAddress = stakingAddresses[network];
-            if (!contractAddress) {
-                throw new Error('Staking not available on the network ' + network);
-            }
-        }
-
         this.params = {
             web3: web3,
             contractAddress: contractAddress,
-            contract: new Contract(web3, staking, contractAddress),
+            contract: new Contract(web3, idostaking, contractAddress),
         };
-
-        if (!tokenAddress) {
-            let tokenAddresses = this.tokenAddresses;
-            if (test) {
-                tokenAddresses = this.tokenTestAddresses;
-            }
-            tokenAddress = tokenAddresses[network];
-            if (!tokenAddress) {
-                throw new Error('Token not available on the network ' + network);
-            }
-        }
-
-        this.params.erc20TokenContract = new ERC20TokenContract({
-            web3: web3,
-            contractAddress: tokenAddress,
-            acc
-        });
     }
 
     /**
@@ -108,7 +60,7 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	 * @description Approve the stake to use approved tokens
 	 */
 	approveStakeERC20 = async ({ tokenAmount, callback }) => {
-		return await this.getTokenContract().approve({
+		return await (await this.getTokenContract()).approve({
 			address: this.params.contractAddress,
 			amount: tokenAmount,
 			callback
@@ -123,7 +75,7 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	 * @returns {Boolean}
 	 */
 	isApproved = async ({ tokenAmount, address }) => {
-		return await this.getTokenContract().isApproved({
+		return await (await this.getTokenContract()).isApproved({
 			address: address,
 			amount: tokenAmount,
 			spenderAddress: this.params.contractAddress
@@ -136,23 +88,21 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	 * @description Withdraw tokens from the stake contract
 	 */
 	 withdraw = async ({amount}) => {
-
-        amount = Numbers.toSmartContractDecimals(
-			amount,
-			await this.getDecimals()
-		)
 		try {
 			return await this.__sendTx(
 				this.params.contract
 					.getContract()
-					.methods.withdraw(amount)
+					.methods.withdraw(Numbers.toSmartContractDecimals(
+						amount,
+						await this.getDecimals()
+					))
 			);
 		} catch (err) {
 			throw err;
 		}
 	};
 
-    /**
+	/**
 	 * @function withdrawAll
 	 * @description Withdraw all the tokens from the stake contract
 	 */
@@ -177,7 +127,7 @@ import ERC20TokenContract from "./ERC20TokenContract";
 			return await this.__sendTx(
 				this.params.contract
 					.getContract()
-					.methods.claim()
+					.methods.getReward()
 			);
 		} catch (err) {
 			throw err;
@@ -191,36 +141,7 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	 * @returns {Integer} userAccumulatedRewards
 	*/
     userAccumulatedRewards = async ({address}) => {
-		return await this.params.contract.getContract().methods.userAccumulatedRewards(address).call();
-	}
-
-	/**
-	 * @function stakeTime
-	 * @description Returns the stake time for a wallet
-	 * @param {string} address
-	 * @returns {Integer} stakeTime
-	*/
-    stakeTime = async ({address}) => {
-		return await this.params.contract.getContract().methods.stakeTime(address).call();
-	}
-
-    /**
-	 * @function lockTimePeriod
-	 * @description Returns the lock time perdio
-	 * @returns {Integer} lockTimePeriod
-	*/
-    getLockTimePeriod = async () => {
-		return await this.params.contract.getContract().methods.lockTimePeriod().call();
-	}
-    
-    /**
-	 * @function getUnlockTime
-	 * @description Returns the stake time for a wallet
-	 * @param {string} address
-	 * @returns {Integer} unlockTime
-	*/
-    getUnlockTime = async ({address}) => {
-		return await this.params.contract.getContract().methods.getUnlockTime(address).call();
+		return await this.params.contract.getContract().methods.earned(address).call();
 	}
 
     /**
@@ -231,16 +152,23 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	*/
     stakeAmount = async ({address}) => {
 		return Numbers.fromDecimals(
-            await this.params.contract.getContract().methods.stakeAmount(address).call(),
+            await this.params.contract.getContract().methods.balanceOf(address).call(),
             await this.getDecimals()
         );
 	}
 
     getDecimals = async () => {
-		return 18;
+		return await (await this.getTokenContract()).getDecimals();
 	}
 
-    getTokenContract() {
+    getTokenContract = async () => {
+		if (!this.params.erc20TokenContract) {
+			this.params.erc20TokenContract = new ERC20TokenContract({
+				web3: web3,
+				contractAddress: await this.params.contract.getContract().methods.stakingToken().call(),
+				acc: this.acc
+			});
+		}
 		return this.params.erc20TokenContract;
 	}
 
@@ -293,4 +221,4 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	};
 }
 
-export default Staking;
+export default IDOStaking;

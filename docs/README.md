@@ -12,4 +12,6 @@ Welcome to the Polkastarter JS doc to integrate Polkastarter.
 
 #### [Network Utils](/docs/NETWORK.md)
 
-#### [STaking](/docs/STAKING.md)
+#### [Staking](/docs/STAKING.md)
+
+#### [IDO Staking](/docs/IDOSTAKING.md)

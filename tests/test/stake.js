@@ -97,17 +97,24 @@ context('Staking Contract', async () => {
     }));
 
     it('should stake after approve', mochaAsync(async () => {
+        expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: 1000})).to.equal(false);
         await stakeContract.approveStakeERC20({tokenAmount: 1000});
+        expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: '1000'})).to.equal(true);
+        expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: 1000})).to.equal(true);
         await stakeContract.stake({amount: 1000});
         const res = await stakeContract.stakeAmount({address: app.account.getAddress()});
         expect(Number(res).noExponents()).to.equal(Number(1000).noExponents());
+
+        let unlockTime = parseInt(await stakeContract.stakeTime({address: app.account.getAddress()})) + parseInt(await stakeContract.getLockTimePeriod())
+
+        expect(Number(await stakeContract.getUnlockTime({address: app.account.getAddress()})).noExponents()).to.equal(Number(unlockTime).noExponents())
     }));
 
 
     it('should fail withdraw if we didnt reach time', mochaAsync(async () => {
         let failed = false;
         try {
-            res = await stakeContract.withdraw()
+            res = await stakeContract.withdrawAll()
             expect(res).to.not.equal(false);
         } catch (e) {
             failed = true;
@@ -117,8 +124,11 @@ context('Staking Contract', async () => {
 
     it('should withdraw after stake', mochaAsync(async () => {
         await forwardTime(lockTime + 30);
-        await stakeContract.withdraw();
-        const res = await stakeContract.stakeAmount({address: app.account.getAddress()});
+        await stakeContract.withdraw({amount: 400});
+        let res = await stakeContract.stakeAmount({address: app.account.getAddress()});
+        expect(Number(res).noExponents()).to.equal(Number(600).noExponents());
+        await stakeContract.withdrawAll();
+        res = await stakeContract.stakeAmount({address: app.account.getAddress()});
         expect(Number(res).noExponents()).to.equal(Number(0).noExponents());
     }));
 });

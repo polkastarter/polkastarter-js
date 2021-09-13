@@ -20,6 +20,12 @@
 <dt><a href="#isPaused">isPaused()</a> ⇒ <code>boolean</code></dt>
 <dd><p>Returns if the contract is paused or not</p>
 </dd>
+<dt><a href="#setStakingRewards">setStakingRewards(address)</a> ⇒ <code>admin</code></dt>
+<dd><p>Sets the staking rewards address</p>
+</dd>
+<dt><a href="#getIDOStaking">getIDOStaking()</a> ⇒ <code>IDOStaking</code></dt>
+<dd><p>Returns the contract for the ido staking</p>
+</dd>
 <dt><a href="#pauseContract">pauseContract()</a> ⇒ <code>admin</code></dt>
 <dd><p>Pause Contract</p>
 </dd>
@@ -155,7 +161,7 @@
 <dt><a href="#swap">swap(tokenAmount, [signature])</a></dt>
 <dd><p>Swap tokens by Ethereum or ERC20</p>
 </dd>
-<dt><a href="#redeemTokens(isStandard)">redeemTokens(purchase_id)</a></dt>
+<dt><a href="#redeemTokens(isStandard)">redeemTokens(purchase_id, [stake])</a></dt>
 <dd><p>Reedem tokens bought</p>
 </dd>
 <dt><a href="#redeemGivenMinimumGoalNotAchieved(isStandard)">redeemGivenMinimumGoalNotAchieved(purchase_id)</a></dt>
@@ -274,6 +280,23 @@ Returns true if the address is in the blacklist
 
 ## isPaused() ⇒ <code>boolean</code>
 Returns if the contract is paused or not
+
+**Kind**: global function  
+<a name="setStakingRewards"></a>
+
+## setStakingRewards(address) ⇒ <code>admin</code>
+Sets the staking rewards address
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="getIDOStaking"></a>
+
+## getIDOStaking() ⇒ <code>IDOStaking</code>
+Returns the contract for the ido staking
 
 **Kind**: global function  
 <a name="pauseContract"></a>
@@ -601,14 +624,15 @@ Swap tokens by Ethereum or ERC20
 
 <a name="redeemTokens(isStandard)"></a>
 
-## redeemTokens(purchase_id)
+## redeemTokens(purchase_id, [stake])
 Reedem tokens bought
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| purchase_id | <code>Integer</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| purchase_id | <code>Integer</code> |  |
+| [stake] | <code>Boolean</code> | If true send token to the ido staking contract |
 
 <a name="redeemGivenMinimumGoalNotAchieved(isStandard)"></a>
 

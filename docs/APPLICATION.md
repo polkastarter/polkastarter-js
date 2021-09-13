@@ -15,7 +15,7 @@
 <dd><p>Starts an instance of web3</p>
 </dd>
 <dt><a href="#login">login()</a></dt>
-<dd><p>Prompts a modal for user to login with his wallet.</p>
+<dd><p>Logins with metamask</p>
 </dd>
 <dt><a href="#getSigner">getSigner()</a></dt>
 <dd><p>Returns the Signer instance.</p>
@@ -75,7 +75,7 @@ Starts an instance of web3
 <a name="login"></a>
 
 ## login()
-Prompts a modal for user to login with his wallet.
+Logins with metamask
 
 **Kind**: global function  
 <a name="getSigner"></a>
