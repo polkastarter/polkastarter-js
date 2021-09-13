@@ -107,22 +107,72 @@ class Application {
 		}
 	}
 
-
 	/**
 	 * @function login
-	 * @description Logins with metamask
+	 * @description Prompts a modal for user to login with his wallet. 
 	*/
 	login = async () => {
 		try{
 			console.log("Login being done")
 			if (typeof window === "undefined") { return false; }
-			if (window.ethereum) {
-				window.web3 = new Web3(window.ethereum);
+
+		
+			let chainId;
+			if (this.network == 'DOT') {
+				chainId = 1287;
+			} else if (this.network == 'BSC') {
+				if (this.mainnet == true) {
+					chainId = 56;
+				} else {
+					chainId = 97;
+				}
+			} else if (this.network == 'MATIC') {
+				if (this.mainnet == true) {
+					chainId = 137;
+				} else {
+					chainId = 80001;
+				}
+			} else {
+				if (this.mainnet == true) {
+					chainId = 1;
+				} else {
+					chainId = 42;
+				}
+			}
+
+			let WalletConnectProvider;
+			if (window.WalletConnectProvider) {
+				WalletConnectProvider = window.WalletConnectProvider.default;
+			} else {
+				WalletConnectProvider = require("@walletconnect/web3-provider");
+			}
+			this.web3ModalProvider = new Web3Modal({
+				cacheProvider: true,
+				providerOptions: {
+					walletconnect: {
+						package: WalletConnectProvider, // required
+						options: {
+							rpc: {
+								1: ETH_URL_MAINNET,
+								56: BINANCE_CHAIN_URL,
+								97: BINANCE_CHAIN_TESTNET_URL,
+								42: ETH_URL_TESTNET,
+								137: POLYGON_CHAIN_URL,
+								80001: POLYGON_CHAIN_TESTNET_URL,
+								1287: MOONBEAM_TESTNET_URL
+							},
+							chainId
+						}
+					}
+				}
+			})
+
+			if (this.web3ModalProvider) {
+				// this.web3ModalProvider.clearCachedProvider();
+				window.web3 = new Web3(await this.web3ModalProvider.connect());
 				this.web3 = window.web3;
-				await window.ethereum.enable();
 				return true;
 			}
-			return false;
 		}catch(err){
 			throw err;
 		}
