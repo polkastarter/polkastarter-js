@@ -18,7 +18,7 @@ import ERC20TokenContract from "./ERC20TokenContract";
     stakingAddresses = {};
     tokenAddresses = {};
     stakingTestAddresses = {
-        'BSC': '0x20c48C19Ca7079Ed8E7CD317829d4ebf75125390',
+        'BSC': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',
         'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
     };
     tokenTestAddresses = {
