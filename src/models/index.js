@@ -168,7 +168,7 @@ class Application {
 			})
 
 			if (this.web3ModalProvider) {
-				// this.web3ModalProvider.clearCachedProvider();
+				this.web3ModalProvider.clearCachedProvider();
 				window.web3 = new Web3(await this.web3ModalProvider.connect());
 				this.web3 = window.web3;
 				return true;
