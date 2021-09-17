@@ -754,9 +754,9 @@ class FixedSwapContract {
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res.timestamp),
 			amountReedemed : amountReedemed,
 			amountLeftToRedeem : amountLeftToRedeem,
-			amountToReedemNow : isFinalized ? (await this.params.contract
+			amountToReedemNow : isFinalized ? Numbers.fromDecimals((await this.params.contract
 				.getContract()
-				.methods.getRedeemableTokensAmount(purchase_id).call()).amount : 0,
+				.methods.getRedeemableTokensAmount(purchase_id).call()).amount, await this.getDecimals()) : 0,
 			wasFinalized: res.wasFinalized,
 			reverted: res.reverted,
 		};

@@ -82,7 +82,7 @@ context('Staking Contract', async () => {
     it('should automatically get addresses', mochaAsync(async () => {
         let stakeContract = await app.getStaking({});
         expect(stakeContract).to.not.equal(false);
-        expect(stakeContract.params.contractAddress).to.equal('0x20c48C19Ca7079Ed8E7CD317829d4ebf75125390');
+        expect(stakeContract.params.contractAddress).to.equal('0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f');
         expect(stakeContract.params.erc20TokenContract.params.contractAddress).to.equal('0xcfd314B14cAB8c3e36852A249EdcAa1D3Dd05055');
     }));
 
