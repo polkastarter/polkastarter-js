@@ -2,6 +2,7 @@ import Contract from "./Contract";
 import { idostaking } from "../interfaces";
 import Numbers from "../utils/Numbers";
 import ERC20TokenContract from "./ERC20TokenContract";
+import Client from "../utils/Client";
 
 /**
  * IDO Staking Object
@@ -31,6 +32,7 @@ import ERC20TokenContract from "./ERC20TokenContract";
             contractAddress: contractAddress,
             contract: new Contract(web3, idostaking, contractAddress),
         };
+		this.client = new Client();
     }
 
     /**
@@ -44,7 +46,10 @@ import ERC20TokenContract from "./ERC20TokenContract";
 			await this.getDecimals()
 		)
 		try {
-			return await this.__sendTx(
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
 				this.params.contract
 					.getContract()
 					.methods.stake(amount)
@@ -89,7 +94,10 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	 */
 	 withdraw = async ({amount}) => {
 		try {
-			return await this.__sendTx(
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
 				this.params.contract
 					.getContract()
 					.methods.withdraw(Numbers.toSmartContractDecimals(
@@ -108,7 +116,10 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	 */
 	 withdrawAll = async () => {
 		try {
-			return await this.__sendTx(
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
 				this.params.contract
 					.getContract()
 					.methods.withdrawAll()
@@ -124,7 +135,10 @@ import ERC20TokenContract from "./ERC20TokenContract";
 	 */
 	 claim = async () => {
 		try {
-			return await this.__sendTx(
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
 				this.params.contract
 					.getContract()
 					.methods.getReward()
@@ -172,53 +186,6 @@ import ERC20TokenContract from "./ERC20TokenContract";
 		return this.params.erc20TokenContract;
 	}
 
-    // ToDo Refactor
-	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
-		return new Promise( (resolve, reject) => {
-			// Detect possible error on tx
-			f.estimateGas({gas: 5000000}, (error, gasAmount) => {
-				//if(error){reject("Transaction will fail : " + error);}
-				if(gasAmount >= 5000000){
-					reject("Transaction will fail, too much gas");
-				}
-
-				// all alright
-				f.send({
-					from: acc,
-					value: value,
-				})
-				.on("confirmation", (confirmationNumber, receipt) => {
-					callback(confirmationNumber)
-					if (confirmationNumber > 0) {
-						resolve(receipt);
-					}
-				})
-				.on("error", (err) => {
-					reject(err);
-				});
-			});
-		});
-	};
-
-	__sendTx = async (f, call = false, value, callback=()=>{}) => {
-		var res;
-		if (!this.acc && !call) {
-			const accounts = await this.params.web3.eth.getAccounts();
-			res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
-		} else if (this.acc && !call) {
-			let data = f.encodeABI();
-			res = await this.params.contract.send(
-				this.acc.getAccount(),
-				data,
-				value
-			);
-		} else if (this.acc && call) {
-			res = await f.call({ from: this.acc.getAddress() });
-		} else {
-			res = await f.call();
-		}
-		return res;
-	};
 }
 
 export default IDOStaking;
