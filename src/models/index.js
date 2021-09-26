@@ -146,7 +146,7 @@ class Application {
 	 * @description Returns the Network Utils instance. 
 	*/
 	getNetworkUtils = () => {
-		return new Network(this.network, this.test);
+		return new Network(this.network, !this.mainnet);
 	}
 
 	/**
