@@ -28,8 +28,14 @@
 **Kind**: global class  
 <a name="new_Network_new"></a>
 
-### new Network()
+### new Network([network], [test])
 Network utils object
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [network] | <code>ETH</code> \| <code>BSC</code> \| <code>MATIC</code> \| <code>DOT</code> | The network where the staking contract is. (Default: ETH) |
+| [test] | <code>Boolean</code> | ? Specifies if we're on test env (Default: false) |
 
 <a name="changeToCurrentNetwork"></a>
 

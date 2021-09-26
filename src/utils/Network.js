@@ -1,14 +1,17 @@
 /**
  * Network utils object
  * @constructor Network
+ * @param {(ETH|BSC|MATIC|DOT)=} network The network where the staking contract is. (Default: ETH)
+ * @param {Boolean=} test ? Specifies if we're on test env (Default: false)
 */
 class Network {
 
-    constructor(network='ETH') {
+    constructor(network='ETH', test = false) {
         if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC')){
 			throw new Error("Network has to be ETH or DOT or BSC or MATIC");
 		}
         this.network = network;
+        this.test = test;
     }
     
     /**
@@ -31,14 +34,17 @@ class Network {
 	 */
     async switchToEthereum() {
         if (window.ethereum) {
-        try {
-            await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x1' }],
-            });
-        } catch (error) {
-            console.error(error);
-        }
+            if (this.test) {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0x2A' }],
+                });
+            } else {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0x1' }],
+                });
+            }
         }
     }
 
@@ -48,22 +54,41 @@ class Network {
 	 */
     async switchToPolygon() {
         if (window.ethereum) {
-            window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [
-                {
-                    chainId: '0x89',
-                    chainName: 'Polygon',
-                    nativeCurrency: {
-                    name: 'MATIC',
-                    symbol: 'MATIC',
-                    decimals: 18,
+            if (this.test) {
+                window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0x13881',
+                        chainName: 'Polygon Testnet',
+                        nativeCurrency: {
+                        name: 'MATIC',
+                        symbol: 'MATIC',
+                        decimals: 18,
+                        },
+                        rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
+                        blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
                     },
-                    rpcUrls: ['https://rpc-mainnet.maticvigil.com/'],
-                    blockExplorerUrls: ['https://polygonscan.com/'],
-                },
-                ],
-            });
+                    ],
+                });
+            } else {
+                window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0x89',
+                        chainName: 'Polygon',
+                        nativeCurrency: {
+                        name: 'MATIC',
+                        symbol: 'MATIC',
+                        decimals: 18,
+                        },
+                        rpcUrls: ['https://rpc-mainnet.maticvigil.com/'],
+                        blockExplorerUrls: ['https://polygonscan.com/'],
+                    },
+                    ],
+                });
+            }
         }
     }
 
@@ -73,23 +98,43 @@ class Network {
 	*/
     async switchToBsc() {
         if (window.ethereum) {
-            window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [
-                {
-                    chainId: '0x38',
-                    chainName: 'Binance Smart Chain',
-                    nativeCurrency:
+            if (this.test) {
+                window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
                     {
-                    name: 'BNB',
-                    symbol: 'BNB',
-                    decimals: 18
+                        chainId: '0x61',
+                        chainName: 'Binance Smart Chain Test',
+                        nativeCurrency:
+                        {
+                        name: 'BNB',
+                        symbol: 'BNB',
+                        decimals: 18
+                        },
+                        rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+                        blockExplorerUrls: ['https://testnet.bscscan.com/'],
                     },
-                    rpcUrls: ['https://bsc-dataseed.binance.org/'],
-                    blockExplorerUrls: ['https://bscscan.com/'],
-                },
-                ],
-            });
+                    ],
+                });
+            } else {
+                window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0x38',
+                        chainName: 'Binance Smart Chain',
+                        nativeCurrency:
+                        {
+                        name: 'BNB',
+                        symbol: 'BNB',
+                        decimals: 18
+                        },
+                        rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                        blockExplorerUrls: ['https://bscscan.com/'],
+                    },
+                    ],
+                });
+            }
         }
     }
 }
