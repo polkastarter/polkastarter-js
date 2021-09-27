@@ -55,7 +55,7 @@ class Network {
     async switchToPolygon() {
         if (window.ethereum) {
             if (this.test) {
-                window.ethereum.request({
+                await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [
                     {
@@ -72,7 +72,7 @@ class Network {
                     ],
                 });
             } else {
-                window.ethereum.request({
+                await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [
                     {
@@ -99,7 +99,7 @@ class Network {
     async switchToBsc() {
         if (window.ethereum) {
             if (this.test) {
-                window.ethereum.request({
+                await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [
                     {
@@ -117,7 +117,7 @@ class Network {
                     ],
                 });
             } else {
-                window.ethereum.request({
+                await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [
                     {
