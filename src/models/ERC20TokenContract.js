@@ -1,7 +1,6 @@
 import contract from "./Contract";
 import { ierc20 } from "../interfaces";
 import Numbers from "../utils/Numbers";
-import Client from "../utils/Client";
 let self;
 
 class ERC20TokenContract {
@@ -18,8 +17,46 @@ class ERC20TokenContract {
 		self = {
 			contract: new contract(web3, ierc20, contractAddress)
 		};
-		this.client = new Client();
 	}
+
+	__metamaskCall = async ({ f, acc, value, callback=()=>{}}) => {
+		return new Promise((resolve, reject) => {
+			f.send({
+				from: acc,
+				value: value,
+			})
+				.on("confirmation", (confirmationNumber, receipt) => {
+					callback(confirmationNumber);
+					if (confirmationNumber > 0) {
+						resolve(receipt);
+					}
+				})
+				.on("error", (err) => {
+					reject(err);
+				});
+		});
+	};
+
+
+	__sendTx = async (f, call = false, value, callback=()=>{}) => {
+		var res;
+		if (!this.acc && !call) {
+			const accounts = await this.params.web3.eth.getAccounts();
+			res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
+		} else if (this.acc && !call) {
+			let data = f.encodeABI();
+			res = await this.params.contract.send(
+				this.acc.getAccount(),
+				data,
+				value
+			);
+		} else if (this.acc && call) {
+			res = await f.call({ from: this.acc.getAddress() });
+		} else {
+			res = await f.call();
+		}
+		return res;
+	};
 
 	__assert() {
 		this.params.contract.use(ierc20, this.getAddress());
@@ -35,10 +72,7 @@ class ERC20TokenContract {
 
 	setNewOwner = async ({ address }) => {
 		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
+			return await this.__sendTx( 
 				this.params.contract
 				.getContract()
 				.methods.transferOwnership(address)
@@ -53,11 +87,7 @@ class ERC20TokenContract {
 			tokenAmount,
 			await this.getDecimals()
 		);
-		return await this.client.sendTx( 
-
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx( 
 			this.params.contract
 			.getContract()
 			.methods.transfer(toAddress, amountWithDecimals)
@@ -88,10 +118,7 @@ class ERC20TokenContract {
 
 	async isApproved({ address, amount, spenderAddress, callback }) {
 		try {
-			let res =  await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract, 
+			let res =  await this.__sendTx( 
 				this.params.contract
 				.getContract()
 				.methods.allowance(address, spenderAddress),
@@ -116,10 +143,7 @@ class ERC20TokenContract {
 				amount,
 				await this.getDecimals()
 			);
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
+			return await this.__sendTx( 
 				this.params.contract
 				.getContract()
 				.methods.approve(address, amountWithDecimals),

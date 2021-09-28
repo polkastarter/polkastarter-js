@@ -8,7 +8,6 @@ import moment from 'moment';
 const RESIDUAL_ETH = 0.00001;
 import { Decimal } from 'decimal.js';
 import * as ethers from 'ethers';
-import Client from "../utils/Client";
 
 /**
  * Fixed Swap Object
@@ -50,7 +49,6 @@ class FixedSwapContract {
 			}else{
 				if(!contractAddress){throw new Error("Please provide a contractAddress if already deployed")}
 			}
-			this.client = new Client();
 		} catch (err) {
 			throw err;
 		}
@@ -84,6 +82,53 @@ class FixedSwapContract {
 		};
 	}
 
+	__metamaskCall = async ({ f, acc, value, callback=()=> {} }) => {
+		return new Promise( (resolve, reject) => {
+			// Detect possible error on tx
+			f.estimateGas({gas: 5000000}, (error, gasAmount) => {
+				//if(error){reject("Transaction will fail : " + error);}
+				if(gasAmount >= 5000000){
+					reject("Transaction will fail, too much gas");
+				}
+
+				// all alright
+				f.send({
+					from: acc,
+					value: value,
+				})
+				.on("confirmation", (confirmationNumber, receipt) => {
+					callback(confirmationNumber)
+					if (confirmationNumber > 0) {
+						resolve(receipt);
+					}
+				})
+				.on("error", (err) => {
+					reject(err);
+				});
+			});
+		});
+	};
+
+	__sendTx = async (f, call = false, value, callback=()=>{}) => {
+		var res;
+		if (!this.acc && !call) {
+			const accounts = await this.params.web3.eth.getAccounts();
+			res = await this.__metamaskCall({ f, acc: accounts[0], value, callback });
+		} else if (this.acc && !call) {
+			let data = f.encodeABI();
+			res = await this.params.contract.send(
+				this.acc.getAccount(),
+				data,
+				value
+			);
+		} else if (this.acc && call) {
+			res = await f.call({ from: this.acc.getAddress() });
+		} else {
+			res = await f.call();
+		}
+		return res;
+	};
+
 	__deploy = async (params, callback) => {
 		return await this.params.contract.deploy(
 			this.acc,
@@ -101,10 +146,7 @@ class FixedSwapContract {
 	 */
 	 addToBlacklist = async ({ address }) => {
 		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
+			return await this.__sendTx(
 				this.params.contract
 					.getContract()
 					.methods.addToBlacklist(address)
@@ -121,10 +163,7 @@ class FixedSwapContract {
 	 */
 	 removeFromBlacklist = async ({ address }) => {
 		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
+			return await this.__sendTx(
 				this.params.contract
 					.getContract()
 					.methods.removeFromBlacklist(address)
@@ -161,10 +200,7 @@ class FixedSwapContract {
 	 * @param {string} address
 	 */
 	async setStakingRewards({address}) {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.setStakingRewards(address)
 		);
 	}
@@ -192,10 +228,7 @@ class FixedSwapContract {
 	 * @description Pause Contract
 	 */
 	 async pauseContract() {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.pause()
 		);
 	}
@@ -219,10 +252,7 @@ class FixedSwapContract {
 	 * @description Unpause Contract
 	 */
 	async unpauseContract() {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.unpause()
 		);
 	}
@@ -426,10 +456,7 @@ class FixedSwapContract {
 	 */
 	 setSignerPublicAddress = async ({ address }) => {
 		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
+			return await this.__sendTx(
 				this.params.contract
 					.getContract()
 					.methods.setSignerPublicAddress(address)
@@ -778,10 +805,7 @@ class FixedSwapContract {
 	 * @returns {Array | Integer} _ids
 	 */
 	getAddressPurchaseIds = async ({ address }) => {
-		let res = await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		let res = await this.__sendTx(
 			this.params.contract.getContract().methods.getMyPurchases(address),
 			true
 		);
@@ -871,10 +895,7 @@ class FixedSwapContract {
 			signature = '0x00';
 		}
 
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.swap(amountWithDecimals, signature),
 			false,
 			await this.isETHTrade() ? costToDecimals : 0,
@@ -890,10 +911,7 @@ class FixedSwapContract {
 	 * @param {Boolean=} stake If true send token to the ido staking contract
 	 */
 	redeemTokens = async ({ purchase_id, stake = false }) => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.transferTokens(purchase_id, stake)
 		);
 	};
@@ -905,10 +923,7 @@ class FixedSwapContract {
 	 * @param {Integer} purchase_id
 	 */
 	redeemGivenMinimumGoalNotAchieved = async ({ purchase_id }) => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract
 				.getContract()
 				.methods.redeemGivenMinimumGoalNotAchieved(purchase_id)
@@ -921,10 +936,7 @@ class FixedSwapContract {
 	 */
 
 	withdrawUnsoldTokens = async () => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.withdrawUnsoldTokens()
 		);
 	};
@@ -934,10 +946,7 @@ class FixedSwapContract {
 	 * @description Withdraw all funds from tokens sold
 	 */
 	withdrawFunds = async () => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.withdrawFunds()
 		);
 	};
@@ -966,10 +975,7 @@ class FixedSwapContract {
 			individualMaximumAmount,
 			await this.getDecimals()
 		);
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.setIndividualMaximumAmount(maxAmount)
 		);
 	};
@@ -981,10 +987,7 @@ class FixedSwapContract {
 	 * @description Modifies the end date for the pool
 	 */
 	 setEndDate = async ( { endDate } ) => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.setEndDate(Numbers.timeToSmartContractTime(endDate))
 		);
 	};
@@ -996,10 +999,7 @@ class FixedSwapContract {
 	 * @description Modifies the start date for the pool
 	 */
 	 setStartDate = async ( { startDate } ) => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.setStartDate(Numbers.timeToSmartContractTime(startDate))
 		);
 	}
@@ -1011,10 +1011,7 @@ class FixedSwapContract {
 	 * @description Modifies if the pool has whitelisting or not
 	 */
 	setHasWhitelisting = async ( { hasWhitelist } ) => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.setHasWhitelisting(hasWhitelist)
 		);
 	}
@@ -1042,10 +1039,7 @@ class FixedSwapContract {
 		const DECIMALS_PERCENT_MUL = 10**12;
 		vestingSchedule = vestingSchedule.map( a => String(new Decimal(a).mul(DECIMALS_PERCENT_MUL)).toString());
 
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.setVesting(
 				Numbers.timeToSmartContractTime(vestingStart), vestingCliff, vestingDuration, vestingSchedule
 			)
@@ -1108,10 +1102,7 @@ class FixedSwapContract {
 			await this.getDecimals()
 		);
 
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.fund(amountWithDecimals),
 			null,
 			null,
@@ -1145,10 +1136,7 @@ class FixedSwapContract {
 			}
 		})
 
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.add(addressesClean)
 		);
 	};
@@ -1160,10 +1148,7 @@ class FixedSwapContract {
 	 * @description remove WhiteListed Address
 	 */
 	removeWhitelistedAddress = async ({address, index}) => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.remove(address, index)
 		);
 	};
@@ -1174,10 +1159,7 @@ class FixedSwapContract {
 	 * @description Safe Pull all tokens & ETH
 	 */
 	safePull = async () => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract.getContract().methods.safePull(),
 			null,
 			0
@@ -1191,10 +1173,7 @@ class FixedSwapContract {
 	 * @param {Address} toAddress
 	 */
 	removeOtherERC20Tokens = async ({ tokenAddress, toAddress }) => {
-		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
+		return await this.__sendTx(
 			this.params.contract
 				.getContract()
 				.methods.removeOtherERC20Tokens(tokenAddress, toAddress)
