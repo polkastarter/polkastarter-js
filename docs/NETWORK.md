@@ -92,5 +92,5 @@ Callback when networks changes
 
 | Param | Type | Description |
 | --- | --- | --- |
-| sum | <code>int</code> | An integer. |
+| network | <code>string</code> | Network name |
 

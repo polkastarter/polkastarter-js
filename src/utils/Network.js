@@ -19,7 +19,7 @@ class Network {
      * Callback when networks changes
      *
      * @callback onChainChangedCallback
-     * @param {int} sum - An integer.
+     * @param {string} network - Network name
      */
 
 
