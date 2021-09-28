@@ -6,12 +6,32 @@
 */
 class Network {
 
-    constructor(network='ETH', test = false) {
+    constructor(network='ETH', test = false, getETHNetwork) {
         if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC')){
 			throw new Error("Network has to be ETH or DOT or BSC or MATIC");
 		}
         this.network = network;
         this.test = test;
+        this.getETHNetwork = getETHNetwork;
+    }
+
+    /**
+     * Callback when networks changes
+     *
+     * @callback onChainChangedCallback
+     * @param {int} sum - An integer.
+     */
+
+
+    /**
+	 * @function onChainChanged
+     * @param {onChainChangedCallback} callback
+	 * @description Triggers the callback after the users changes their chain
+	 */
+    async onChainChanged({callback}) {
+        window.ethereum.on('chainChanged', async () => {
+            callback(await this.getETHNetwork());
+        });
     }
     
     /**
