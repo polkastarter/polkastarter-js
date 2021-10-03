@@ -826,8 +826,8 @@ class FixedSwapContract {
 		let vestingTime = parseInt(await this.params.contract.getContract().methods.vestingTime().call());
 		let vestingSchedule = [];
 
-		for(var i = 1; i <= vestingTime; i++){
-			let a = parseInt(await this.getVestingSchedule({position: i}));
+		for(var i = 1; i < vestingTime; i++){
+			let a = parseInt(await this.getVestingSchedule({position: i - 1}));
 			vestingSchedule.push(a);
 		}
 

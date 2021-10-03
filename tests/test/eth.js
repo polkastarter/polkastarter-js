@@ -394,6 +394,8 @@ context('ETH Contract', async () => {
             });
             contractAddress = swapContract.getAddress();
             expect(res).to.not.equal(false);
+            let info = await swapContract.getDistributionInformation();
+            expect(info).to.not.equal(false);
 
             if (editVesting) {
                 await swapContract.setVesting({vestingSchedule: schedule, vestingStart: endDate, cliff: 0, vestingDuration: duration});
