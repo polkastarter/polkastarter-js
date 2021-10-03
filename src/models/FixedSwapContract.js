@@ -727,6 +727,19 @@ class FixedSwapContract {
 		let amountLeftToRedeem = amount-amountReedemed;
 
 		let isFinalized = await this.hasFinalized();
+		let amountToReedemNow = 0;
+		try {
+			amountToReedemNow = isFinalized ? Numbers.fromDecimals((await this.params.contract
+				.getContract()
+				.methods.getRedeemableTokensAmount(purchase_id).call()).amount, await this.getDecimals()) : 0
+		} catch (e) {
+			// Swap v2
+			let currentSchedule = await this.getCurrentSchedule();
+			let lastTrancheSent = parseInt(res[5]);
+			for(var i = lastTrancheSent+1; i <= currentSchedule; i++){
+				amountToReedemNow = amountToReedemNow + amount*(await this.getVestingSchedule({position: i}))/10000
+			}
+		}
 
 		// ToDo add a test for amountToReedemNow
 		return {
@@ -737,9 +750,7 @@ class FixedSwapContract {
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res.timestamp),
 			amountReedemed : amountReedemed,
 			amountLeftToRedeem : amountLeftToRedeem,
-			amountToReedemNow : isFinalized ? Numbers.fromDecimals((await this.params.contract
-				.getContract()
-				.methods.getRedeemableTokensAmount(purchase_id).call()).amount, await this.getDecimals()) : 0,
+			amountToReedemNow,
 			wasFinalized: res.wasFinalized,
 			reverted: res.reverted,
 		};
@@ -840,7 +851,7 @@ class FixedSwapContract {
 		} catch (e) {
 			legacy = true;
 		}
-		
+
 		let vestingSchedule = [];
 
 		if (legacy) {
