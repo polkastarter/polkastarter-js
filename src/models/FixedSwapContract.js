@@ -249,9 +249,14 @@ class FixedSwapContract {
 	 * @returns {Date}
 	 */
 	 async vestingStart() {
-		return Numbers.fromSmartContractTimeToMinutes(
-			await this.params.contract.getContract().methods.vestingStart().call()
-		);
+		try {
+			return Numbers.fromSmartContractTimeToMinutes(
+				await this.params.contract.getContract().methods.vestingStart().call()
+			);
+		} catch (e) {
+			// Swap v2
+			return await this.endDate();
+		}
 	}
 
 	/**
@@ -649,10 +654,15 @@ class FixedSwapContract {
 	 * @returns {Address}
 	 */
 	async getTradingERC20Address(){
-		return await this.params.contract
-		.getContract()
-		.methods.erc20TradeIn()
-		.call();
+		try {
+			return await this.params.contract
+			.getContract()
+			.methods.erc20TradeIn()
+			.call();
+		} catch (e) {
+			// Swap v2
+			return '0x0000000000000000000000000000000000000000';
+		}
 	}
 
 	/**
@@ -824,14 +834,29 @@ class FixedSwapContract {
 			currentSchedule = parseInt(await this.getCurrentSchedule());
 		}
 		let vestingTime = parseInt(await this.params.contract.getContract().methods.vestingTime().call());
+		let legacy = false;
+		try {
+			await this.getSmartContractVersion();
+		} catch (e) {
+			legacy = true;
+		}
+		
 		let vestingSchedule = [];
 
-		for(var i = 1; i < vestingTime; i++){
-			let a = parseInt(await this.getVestingSchedule({position: i - 1}));
-			vestingSchedule.push(a);
+		if (legacy) {
+			for(var i = 1; i <= vestingTime; i++){
+				let a = parseInt(await this.getVestingSchedule({position: i}));
+				vestingSchedule.push(a);
+			}
+		} else {
+			for(var i = 1; i < vestingTime; i++){
+				let a = parseInt(await this.getVestingSchedule({position: i - 1}));
+				vestingSchedule.push(a);
+			}
 		}
 
 		const vestingStart = await this.vestingStart();
+		
 
 		return {
 			currentSchedule,
