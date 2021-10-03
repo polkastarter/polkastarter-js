@@ -734,11 +734,38 @@ class FixedSwapContract {
 				.methods.getRedeemableTokensAmount(purchase_id).call()).amount, await this.getDecimals()) : 0
 		} catch (e) {
 			// Swap v2
+			// ToDo Refactor
+			const abi = JSON.parse('[{ "inputs": [ { "internalType": "uint256", "name": "purchase_id", "type": "uint256" } ], "name": "getPurchase", "outputs": [ { "name": "", "type": "uint256" }, { "name": "", "type": "address" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "bool" }, { "name": "", "type": "bool" } ], "stateMutability": "view", "type": "function" }]');
+			const contract = new Contract(this.web3, {abi}, this.params.contractAddress);
+			res = await contract
+				.getContract()
+				.methods.getPurchase(purchase_id)
+				.call();
+
+			lastTrancheSent = parseInt(res[5]);
+			amount = Numbers.fromDecimals(res[0], await this.getDecimals());
+			costAmount = Numbers.fromDecimals(res[2], await this.getTradingDecimals());
+			amountReedemed = Numbers.fromDecimals(res[4], await this.getDecimals());
+			amountLeftToRedeem = amount-amountReedemed;
+
 			let currentSchedule = await this.getCurrentSchedule();
 			let lastTrancheSent = parseInt(res[5]);
 			for(var i = lastTrancheSent+1; i <= currentSchedule; i++){
 				amountToReedemNow = amountToReedemNow + amount*(await this.getVestingSchedule({position: i}))/10000
 			}
+			return {
+				_id: purchase_id,
+				amount: amount,
+				purchaser: res[1],
+				costAmount: costAmount,
+				timestamp: Numbers.fromSmartContractTimeToMinutes(res[3]),
+				amountReedemed : amountReedemed,
+				amountLeftToRedeem : amountLeftToRedeem,
+				amountToReedemNow : isFinalized ? amountToReedemNow : 0,
+				lastTrancheSent :  lastTrancheSent,
+				wasFinalized: res[6],
+				reverted: res[7],
+			};
 		}
 
 		// ToDo add a test for amountToReedemNow
