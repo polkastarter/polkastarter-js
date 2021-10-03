@@ -1910,6 +1910,19 @@
     },
     {
       "inputs": [],
+      "name": "unsoldTokensReedemed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "updateFundStatus",
       "outputs": [],
       "stateMutability": "nonpayable",
