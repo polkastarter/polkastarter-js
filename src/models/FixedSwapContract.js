@@ -955,6 +955,37 @@ class FixedSwapContract {
 		);
 	};
 
+	__oldSwap = async ({ tokenAmount, callback }) => {
+		console.log("swap (tokens Amount)", tokenAmount);
+		let amountWithDecimals = Numbers.toSmartContractDecimals(
+			tokenAmount,
+			await this.getDecimals()
+		);
+
+		let cost = await this.getCostFromTokens({
+			tokenAmount,
+		});
+		console.log("cost in ETH (after getCostFromTokens) ", cost);
+
+		let costToDecimals = Numbers.toSmartContractDecimals(cost, await this.getTradingDecimals());
+
+		console.log("swap (amount in decimals) ", amountWithDecimals);
+		console.log("cost (amount in decimals) ", costToDecimals);
+
+		const abi = JSON.parse('[{ "constant": false, "inputs": [ { "name": "_amount", "type": "uint256" } ], "name": "swap", "outputs": [], "payable": true, "stateMutability": "payable", "type": "function" }]');
+		const contract = new Contract(this.web3, {abi}, this.params.contractAddress);
+
+		return await this.client.sendTx(
+			this.params.web3,
+			this.acc,
+			contract,
+			contract.getContract().methods.swap(amountWithDecimals),
+			false,
+			await this.isETHTrade() ? costToDecimals : 0,
+			callback
+		);
+	};
+
 	/**
 	 * @function redeemTokens
 	 * @variation isStandard
@@ -974,6 +1005,9 @@ class FixedSwapContract {
 			const abi = JSON.parse('[{ "constant": false, "inputs": [ { "name": "purchase_id", "type": "uint256" } ], "name": "redeemTokens", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }]');
 			const contract = new Contract(this.web3, {abi}, this.params.contractAddress);
 			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				contract,
 				contract.getContract().methods.redeemTokens(purchase_id)
 			);
 		}

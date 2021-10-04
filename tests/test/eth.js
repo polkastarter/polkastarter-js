@@ -6,6 +6,8 @@ import { mochaAsync } from '../utils';
 import moment, { isDate } from 'moment';
 import Application from '../../src/models';
 import { ierc20 } from "../../src/interfaces";
+import Numbers from "../../src/utils/Numbers";
+import Contract from "../../src/models/Contract";
 import * as ethers from 'ethers';
 
 // const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
@@ -17,6 +19,8 @@ let tokenPurchaseAmount = 0.01;
 const tokenFundAmount = 0.03;
 const tradeValue = 0.01;
 
+// Set to true if yu want to test the fixed swap v2 contract
+const oldContract = false;
 
 context('ETH Contract', async () => {
     var ERC20TokenAddress;
@@ -71,18 +75,55 @@ context('ETH Contract', async () => {
    
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
         /* Create Contract */
-        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
+    swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
         /* Deploy */
-        let res = await swapContract.deploy({
-            tradeValue : tradeValue, 
-            tokensForSale : tokenFundAmount, 
-            isTokenSwapAtomic : false,
-            individualMaximumAmount : tokenFundAmount,
-            startDate : moment().add(4, 'minutes'),
-            endDate : moment().add(8, 'minutes'),
-            hasWhitelisting : false,
-            isETHTrade : true
-        });
+        let res;
+        if (oldContract) {
+            let params = [
+                ERC20TokenAddress,
+                Numbers.toSmartContractDecimals(tradeValue, 18),
+                Numbers.toSmartContractDecimals(tokenFundAmount, 18),
+                Numbers.timeToSmartContractTime(moment().add(4, 'minutes')),
+                Numbers.timeToSmartContractTime(moment().add(8, 'minutes')),
+                Numbers.toSmartContractDecimals(
+                    0,
+                    18
+                ),
+                Numbers.toSmartContractDecimals(
+                    tokenFundAmount,
+                    18
+                ),
+                false,
+                Numbers.toSmartContractDecimals(0, 18),
+                1,
+                false,
+                ERC20TokenAddress,
+                true,
+                false,
+                1,
+                [100]
+            ];
+            const swapv2 = require('../../src/interfaces/fixedswapv2.json');
+            let contract = new Contract(app.web3, swapv2);
+            res = await contract.deploy(
+                app.account,
+                swapv2.abi,
+                swapv2.bytecode,
+                params
+            );
+            swapContract = await app.getFixedSwapContract({tokenAddress: ERC20TokenAddress, contractAddress: contract.address});
+        } else {
+            res = await swapContract.deploy({
+                tradeValue : tradeValue, 
+                tokensForSale : tokenFundAmount, 
+                isTokenSwapAtomic : false,
+                individualMaximumAmount : tokenFundAmount,
+                startDate : moment().add(4, 'minutes'),
+                endDate : moment().add(8, 'minutes'),
+                hasWhitelisting : false,
+                isETHTrade : true
+            });
+        }
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
 
@@ -90,7 +131,11 @@ context('ETH Contract', async () => {
     }));
 
     it('should get the correct smart contract version', mochaAsync(async () => {
-        expect(await swapContract.getSmartContractVersion()).to.equal(2700000);
+        if (oldContract) {
+            expect(true).to.equal(true);
+        } else {
+            expect(await swapContract.getSmartContractVersion()).to.equal(2700000);
+        }
     }));
 
     it('should get a Fixed Swap Contract From contractAddress - 2.0', mochaAsync(async () => {
@@ -223,10 +268,12 @@ context('ETH Contract', async () => {
     }));
 
     it('Edit max allocation - Admin', mochaAsync(async () => {
-        let newMax = 500;
-        let res = await swapContract.setIndividualMaximumAmount({individualMaximumAmount: newMax});
-        expect(res).to.not.equal(false);
-        expect(await swapContract.individualMaximumAmount()).to.equal(newMax+'');
+        if (!oldContract) {
+            let newMax = 500;
+            let res = await swapContract.setIndividualMaximumAmount({individualMaximumAmount: newMax});
+            expect(res).to.not.equal(false);
+            expect(await swapContract.individualMaximumAmount()).to.equal(newMax+'');
+        }
     }));
 
     it('GET - tokensAvailable after fund', mochaAsync(async () => {        
@@ -236,7 +283,12 @@ context('ETH Contract', async () => {
 
     it('should do a non atomic swap on the Contract', mochaAsync(async () => {
         await forwardTime(5);
-        let res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
+        let res;
+        if (oldContract) {
+            res = await swapContract.__oldSwap({tokenAmount : tokenPurchaseAmount});
+        } else {
+            res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
+        }
         expect(res).to.not.equal(false);
     }));
 
@@ -300,9 +352,10 @@ context('ETH Contract', async () => {
     }));
 
 
-    it('GET - Purchase ID', mochaAsync(async () => {     
+    it('GET - Purchase ID 2', mochaAsync(async () => {     
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
         let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
+        console.log(purchase);
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.wasFinalized).to.equal(true);
         expect(purchase.reverted).to.equal(false);
@@ -320,15 +373,19 @@ context('ETH Contract', async () => {
     }));
 
     it('Add to blacklist - Admin', mochaAsync(async () => {  
-        let res = await swapContract.addToBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
-        expect(res).to.not.equal(false);
-        expect(await swapContract.isBlacklisted({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'})).to.equal(true);
+        if (!oldContract) {
+            let res = await swapContract.addToBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
+            expect(res).to.not.equal(false);
+            expect(await swapContract.isBlacklisted({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'})).to.equal(true);
+        }
     }));
 
     it('Remove from blacklist - Admin', mochaAsync(async () => {  
-        let res = await swapContract.removeFromBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
-        expect(res).to.not.equal(false);
-        expect(await swapContract.isBlacklisted({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'})).to.equal(false);
+        if (!oldContract) {
+            let res = await swapContract.removeFromBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
+            expect(res).to.not.equal(false);
+            expect(await swapContract.isBlacklisted({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'})).to.equal(false);
+        }
     }));
 
     /* Whitelist */
@@ -380,17 +437,17 @@ context('ETH Contract', async () => {
             const endDate = new Date((currentTime + (8 * 60)) * 1000);
             /* Deploy */
             let res = await swapContract.deploy({
-                tradeValue : tradeValue, 
-                tokensForSale : tokenFundAmount, 
-                isTokenSwapAtomic : false,
-                individualMaximumAmount : tokenFundAmount,
-                startDate : startDate, // 3 mins
-                endDate : endDate, // 8 mins
-                hasWhitelisting : false,
-                isETHTrade : true,
-                vestingSchedule : !editVesting ? schedule : [],
-                vestingCliff : 0,
-                vestingDuration: !editVesting ? duration : 0
+                    tradeValue : tradeValue, 
+                    tokensForSale : tokenFundAmount, 
+                    isTokenSwapAtomic : false,
+                    individualMaximumAmount : tokenFundAmount,
+                    startDate : startDate, // 3 mins
+                    endDate : endDate, // 8 mins
+                    hasWhitelisting : false,
+                    isETHTrade : true,
+                    vestingSchedule : !editVesting ? schedule : [],
+                    vestingCliff : 0,
+                    vestingDuration: !editVesting ? duration : 0
             });
             contractAddress = swapContract.getAddress();
             expect(res).to.not.equal(false);
