@@ -734,7 +734,6 @@ class FixedSwapContract {
 				.methods.getRedeemableTokensAmount(purchase_id).call()).amount, await this.getDecimals()) : 0
 		} catch (e) {
 			// Swap v2
-			// ToDo Refactor
 			const abi = JSON.parse('[{ "inputs": [ { "internalType": "uint256", "name": "purchase_id", "type": "uint256" } ], "name": "getPurchase", "outputs": [ { "name": "", "type": "uint256" }, { "name": "", "type": "address" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "bool" }, { "name": "", "type": "bool" } ], "stateMutability": "view", "type": "function" }]');
 			const contract = new Contract(this.web3, {abi}, this.params.contractAddress);
 			res = await contract
@@ -807,15 +806,32 @@ class FixedSwapContract {
 	 * @returns {(Array | Integer)} _ids
 	 */
 	getPurchaseIds = async () => {
-		let res = await this.params.contract
-			.getContract()
-			.methods.getPurchasesCount()
-			.call();
-		let ids = [];
-		for (let i = 0; i < res; i++) {
-			ids.push(i);
+		try {
+			let res = await this.params.contract
+				.getContract()
+				.methods.getPurchasesCount()
+				.call();
+			let ids = [];
+			for (let i = 0; i < res; i++) {
+				ids.push(i);
+			}
+			return ids;
+		} catch(e) {
+			// Swap v2
+			// ToDo Refactor
+			const abi = JSON.parse('[{ "constant": true, "inputs": [], "name": "getPurchaseIds", "outputs": [ { "name": "", "type": "uint256[]" } ], "payable": false, "stateMutability": "view", "type": "function" }]');
+			const contract = new Contract(this.web3, {abi}, this.params.contractAddress);
+			let res = await contract
+				.getContract()
+				.methods.getPurchaseIds()
+				.call();
+
+			let ids = [];
+			for (let i = 0; i < res; i++) {
+				ids.push(i);
+			}
+			return ids;
 		}
-		return ids;
 		// return res.map((id) => Numbers.fromHex(id));
 	};
 
@@ -953,6 +969,20 @@ class FixedSwapContract {
 	 * @param {Boolean=} stake If true send token to the ido staking contract
 	 */
 	redeemTokens = async ({ purchase_id, stake = false }) => {
+		let legacy = false;
+		try {
+			await this.getSmartContractVersion();
+		} catch (e) {
+			legacy = true;
+		}
+		if (legacy) {
+			// Swap v2
+			const abi = JSON.parse('[{ "constant": false, "inputs": [ { "name": "purchase_id", "type": "uint256" } ], "name": "redeemTokens", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }]');
+			const contract = new Contract(this.web3, {abi}, this.params.contractAddress);
+			return await this.client.sendTx(
+				contract.getContract().methods.redeemTokens(purchase_id)
+			);
+		}
 		return await this.client.sendTx(
 			this.params.web3,
 			this.acc,
