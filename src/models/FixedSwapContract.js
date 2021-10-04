@@ -825,14 +825,8 @@ class FixedSwapContract {
 				.getContract()
 				.methods.getPurchaseIds()
 				.call();
-
-			let ids = [];
-			for (let i = 0; i < res; i++) {
-				ids.push(i);
-			}
-			return ids;
+			return res.map((id) => Numbers.fromHex(id))
 		}
-		// return res.map((id) => Numbers.fromHex(id));
 	};
 
 	/**
