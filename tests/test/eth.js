@@ -5,7 +5,7 @@ import chai from 'chai';
 import { mochaAsync } from '../utils';
 import moment, { isDate } from 'moment';
 import Application from '../../src/models';
-import { ierc20 } from "../../src/interfaces";
+import { ierc20, idostaking } from "../../src/interfaces";
 import Numbers from "../../src/utils/Numbers";
 import Contract from "../../src/models/Contract";
 import * as ethers from 'ethers';
@@ -386,6 +386,69 @@ context('ETH Contract', async () => {
             expect(res).to.not.equal(false);
             expect(await swapContract.isBlacklisted({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'})).to.equal(false);
         }
+    }));
+
+    /* Staking Rewards */
+    it('should deploy Fixed Swap Contract with staking rewards and swap', mochaAsync(async () => {
+        /* Create Contract */
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
+        /* Deploy */
+        let res = await swapContract.deploy({
+            tradeValue : tradeValue, 
+            tokensForSale : tokenFundAmount, 
+            isTokenSwapAtomic : false,
+            individualMaximumAmount : tokenFundAmount,
+            startDate : new Date((currentTime + (3 * 60)) * 1000), // 3 mins
+            endDate : new Date((currentTime + (8 * 60)) * 1000), // 8 mins
+            hasWhitelisting : false,
+            isETHTrade : true
+        });
+        contractAddress = swapContract.getAddress();
+        expect(res).to.not.equal(false);
+
+        const deployStakeContract = async () => {
+            const tenDays = 864000;
+            return new Promise((resolve) => {
+                // Deploy the staking rewards
+                const contract = new app.web3.eth.Contract(idostaking.abi, null, {data: idostaking.bytecode});
+                contract.deploy({
+                    arguments: [
+                        app.account.getAddress(),
+                        app.account.getAddress(),
+                        ERC20TokenAddress,
+                        ERC20TokenAddress,
+                        tenDays,
+                    ]
+                })
+                    .send({
+                        from: '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB',
+                        gas: 4712388,
+                    })
+                    .on('confirmation', function(confirmationNumber, receipt){ 
+                        resolve(receipt.contractAddress);
+                    }).on('error', console.log);
+            });
+        }
+        await swapContract.setStakingRewards({address: await deployStakeContract()});
+
+        const staking = await swapContract.getIDOStaking();
+
+        await staking.setTokenSaleAddress({address: contractAddress});
+
+        await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
+        await swapContract.fund({tokenAmount : tokenFundAmount});
+        await forwardTime(3*60);
+        res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
+        expect(res).to.not.equal(false);
+
+        let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()});
+        expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0');
+        await forwardTime(6 * 60);
+
+        res = await swapContract.redeemTokens({purchase_id : purchases[0], stake: true});
+        expect(res).to.not.equal(false);
+        expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0.01');
+
     }));
 
     /* Whitelist */

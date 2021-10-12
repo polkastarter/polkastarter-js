@@ -171,6 +171,26 @@ import Client from "../utils/Client";
         );
 	}
 
+	/**
+	 * @function setTokenSaleAddress
+	 * @description Sets the token sale address
+	 * @param {string} address
+	*/
+	setTokenSaleAddress = async ({address}) => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.setTokenSaleAddress(address)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
     getDecimals = async () => {
 		return await (await this.getTokenContract()).getDecimals();
 	}
@@ -178,7 +198,7 @@ import Client from "../utils/Client";
     getTokenContract = async () => {
 		if (!this.params.erc20TokenContract) {
 			this.params.erc20TokenContract = new ERC20TokenContract({
-				web3: web3,
+				web3: this.params.web3,
 				contractAddress: await this.params.contract.getContract().methods.stakingToken().call(),
 				acc: this.acc
 			});
