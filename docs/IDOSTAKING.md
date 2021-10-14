@@ -26,11 +26,17 @@
 <dt><a href="#claim">claim()</a></dt>
 <dd><p>Claim rewards from the staking contract</p>
 </dd>
+<dt><a href="#notifyRewardAmountSamePeriod">notifyRewardAmountSamePeriod(amount)</a></dt>
+<dd><p>add (more) rewards token to current/future period</p>
+</dd>
 <dt><a href="#userAccumulatedRewards">userAccumulatedRewards(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the accumulated rewards</p>
 </dd>
 <dt><a href="#stakeAmount">stakeAmount(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the stake amount for a wallet</p>
+</dd>
+<dt><a href="#setTokenSaleAddress">setTokenSaleAddress(address)</a></dt>
+<dd><p>Sets the token sale address</p>
 </dd>
 </dl>
 
@@ -107,6 +113,17 @@ Withdraw all the tokens from the stake contract
 Claim rewards from the staking contract
 
 **Kind**: global function  
+<a name="notifyRewardAmountSamePeriod"></a>
+
+## notifyRewardAmountSamePeriod(amount)
+add (more) rewards token to current/future period
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| amount | <code>Integer</code> | 
+
 <a name="userAccumulatedRewards"></a>
 
 ## userAccumulatedRewards(address) ⇒ <code>Integer</code>
@@ -126,6 +143,17 @@ Returns the stake amount for a wallet
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - stakeAmount  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="setTokenSaleAddress"></a>
+
+## setTokenSaleAddress(address)
+Sets the token sale address
+
+**Kind**: global function  
 
 | Param | Type |
 | --- | --- |

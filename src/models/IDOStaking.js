@@ -148,6 +148,30 @@ import Client from "../utils/Client";
 		}
 	};
 
+	/**
+	 * @function notifyRewardAmountSamePeriod
+	 * @description add (more) rewards token to current/future period
+	 * @param {Integer} amount
+	 */
+	notifyRewardAmountSamePeriod = async ({reward}) => {
+		try {
+			const amount = Numbers.toSmartContractDecimals(
+				reward,
+				await this.getRewardsDecimals()
+			);
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.notifyRewardAmountSamePeriod(amount)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
     /**
 	 * @function userAccumulatedRewards
 	 * @description Returns the accumulated rewards
@@ -155,7 +179,10 @@ import Client from "../utils/Client";
 	 * @returns {Integer} userAccumulatedRewards
 	*/
     userAccumulatedRewards = async ({address}) => {
-		return await this.params.contract.getContract().methods.earned(address).call();
+		return Numbers.fromDecimals(
+			await this.params.contract.getContract().methods.earned(address).call(),
+			await this.getRewardsDecimals(),
+		);
 	}
 
     /**
@@ -204,6 +231,21 @@ import Client from "../utils/Client";
 			});
 		}
 		return this.params.erc20TokenContract;
+	}
+
+	getRewardsDecimals = async () => {
+		return await (await this.getRewardsTokenContract()).getDecimals();
+	}
+
+    getRewardsTokenContract = async () => {
+		if (!this.params.erc20TokenRewardsContract) {
+			this.params.erc20TokenRewardsContract = new ERC20TokenContract({
+				web3: this.params.web3,
+				contractAddress: await this.params.contract.getContract().methods.rewardsToken().call(),
+				acc: this.acc
+			});
+		}
+		return this.params.erc20TokenRewardsContract;
 	}
 
 }
