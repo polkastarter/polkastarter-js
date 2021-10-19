@@ -1,9 +1,8 @@
 import moment from 'moment'
 import accounting from 'accounting'
 import dayjs from 'dayjs'
-import BN from 'bn.js';
 import web3 from "web3";
-let Web3 = new web3();
+import { create, all } from 'mathjs';
 
 Number.prototype.noExponents = function () {
   var data = String(this).split(/[eE]/)
@@ -24,7 +23,16 @@ Number.prototype.noExponents = function () {
   return str + z
 }
 
+/**
+ * Numbers object
+ * @constructor Numbers
+ */
 class numbers {
+  math = create(all, {
+    number: 'BigNumber',
+    precision: 64,
+  });
+
   constructor() {}
 
   fromDayMonthYear(date) {
@@ -62,49 +70,47 @@ class numbers {
   }
 
   toMoney(number) {
-    return accounting.formatMoney(number, { symbol: 'EUR', format: '%v' })
-  }
-
-  toFormatBet(number) {
-    return parseFloat(parseFloat(number).toFixed(6))
+    var _0xbea8=["\x45\x55\x52","\x25\x76","\x66\x6F\x72\x6D\x61\x74\x4D\x6F\x6E\x65\x79"];return accounting[_0xbea8[2]](number,{symbol:_0xbea8[0],format:_0xbea8[1]})
   }
 
   formatNumber(number) {
     return accounting.formatNumber(number)
   }
 
+  /**
+	 * @function toSmartContractDecimals
+	 * @description Converts a "human" number to the minimum unit.
+   * @param {Float} value The number that you want to convert
+	 * @param {Integer} decimals Number of decimals
+	 * @returns {string}
+	 */
   toSmartContractDecimals(value, decimals) {
-    let numberWithNoExponents = new Number(parseInt(Number(value).toFixed(18) * 10 ** decimals)).noExponents();
-    return numberWithNoExponents;
+    return this.math.chain(this.math.bignumber(value)).multiply(this.math.bignumber(10 ** decimals)).done().toFixed(0);
   }
 
-  fromBigNumberToInteger(value, decimals = 18) {
-    return (value / Math.pow(10, decimals)) * 1000000000000000000
-  }
-
+  /**
+	 * @function fromDecimals
+	 * @description Converts a number from his minimum unit to a human readable one.
+   * @param {Float} value The number that you want to convert
+	 * @param {Integer} decimals Number of decimals
+	 * @returns {string}
+	 */
   fromDecimals(value, decimals) {
-      return  Number(parseFloat(value / 10 ** decimals).toPrecision(decimals)).noExponents();
+    if (value == null) {
+      return 0;
+    }
+    return this.math.chain(
+      this.math.bignumber(value.toString())).divide(this.math.bignumber(10 ** decimals)
+    ).toString();
   }
 
   fromExponential(x) {
-    if (Math.abs(x) < 1.0) {
-      var e = parseInt(x.toString().split('e-')[1])
-      if (e) {
-        x *= Math.pow(10, e - 1)
-        x = '0.' + new Array(e).join('0') + x.toString().substring(2)
-      }
-    } else {
-      var e = parseInt(x.toString().split('+')[1])
-      if (e > 20) {
-        e -= 20
-        x /= Math.pow(10, e)
-        x += new Array(e + 1).join('0')
-      }
-    }
-    return x
+    var _0xe3ed=["\x61\x62\x73","\x65\x2D","\x73\x70\x6C\x69\x74","\x70\x6F\x77","\x30\x2E","\x30","\x6A\x6F\x69\x6E","\x73\x75\x62\x73\x74\x72\x69\x6E\x67","\x2B"];if(Math[_0xe3ed[0]](x)< 1.0){var e=parseInt(x.toString()[_0xe3ed[2]](_0xe3ed[1])[1]);if(e){x*= Math[_0xe3ed[3]](10,e- 1);x= _0xe3ed[4]+  new Array(e)[_0xe3ed[6]](_0xe3ed[5])+ x.toString()[_0xe3ed[7]](2)}}else {var e=parseInt(x.toString()[_0xe3ed[2]](_0xe3ed[8])[1]);if(e> 20){e-= 20;x/= Math[_0xe3ed[3]](10,e);x+=  new Array(e+ 1)[_0xe3ed[6]](_0xe3ed[5])}};return x
   }
+
 }
 
 let Numbers = new numbers()
 
 export default Numbers
+
