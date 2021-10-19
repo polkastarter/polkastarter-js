@@ -8,14 +8,23 @@
 ## Functions
 
 <dl>
-<dt><a href="#setNewOwner">setNewOwner(address)</a></dt>
-<dd><p>Set New Owner of the Contract</p>
+<dt><a href="#addToBlacklist">addToBlacklist(address)</a></dt>
+<dd><p>Adds an address to the blacklist</p>
 </dd>
-<dt><a href="#owner">owner()</a> ⇒ <code>string</code></dt>
-<dd><p>Get Owner of the Contract</p>
+<dt><a href="#removeFromBlacklist">removeFromBlacklist(address)</a></dt>
+<dd><p>Removes an address from the blacklist</p>
+</dd>
+<dt><a href="#isBlackListed">isBlackListed(address)</a> ⇒ <code>boolean</code></dt>
+<dd><p>Returns true if the address is in the blacklist</p>
 </dd>
 <dt><a href="#isPaused">isPaused()</a> ⇒ <code>boolean</code></dt>
-<dd><p>Get Owner of the Contract</p>
+<dd><p>Returns if the contract is paused or not</p>
+</dd>
+<dt><a href="#setStakingRewards">setStakingRewards(address)</a> ⇒ <code>admin</code></dt>
+<dd><p>Sets the staking rewards address</p>
+</dd>
+<dt><a href="#getIDOStaking">getIDOStaking()</a> ⇒ <code>IDOStaking</code></dt>
+<dd><p>Returns the contract for the ido staking</p>
 </dd>
 <dt><a href="#pauseContract">pauseContract()</a> ⇒ <code>admin</code></dt>
 <dd><p>Pause Contract</p>
@@ -23,14 +32,14 @@
 <dt><a href="#erc20">erc20()</a> ⇒ <code>Address</code></dt>
 <dd><p>Get Token Address</p>
 </dd>
-<dt><a href="#decimals">decimals()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get Decimals</p>
-</dd>
 <dt><a href="#unpauseContract">unpauseContract()</a> ⇒ <code>admin</code></dt>
 <dd><p>Unpause Contract</p>
 </dd>
 <dt><a href="#tradeValue">tradeValue()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get swapratio for the pool</p>
+</dd>
+<dt><a href="#vestingStart">vestingStart()</a> ⇒ <code>Date</code></dt>
+<dd><p>Get Start Date of the Vesting</p>
 </dd>
 <dt><a href="#startDate">startDate()</a> ⇒ <code>Date</code></dt>
 <dd><p>Get Start Date of Pool</p>
@@ -68,6 +77,12 @@
 <dt><a href="#tokensLeft">tokensLeft()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens available to be sold in the pool</p>
 </dd>
+<dt><a href="#setSignerPublicAddress">setSignerPublicAddress(address)</a></dt>
+<dd><p>Set the public address of the signer</p>
+</dd>
+<dt><a href="#signerPublicAddress">signerPublicAddress()</a> ⇒ <code>string</code></dt>
+<dd><p>Get the public address of the signer</p>
+</dd>
 <dt><a href="#withdrawableUnsoldTokens">withdrawableUnsoldTokens()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens available to be withdrawn by the admin</p>
 </dd>
@@ -80,7 +95,7 @@
 <dt><a href="#hasWhitelisting">hasWhitelisting()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if swap has whitelisting</p>
 </dd>
-<dt><a href="#isWhitelisted">isWhitelisted()</a> ⇒ <code>Boolean</code></dt>
+<dt><a href="#isWhitelisted">isWhitelisted(address)</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if address is whitelisted</p>
 </dd>
 <dt><a href="#wereUnsoldTokensReedemed">wereUnsoldTokensReedemed()</a> ⇒ <code>Boolean</code></dt>
@@ -122,7 +137,7 @@
 <dt><a href="#getVestingSchedule">getVestingSchedule(Position)</a> ⇒ <code>Array</code> | <code>Integer</code></dt>
 <dd><p>Gets Vesting Schedule</p>
 </dd>
-<dt><a href="#getPurchase">getPurchase(purchase_id)</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Address</code> | <code>Integer</code> | <code>Date</code> | <code>Integer</code> | <code>Integer</code> | <code>Boolean</code> | <code>Boolean</code></dt>
+<dt><a href="#getPurchase">getPurchase(purchase_id)</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Address</code> | <code>Integer</code> | <code>Date</code> | <code>Integer</code> | <code>Boolean</code> | <code>Boolean</code></dt>
 <dd><p>Get Purchase based on ID</p>
 </dd>
 <dt><a href="#getWhiteListedAddresses">getWhiteListedAddresses()</a> ⇒ <code>Array</code> | <code>Address</code></dt>
@@ -140,13 +155,13 @@
 <dt><a href="#getCostFromTokens">getCostFromTokens(tokenAmount)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Cost from Tokens Amount</p>
 </dd>
-<dt><a href="#getDistributionInformation">getDistributionInformation()</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Array</code> | <code>Integer</code></dt>
+<dt><a href="#getDistributionInformation">getDistributionInformation()</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Array</code> | <code>Integer</code> | <code>Date</code></dt>
 <dd><p>Get Distribution Information</p>
 </dd>
-<dt><a href="#swap">swap(tokenAmount)</a></dt>
+<dt><a href="#swap">swap(tokenAmount, [signature])</a></dt>
 <dd><p>Swap tokens by Ethereum or ERC20</p>
 </dd>
-<dt><a href="#redeemTokens(isStandard)">redeemTokens(purchase_id)</a></dt>
+<dt><a href="#redeemTokens(isStandard)">redeemTokens(purchase_id, [stake])</a></dt>
 <dd><p>Reedem tokens bought</p>
 </dd>
 <dt><a href="#redeemGivenMinimumGoalNotAchieved(isStandard)">redeemGivenMinimumGoalNotAchieved(purchase_id)</a></dt>
@@ -158,19 +173,28 @@
 <dt><a href="#withdrawFunds">withdrawFunds()</a></dt>
 <dd><p>Withdraw all funds from tokens sold</p>
 </dd>
-<dt><a href="#approveFundERC20">approveFundERC20()</a></dt>
+<dt><a href="#approveFundERC20">approveFundERC20(tokenAmount)</a></dt>
 <dd><p>Approve the pool to use approved tokens for sale</p>
 </dd>
-<dt><a href="#editIndividualMaximumAmount">editIndividualMaximumAmount()</a> ⇒ <code>admin</code></dt>
+<dt><a href="#setIndividualMaximumAmount">setIndividualMaximumAmount(individualMaximumAmount)</a> ⇒ <code>admin</code></dt>
 <dd><p>Modifies the max allocation</p>
 </dd>
-<dt><a href="#editEndDate">editEndDate()</a> ⇒ <code>admin</code></dt>
+<dt><a href="#setEndDate">setEndDate(endDate)</a> ⇒ <code>admin</code></dt>
 <dd><p>Modifies the end date for the pool</p>
 </dd>
-<dt><a href="#approveSwapERC20">approveSwapERC20()</a></dt>
+<dt><a href="#setStartDate">setStartDate(startDate)</a> ⇒ <code>admin</code></dt>
+<dd><p>Modifies the start date for the pool</p>
+</dd>
+<dt><a href="#setHasWhitelisting">setHasWhitelisting(hasWhitelist)</a> ⇒ <code>admin</code></dt>
+<dd><p>Modifies if the pool has whitelisting or not</p>
+</dd>
+<dt><a href="#setVesting">setVesting([vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a> ⇒ <code>admin</code></dt>
+<dd><p>Modifies the current vesting config</p>
+</dd>
+<dt><a href="#approveSwapERC20">approveSwapERC20(tokenAmount)</a></dt>
 <dd><p>Approve the investor to use approved tokens for the sale</p>
 </dd>
-<dt><a href="#isApprovedSwapERC20">isApprovedSwapERC20()</a></dt>
+<dt><a href="#isApprovedSwapERC20">isApprovedSwapERC20(tokenAmount, address)</a></dt>
 <dd><p>Verify if it is approved to invest</p>
 </dd>
 <dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
@@ -182,7 +206,7 @@
 <dt><a href="#addWhitelistedAddress">addWhitelistedAddress(Addresses)</a></dt>
 <dd><p>add WhiteListed Address</p>
 </dd>
-<dt><a href="#removeWhitelistedAddress">removeWhitelistedAddress()</a></dt>
+<dt><a href="#removeWhitelistedAddress">removeWhitelistedAddress(addresses, index)</a></dt>
 <dd><p>remove WhiteListed Address</p>
 </dd>
 <dt><a href="#safePull">safePull()</a></dt>
@@ -191,11 +215,11 @@
 <dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a></dt>
 <dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
 </dd>
-<dt><a href="#deploy">deploy()</a></dt>
+<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
-<dt><a href="#getOwner">getOwner(Address)</a></dt>
-<dd><p>Get owner address of contract</p>
+<dt><a href="#getSmartContractVersion">getSmartContractVersion(Address)</a></dt>
+<dd><p>Returns the version of the smart contract that is currently inside psjs</p>
 </dd>
 <dt><a href="#getBalance">getBalance(Balance)</a></dt>
 <dd><p>Get Balance of Contract</p>
@@ -208,7 +232,7 @@
 **Kind**: global class  
 <a name="new_FixedSwapContract_new"></a>
 
-### new FixedSwapContract(web3, tokenAddress, decimals, contractAddress)
+### new FixedSwapContract(web3, tokenAddress, contractAddress)
 Fixed Swap Object
 
 
@@ -216,13 +240,12 @@ Fixed Swap Object
 | --- | --- | --- |
 | web3 | <code>Web3</code> |  |
 | tokenAddress | <code>Address</code> |  |
-| decimals | <code>Integer</code> |  |
 | contractAddress | <code>Address</code> | ? (opt) |
 
-<a name="setNewOwner"></a>
+<a name="addToBlacklist"></a>
 
-## setNewOwner(address)
-Set New Owner of the Contract
+## addToBlacklist(address)
+Adds an address to the blacklist
 
 **Kind**: global function  
 
@@ -230,17 +253,50 @@ Set New Owner of the Contract
 | --- | --- |
 | address | <code>string</code> | 
 
-<a name="owner"></a>
+<a name="removeFromBlacklist"></a>
 
-## owner() ⇒ <code>string</code>
-Get Owner of the Contract
+## removeFromBlacklist(address)
+Removes an address from the blacklist
 
 **Kind**: global function  
-**Returns**: <code>string</code> - address  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="isBlackListed"></a>
+
+## isBlackListed(address) ⇒ <code>boolean</code>
+Returns true if the address is in the blacklist
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - isBlackListed  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
 <a name="isPaused"></a>
 
 ## isPaused() ⇒ <code>boolean</code>
-Get Owner of the Contract
+Returns if the contract is paused or not
+
+**Kind**: global function  
+<a name="setStakingRewards"></a>
+
+## setStakingRewards(address) ⇒ <code>admin</code>
+Sets the staking rewards address
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="getIDOStaking"></a>
+
+## getIDOStaking() ⇒ <code>IDOStaking</code>
+Returns the contract for the ido staking
 
 **Kind**: global function  
 <a name="pauseContract"></a>
@@ -256,13 +312,6 @@ Get Token Address
 
 **Kind**: global function  
 **Returns**: <code>Address</code> - Token Address  
-<a name="decimals"></a>
-
-## decimals() ⇒ <code>Integer</code>
-Get Decimals
-
-**Kind**: global function  
-**Returns**: <code>Integer</code> - Integer  
 <a name="unpauseContract"></a>
 
 ## unpauseContract() ⇒ <code>admin</code>
@@ -276,6 +325,12 @@ Get swapratio for the pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - trade value against ETH  
+<a name="vestingStart"></a>
+
+## vestingStart() ⇒ <code>Date</code>
+Get Start Date of the Vesting
+
+**Kind**: global function  
 <a name="startDate"></a>
 
 ## startDate() ⇒ <code>Date</code>
@@ -353,6 +408,24 @@ Get Total tokens available to be sold in the pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="setSignerPublicAddress"></a>
+
+## setSignerPublicAddress(address)
+Set the public address of the signer
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
+<a name="signerPublicAddress"></a>
+
+## signerPublicAddress() ⇒ <code>string</code>
+Get the public address of the signer
+
+**Kind**: global function  
+**Returns**: <code>string</code> - address  
 <a name="withdrawableUnsoldTokens"></a>
 
 ## withdrawableUnsoldTokens() ⇒ <code>Integer</code>
@@ -381,10 +454,15 @@ Verify if swap has whitelisting
 **Kind**: global function  
 <a name="isWhitelisted"></a>
 
-## isWhitelisted() ⇒ <code>Boolean</code>
+## isWhitelisted(address) ⇒ <code>Boolean</code>
 Verify if address is whitelisted
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| address | <code>string</code> | 
+
 <a name="wereUnsoldTokensReedemed"></a>
 
 ## wereUnsoldTokensReedemed() ⇒ <code>Boolean</code>
@@ -470,11 +548,11 @@ Gets Vesting Schedule
 
 <a name="getPurchase"></a>
 
-## getPurchase(purchase_id) ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Address</code> \| <code>Integer</code> \| <code>Date</code> \| <code>Integer</code> \| <code>Integer</code> \| <code>Boolean</code> \| <code>Boolean</code>
+## getPurchase(purchase_id) ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Address</code> \| <code>Integer</code> \| <code>Date</code> \| <code>Integer</code> \| <code>Boolean</code> \| <code>Boolean</code>
 Get Purchase based on ID
 
 **Kind**: global function  
-**Returns**: <code>Integer</code> - _id<code>Integer</code> - amount<code>Address</code> - purchaser<code>Integer</code> - costAmount<code>Date</code> - timestamp<code>Integer</code> - amountReedemed<code>Integer</code> - lastTrancheSent<code>Boolean</code> - wasFinalized<code>Boolean</code> - reverted  
+**Returns**: <code>Integer</code> - _id<code>Integer</code> - amount<code>Address</code> - purchaser<code>Integer</code> - costAmount<code>Date</code> - timestamp<code>Integer</code> - amountReedemed<code>Boolean</code> - wasFinalized<code>Boolean</code> - reverted  
 
 | Param | Type |
 | --- | --- |
@@ -527,32 +605,34 @@ Get Cost from Tokens Amount
 
 <a name="getDistributionInformation"></a>
 
-## getDistributionInformation() ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Array</code> \| <code>Integer</code>
+## getDistributionInformation() ⇒ <code>Integer</code> \| <code>Integer</code> \| <code>Array</code> \| <code>Integer</code> \| <code>Date</code>
 Get Distribution Information
 
 **Kind**: global function  
-**Returns**: <code>Integer</code> - currentSchedule (Ex : 1)<code>Integer</code> - vestingTime (Ex : 1)<code>Array</code> \| <code>Integer</code> - vestingSchedule (Ex : [100])  
+**Returns**: <code>Integer</code> - currentSchedule (Ex : 1)<code>Integer</code> - vestingTime (Ex : 1)<code>Array</code> \| <code>Integer</code> - vestingSchedule (Ex : [100])<code>Date</code> - vestingStart  
 <a name="swap"></a>
 
-## swap(tokenAmount)
+## swap(tokenAmount, [signature])
 Swap tokens by Ethereum or ERC20
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| tokenAmount | <code>Integer</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| tokenAmount | <code>Integer</code> |  |
+| [signature] | <code>string</code> | Signature for the offchain whitelist |
 
 <a name="redeemTokens(isStandard)"></a>
 
-## redeemTokens(purchase_id)
+## redeemTokens(purchase_id, [stake])
 Reedem tokens bought
 
 **Kind**: global function  
 
-| Param | Type |
-| --- | --- |
-| purchase_id | <code>Integer</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| purchase_id | <code>Integer</code> |  |
+| [stake] | <code>Boolean</code> | If true send token to the ido staking contract |
 
 <a name="redeemGivenMinimumGoalNotAchieved(isStandard)"></a>
 
@@ -579,34 +659,96 @@ Withdraw all funds from tokens sold
 **Kind**: global function  
 <a name="approveFundERC20"></a>
 
-## approveFundERC20()
+## approveFundERC20(tokenAmount)
 Approve the pool to use approved tokens for sale
 
 **Kind**: global function  
-<a name="editIndividualMaximumAmount"></a>
 
-## editIndividualMaximumAmount() ⇒ <code>admin</code>
+| Param | Type |
+| --- | --- |
+| tokenAmount | <code>Integer</code> | 
+
+<a name="setIndividualMaximumAmount"></a>
+
+## setIndividualMaximumAmount(individualMaximumAmount) ⇒ <code>admin</code>
 Modifies the max allocation
 
 **Kind**: global function  
-<a name="editEndDate"></a>
 
-## editEndDate() ⇒ <code>admin</code>
+| Param | Type |
+| --- | --- |
+| individualMaximumAmount | <code>Integer</code> | 
+
+<a name="setEndDate"></a>
+
+## setEndDate(endDate) ⇒ <code>admin</code>
 Modifies the end date for the pool
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| endDate | <code>Date</code> | 
+
+<a name="setStartDate"></a>
+
+## setStartDate(startDate) ⇒ <code>admin</code>
+Modifies the start date for the pool
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| startDate | <code>Date</code> | 
+
+<a name="setHasWhitelisting"></a>
+
+## setHasWhitelisting(hasWhitelist) ⇒ <code>admin</code>
+Modifies if the pool has whitelisting or not
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| hasWhitelist | <code>boolean</code> | 
+
+<a name="setVesting"></a>
+
+## setVesting([vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration]) ⇒ <code>admin</code>
+Modifies the current vesting config
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [vestingSchedule] | <code>Array.&lt;Integer&gt;</code> | Vesting schedule in % |
+| [vestingStart] | <code>String</code> | Vesting start date (Default: endDate) |
+| [vestingCliff] | <code>Number</code> | Seconds between every vesting schedule (Default: 0) |
+| [vestingDuration] | <code>Number</code> | Vesting duration (Default: 0) |
+
 <a name="approveSwapERC20"></a>
 
-## approveSwapERC20()
+## approveSwapERC20(tokenAmount)
 Approve the investor to use approved tokens for the sale
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| tokenAmount | <code>Integer</code> | 
+
 <a name="isApprovedSwapERC20"></a>
 
-## isApprovedSwapERC20()
+## isApprovedSwapERC20(tokenAmount, address)
 Verify if it is approved to invest
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| tokenAmount | <code>Integer</code> | 
+| address | <code>Address</code> | 
+
 <a name="isApproved"></a>
 
 ## isApproved(tokenAmount, address) ⇒ <code>Boolean</code>
@@ -643,10 +785,16 @@ add WhiteListed Address
 
 <a name="removeWhitelistedAddress"></a>
 
-## removeWhitelistedAddress()
+## removeWhitelistedAddress(addresses, index)
 remove WhiteListed Address
 
 **Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| addresses | <code>Array</code> \| <code>Addresses</code> | 
+| index | <code>Integer</code> | 
+
 <a name="safePull"></a>
 
 ## safePull()
@@ -667,14 +815,35 @@ Remove Tokens from other ERC20 Address (in case of accident)
 
 <a name="deploy"></a>
 
-## deploy()
+## deploy(tradeValue, tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])
 Deploy the Pool Contract
 
 **Kind**: global function  
-<a name="getOwner"></a>
 
-## getOwner(Address)
-Get owner address of contract
+| Param | Type | Description |
+| --- | --- | --- |
+| tradeValue | <code>Float</code> | Buy price |
+| tokensForSale | <code>Float</code> | Tokens for sale |
+| endDate | <code>String</code> | End date |
+| startDate | <code>String</code> | Start date |
+| [ERC20TradingAddress] | <code>String</code> | Token to use in the swap (Default: 0x0000000000000000000000000000000000000000) |
+| [individualMinimumAmount] | <code>Float</code> | Min cap per wallet. 0 to disable it. (Default: 0) |
+| [individualMaximumAmount] | <code>Float</code> | Max cap per wallet. 0 to disable it. (Default: 0) |
+| [isTokenSwapAtomic] | <code>Boolean</code> | Receive tokens right after the swap. (Default: false) |
+| [minimumRaise] | <code>Float</code> | Soft cap (Default: 0) |
+| [feeAmount] | <code>Float</code> | Fee amount (Default: 1) |
+| [tradingDecimals] | <code>Number</code> | To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) (Default: 0) |
+| [hasWhitelisting] | <code>Boolean</code> | Has White Listing. (Default: false) |
+| [isPOLSWhitelist] | <code>Boolean</code> | Has White Listing. (Default: false) |
+| [vestingSchedule] | <code>Array.&lt;Integer&gt;</code> | Vesting schedule in % |
+| [vestingStart] | <code>String</code> | Vesting start date (Default: endDate) |
+| [vestingCliff] | <code>Number</code> | Seconds to wait for the first unlock after the vesting start (Default: 0) |
+| [vestingDuration] | <code>Number</code> | Seconds to wait between every unlock (Default: 0) |
+
+<a name="getSmartContractVersion"></a>
+
+## getSmartContractVersion(Address)
+Returns the version of the smart contract that is currently inside psjs
 
 **Kind**: global function  
 
