@@ -10,6 +10,7 @@ import Numbers from "../../src/utils/Numbers";
 import Contract from "../../src/models/Contract";
 import * as ethers from 'ethers';
 import { ERC20TokenContract } from '../..';
+import IDOStaking from '../../src/models/IDOStaking';
 
 // const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
@@ -407,30 +408,21 @@ context('ETH Contract', async () => {
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
 
-        const deployStakeContract = async () => {
-            const tenDays = 864000;
-            return new Promise((resolve) => {
-                // Deploy the staking rewards
-                const contract = new app.web3.eth.Contract(idostaking.abi, null, {data: idostaking.bytecode});
-                contract.deploy({
-                    arguments: [
-                        app.account.getAddress(),
-                        app.account.getAddress(),
-                        ERC20TokenAddress,
-                        ERC20TokenAddress,
-                        tenDays,
-                    ]
-                })
-                    .send({
-                        from: '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB',
-                        gas: 4712388,
-                    })
-                    .on('confirmation', function(confirmationNumber, receipt){ 
-                        resolve(receipt.contractAddress);
-                    }).on('error', console.log);
-            });
-        }
-        await swapContract.setStakingRewards({address: await deployStakeContract()});
+        const idoStakeToDeploy = new IDOStaking({
+            web3: app.web3,
+            contractAddress: undefined,
+            acc: app.account,
+        });
+        const tenDays = 864000;
+        await idoStakeToDeploy.deploy({
+            owner: app.account.getAddress(),
+            rewardsDistribution: app.account.getAddress(),
+            rewardsToken: ERC20TokenAddress,
+            stakingToken: ERC20TokenAddress,
+            rewardsDuration: tenDays
+        });
+
+        await swapContract.setStakingRewards({address: idoStakeToDeploy.params.contractAddress});
 
         const staking = await swapContract.getIDOStaking();
 

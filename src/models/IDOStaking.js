@@ -35,6 +35,44 @@ import Client from "../utils/Client";
 		this.client = new Client();
     }
 
+	/**
+	 * @function deploy
+	 * @description Deploys the IDO Staking contracts
+	 * @param {string} owner Address of the owner
+	 * @param {string} rewardsDistribution Address of the distributor
+	 * @param {string} rewardsToken Address of the token we want to reward
+	 * @param {string} stakingToken Address of the token to be staked
+	 * @param {Integer} rewardsDuration Duration of the rewards
+	 */
+	deploy = async ({
+		owner,
+        rewardsDistribution,
+        rewardsToken,
+        stakingToken,
+        rewardsDuration,
+		callback
+	}) => {
+		const params = [
+			owner,
+			rewardsDistribution,
+			rewardsToken,
+			stakingToken,
+			rewardsDuration
+		];
+		const res = await this.__deploy(params, callback);
+		this.params.contractAddress = res.contractAddress;
+	}
+
+	__deploy = async (params, callback) => {
+		return await this.params.contract.deploy(
+			this.acc,
+			this.params.contract.getABI(),
+			this.params.contract.getJSON().bytecode,
+			params,
+			callback
+		);
+	};
+
     /**
 	 * @function stake
 	 * @description Stakes tokens inside the stake contract

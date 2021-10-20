@@ -8,6 +8,9 @@
 ## Functions
 
 <dl>
+<dt><a href="#deploy">deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration)</a></dt>
+<dd><p>Deploys the IDO Staking contracts</p>
+</dd>
 <dt><a href="#stake">stake(amount)</a></dt>
 <dd><p>Stakes tokens inside the stake contract</p>
 </dd>
@@ -55,6 +58,21 @@ IDO Staking Object
 | web3 | <code>Web3</code> |  |
 | contractAddress | <code>string</code> | The staking contract address. |
 | acc | <code>Account</code> |  |
+
+<a name="deploy"></a>
+
+## deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration)
+Deploys the IDO Staking contracts
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| owner | <code>string</code> | Address of the owner |
+| rewardsDistribution | <code>string</code> | Address of the distributor |
+| rewardsToken | <code>string</code> | Address of the token we want to reward |
+| stakingToken | <code>string</code> | Address of the token to be staked |
+| rewardsDuration | <code>Integer</code> | Duration of the rewards |
 
 <a name="stake"></a>
 
