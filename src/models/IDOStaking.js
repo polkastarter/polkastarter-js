@@ -125,6 +125,25 @@ import Client from "../utils/Client";
 		});
 	};
 
+	/**
+	 * @function getAPY
+	 * @description Returns the APY that this pool is giving
+	 * @returns {Integer}
+	 */
+	getAPY = async () => {
+		const oneYear = 31556952;
+		const duration = await this.params.contract
+				.getContract()
+				.methods.rewardsDuration()
+				.call();
+		const rewardPerToken = await this.params.contract
+			.getContract()
+			.methods.rewardPerToken()
+			.call();
+
+		return parseInt((parseInt(rewardPerToken) * 100) / (parseInt(duration) / oneYear));
+	}
+
     /**
 	 * @function withdraw
 	 * @param {Integer} amount

@@ -444,7 +444,11 @@ context('ETH Contract', async () => {
         expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0');
 
         await staking.notifyRewardAmountSamePeriod({reward: 20});
+
+
         await forwardTime(60 * 60);
+
+        expect(await staking.getAPY()).to.equal(3);
         expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0.083356481481480948');
         await app.getERC20TokenContract({tokenAddress: ERC20TokenAddress}).transferTokenAmount({toAddress: staking.params.contractAddress, tokenAmount: 500});
 

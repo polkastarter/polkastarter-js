@@ -20,6 +20,9 @@
 <dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the address has approved the staking to deposit</p>
 </dd>
+<dt><a href="#getAPY">getAPY()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns the APY that this pool is giving</p>
+</dd>
 <dt><a href="#withdraw">withdraw(amount)</a></dt>
 <dd><p>Withdraw tokens from the stake contract</p>
 </dd>
@@ -108,6 +111,12 @@ Verify if the address has approved the staking to deposit
 | tokenAmount | <code>Integer</code> | 
 | address | <code>Address</code> | 
 
+<a name="getAPY"></a>
+
+## getAPY() ⇒ <code>Integer</code>
+Returns the APY that this pool is giving
+
+**Kind**: global function  
 <a name="withdraw"></a>
 
 ## withdraw(amount)
