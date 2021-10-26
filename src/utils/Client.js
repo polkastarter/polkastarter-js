@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /**
  * Client utils object
  * @constructor Network

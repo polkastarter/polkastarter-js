@@ -136,7 +136,7 @@ context('ETH Contract', async () => {
         if (oldContract) {
             expect(true).to.equal(true);
         } else {
-            expect(await swapContract.getSmartContractVersion()).to.equal(2700000);
+            expect(await swapContract.getSmartContractVersion()).to.equal(3100000);
         }
     }));
 
@@ -224,6 +224,20 @@ context('ETH Contract', async () => {
         let res = await swapContract.endDate();
         res = isDate(res);
         expect(res).to.equal(true);
+    }));
+
+    it('should edit end Date', mochaAsync(async () => {
+        let oldEndDate = await swapContract.endDate();
+
+        const newEndDate = new Date(oldEndDate.getTime() + (86400 * 1000));
+        await swapContract.setEndDate({endDate: newEndDate});
+        let res = await swapContract.endDate();
+        expect(res.getTime()).to.equal(newEndDate.getTime());
+
+        await swapContract.setEndDate({endDate: oldEndDate});
+        res = await swapContract.endDate();
+        expect(res.getTime()).to.equal(oldEndDate.getTime());
+
     }));
 
     it('GET - individualMinimumAmount ', mochaAsync(async () => {        
