@@ -186,6 +186,25 @@ import Client from "../utils/Client";
 		}
 	};
 
+	/**
+	 * @function exit
+	 * @description Claims all the rewards and withdraws all the staked tokens
+	 */
+	exit = async () => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.exit()
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
     /**
 	 * @function claim
 	 * @description Claim rewards from the staking contract

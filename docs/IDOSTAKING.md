@@ -29,6 +29,9 @@
 <dt><a href="#withdrawAll">withdrawAll()</a></dt>
 <dd><p>Withdraw all the tokens from the stake contract</p>
 </dd>
+<dt><a href="#exit">exit()</a></dt>
+<dd><p>Claims all the rewards and withdraws all the staked tokens</p>
+</dd>
 <dt><a href="#claim">claim()</a></dt>
 <dd><p>Claim rewards from the staking contract</p>
 </dd>
@@ -132,6 +135,12 @@ Withdraw tokens from the stake contract
 
 ## withdrawAll()
 Withdraw all the tokens from the stake contract
+
+**Kind**: global function  
+<a name="exit"></a>
+
+## exit()
+Claims all the rewards and withdraws all the staked tokens
 
 **Kind**: global function  
 <a name="claim"></a>
