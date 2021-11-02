@@ -260,6 +260,30 @@ import Client from "../utils/Client";
 			await this.getRewardsDecimals(),
 		);
 	}
+	
+	/**
+	 * @function lastTimeRewardApplicable
+	 * @description Get the last time rewards are applicable
+	 * @returns {Date}
+	 */
+	 async lastTimeRewardApplicable() {
+		return Numbers.fromSmartContractTimeToMinutes(
+			await this.params.contract.getContract().methods.lastTimeRewardApplicable().call()
+		);
+	}
+
+
+	/**
+	 * @function totalStaked
+	 * @description Returns the total stake
+	 * @returns {Integer} totalStakeAmount
+	*/
+    totalStaked = async () => {
+		return Numbers.fromDecimals(
+            await this.params.contract.getContract().methods.totalSupply().call(),
+            await this.getDecimals()
+        );
+	}
 
     /**
 	 * @function stakeAmount

@@ -41,6 +41,12 @@
 <dt><a href="#userAccumulatedRewards">userAccumulatedRewards(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the accumulated rewards</p>
 </dd>
+<dt><a href="#lastTimeRewardApplicable">lastTimeRewardApplicable()</a> ⇒ <code>Date</code></dt>
+<dd><p>Get the last time rewards are applicable</p>
+</dd>
+<dt><a href="#totalStaked">totalStaked()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns the total stake</p>
+</dd>
 <dt><a href="#stakeAmount">stakeAmount(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the stake amount for a wallet</p>
 </dd>
@@ -172,6 +178,19 @@ Returns the accumulated rewards
 | --- | --- |
 | address | <code>string</code> | 
 
+<a name="lastTimeRewardApplicable"></a>
+
+## lastTimeRewardApplicable() ⇒ <code>Date</code>
+Get the last time rewards are applicable
+
+**Kind**: global function  
+<a name="totalStaked"></a>
+
+## totalStaked() ⇒ <code>Integer</code>
+Returns the total stake
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - totalStakeAmount  
 <a name="stakeAmount"></a>
 
 ## stakeAmount(address) ⇒ <code>Integer</code>

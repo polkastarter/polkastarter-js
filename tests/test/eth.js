@@ -472,8 +472,10 @@ context('ETH Contract', async () => {
 
         expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0.01');
 
+        expect(await staking.totalStaked()).to.equal('0.01');
         await staking.withdrawAll();
         expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0');
+        expect(await staking.totalStaked()).to.equal('0');
 
     }));
 
