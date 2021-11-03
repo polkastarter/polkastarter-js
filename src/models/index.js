@@ -2,11 +2,11 @@ import Web3 from "web3";
 import FixedSwapContract from "./FixedSwapContract";
 import Signer from "../utils/Signer";
 import Network from "../utils/Network";
+import Wallet from "../utils/Wallet";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 import Staking from "./Staking";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
-import Web3Modal from "web3modal";
 
 const ETH_URL_MAINNET =
 	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
@@ -147,6 +147,14 @@ class Application {
 	*/
 	getNetworkUtils = () => {
 		return new Network(this.network, !this.mainnet, this.getETHNetwork);
+	}
+
+	/**
+	 * @function getWalletUtils
+	 * @description Returns the Wallet Utils instance. 
+	*/
+	getWalletUtils = () => {
+		return new Wallet(this.network, !this.mainnet);
 	}
 
 	/**

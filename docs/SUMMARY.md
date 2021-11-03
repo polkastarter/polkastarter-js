@@ -9,3 +9,4 @@
 * [Network Utils](NETWORK.md)
 * [Staking](STAKING.md)
 * [IDO Staking](IDOSTAKING.md)
+* [Wallet Utils](WALLET.md)
