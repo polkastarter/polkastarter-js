@@ -161,12 +161,13 @@ class FixedSwapContract {
 	 * @param {string} address
 	 */
 	async setStakingRewards({address}) {
-		return await this.client.sendTx(
+		await this.client.sendTx(
 			this.params.web3,
 			this.acc,
 			this.params.contract,
 			this.params.contract.getContract().methods.setStakingRewards(address)
 		);
+		return true;
 	}
 
 	/**

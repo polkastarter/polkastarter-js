@@ -43,6 +43,7 @@ import Client from "../utils/Client";
 	 * @param {string} rewardsToken Address of the token we want to reward
 	 * @param {string} stakingToken Address of the token to be staked
 	 * @param {Integer} rewardsDuration Duration of the rewards
+	 * @returns {string} address The deployed contract address
 	 */
 	deploy = async ({
 		owner,
@@ -61,6 +62,7 @@ import Client from "../utils/Client";
 		];
 		const res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
+		return res.contractAddress;
 	}
 
 	__deploy = async (params, callback) => {
@@ -305,7 +307,7 @@ import Client from "../utils/Client";
 	*/
 	setTokenSaleAddress = async ({address}) => {
 		try {
-			return await this.client.sendTx(
+			await this.client.sendTx(
 				this.params.web3,
 				this.acc,
 				this.params.contract,
@@ -313,6 +315,7 @@ import Client from "../utils/Client";
 					.getContract()
 					.methods.setTokenSaleAddress(address)
 			);
+			return true;
 		} catch (err) {
 			throw err;
 		}

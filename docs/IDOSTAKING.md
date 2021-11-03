@@ -8,7 +8,7 @@
 ## Functions
 
 <dl>
-<dt><a href="#deploy">deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration)</a></dt>
+<dt><a href="#deploy">deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration)</a> ⇒ <code>string</code></dt>
 <dd><p>Deploys the IDO Staking contracts</p>
 </dd>
 <dt><a href="#stake">stake(amount)</a></dt>
@@ -73,10 +73,11 @@ IDO Staking Object
 
 <a name="deploy"></a>
 
-## deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration)
+## deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration) ⇒ <code>string</code>
 Deploys the IDO Staking contracts
 
 **Kind**: global function  
+**Returns**: <code>string</code> - address The deployed contract address  
 
 | Param | Type | Description |
 | --- | --- | --- |
