@@ -178,7 +178,7 @@ class FixedSwapContract {
 	async getIDOStaking() {
 		const contractAddr = await this.params.contract.getContract().methods.stakingRewardsAddress().call();
 		if (contractAddr == '0x0000000000000000000000000000000000000000') {
-			throw new Error('This pool doesn\'t have a staking contract');
+			return null;
 		}
 		return new IDOStaking({
 			acc: this.acc,
