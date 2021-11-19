@@ -37,8 +37,8 @@ import Addresses from "./Addresses";
         if (!web3) {
             throw new Error("Please provide a valid web3 provider");
         }
-        if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC')){
-			throw new Error("Network has to be ETH or DOT or BSC or MATIC");
+        if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network !='CELO')){
+			throw new Error("Network has to be ETH or DOT or BSC or MATIC or CELO");
 		}
         this.web3 = web3;
         this.version = "2.0";

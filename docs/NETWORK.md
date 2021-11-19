@@ -17,6 +17,9 @@
 <dt><a href="#switchToEthereum">switchToEthereum()</a></dt>
 <dd><p>Request switch to the ETH chain</p>
 </dd>
+<dt><a href="#switchToCelo">switchToCelo()</a></dt>
+<dd><p>Request switch to the Celo chain</p>
+</dd>
 <dt><a href="#switchToPolygon">switchToPolygon()</a></dt>
 <dd><p>Request switch to the Polygon chain</p>
 </dd>
@@ -69,6 +72,12 @@ Request the wallet to change to the current chain
 
 ## switchToEthereum()
 Request switch to the ETH chain
+
+**Kind**: global function  
+<a name="switchToCelo"></a>
+
+## switchToCelo()
+Request switch to the Celo chain
 
 **Kind**: global function  
 <a name="switchToPolygon"></a>

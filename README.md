@@ -63,6 +63,21 @@ await swapContract.swap({
 });
 
 ```
+
+## Testing
+
+To run the test suite vs a local chain (ganache):
+
+```bash
+npm test
+```
+
+To run the test suite vs a testnet real chain (Kovan, BSC Testnet, etc):
+
+```bash
+CHAIN_NAME=ETH npm test
+```
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)

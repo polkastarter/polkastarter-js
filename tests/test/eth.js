@@ -29,10 +29,41 @@ context('ETH Contract', async () => {
     var swapContract;
     var app;
     var ethersProvider;
-    var isFunded, isSaleOpen, hasWhitelist, tokensLeft, indiviMinAmount, indivMaxAmount, cost, tokensAvailable;
+    var isFunded, isSaleOpen, tokensLeft, indiviMinAmount, indivMaxAmount, cost, tokensAvailable;
     var currentTime;
 
+    var isRealChain = process.env.CHAIN_NAME;
+
+    const getWeb3 = () => {
+        // Instance Application using ganache
+        const provider = require("ganache-core").provider({
+            gasLimit: 10000000000,
+
+            gasPrice: 1,
+            debug: true,
+            accounts: [
+                {
+                    secretKey: userPrivateKey,
+                    balance: 10000000000000000000
+                }
+            ]
+        });
+        ethersProvider = new ethers.providers.Web3Provider(provider);
+        return new Web3(provider);
+    }
+
+    const sleep = async (time) => {
+        return new Promise((resolve) => {
+            setTimeout(resolve, time * 1000)
+        });
+    }
+
     const forwardTime = async (time) => {
+        if (isRealChain) {
+            await sleep(time);
+            currentTime = parseInt(new Date().getTime()/1000);
+            return;
+        }
         // "Roads? Where we’re going, we don’t need roads."
         const date = parseInt(new Date().getTime()/1000);
         currentTime = date + await ethersProvider.send('evm_increaseTime', [ time ]);
@@ -41,36 +72,23 @@ context('ETH Contract', async () => {
 
     before(mochaAsync(async () => {
         return new Promise(async (resolve) => {
-            // Instance Application using ganache
-            const ganacheProvider = require("ganache-core").provider({
-                gasLimit: 10000000000,
-                
-                gasPrice: 1,
-                debug: true,
-                accounts: [
-                    {
-                        secretKey: userPrivateKey,
-                        balance: 10000000000000000000
-                    }
-                ]
-            });
-            app = new Application({test : true, mainnet : false, network : 'ETH', web3:
-                new Web3(ganacheProvider)
+            // Instance Application
+            app = new Application({test : true, mainnet : false, network : isRealChain ? process.env.CHAIN_NAME : 'ETH', web3:
+                isRealChain ? undefined : getWeb3()
             });
             app.web3.eth.transactionConfirmationBlocks = 1;
-            ethersProvider = new ethers.providers.Web3Provider(ganacheProvider);
-
+            
             // Deploy the ERC20
-            const contract = new app.web3.eth.Contract(ierc20.abi, null, {data: ierc20.bytecode});
-            contract.deploy()
-                .send({
-                    from: '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB',
-                    gas: 4712388,
-                })
-                .on('confirmation', function(confirmationNumber, receipt){ 
-                    ERC20TokenAddress = receipt.contractAddress;
-                    resolve();
-                }).on('error', console.log);              
+            const contract = new Contract(app.web3, ierc20.abi);
+            const response = await contract.deploy(
+                app.account,
+                ierc20.abi,
+                ierc20.bytecode,
+                [],
+                undefined
+            );
+            ERC20TokenAddress = response.contractAddress;
+            resolve();
         });
     }));
 
@@ -450,32 +468,34 @@ context('ETH Contract', async () => {
 
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()});
         expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0');
-        await forwardTime(6 * 60);
 
-        res = await swapContract.redeemTokens({purchase_id : purchases[0], stake: true});
-        expect(res).to.not.equal(false);
+        if (!isRealChain) {
+            await forwardTime(6 * 60);
 
-        expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0');
+            res = await swapContract.redeemTokens({purchase_id : purchases[0], stake: true});
+            expect(res).to.not.equal(false);
 
-        await staking.notifyRewardAmountSamePeriod({reward: 20});
+            expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0');
 
+            await staking.notifyRewardAmountSamePeriod({reward: 20});
 
-        await forwardTime(60 * 60);
+            await forwardTime(60 * 60);
 
-        expect(await staking.getAPY()).to.equal(3);
-        expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0.083356481481480948');
-        await app.getERC20TokenContract({tokenAddress: ERC20TokenAddress}).transferTokenAmount({toAddress: staking.params.contractAddress, tokenAmount: 500});
+            expect(await staking.getAPY()).to.equal(3);
+            expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0.083356481481480948');
+            await app.getERC20TokenContract({tokenAddress: ERC20TokenAddress}).transferTokenAmount({toAddress: staking.params.contractAddress, tokenAmount: 500});
 
-        await staking.claim();
+            await staking.claim();
 
-        expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0');
+            expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0');
+        
+            expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0.01');
 
-        expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0.01');
-
-        expect(await staking.totalStaked()).to.equal('0.01');
-        await staking.withdrawAll();
-        expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0');
-        expect(await staking.totalStaked()).to.equal('0');
+            expect(await staking.totalStaked()).to.equal('0.01');
+            await staking.withdrawAll();
+            expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0');
+            expect(await staking.totalStaked()).to.equal('0');
+        }
 
     }));
 

@@ -24,6 +24,10 @@ const POLYGON_CHAIN_URL =
 	"https://rpc-mainnet.maticvigil.com/";
 const TEST_PRIVATE_KEY = 
 	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
+const CELO_CHAIN_URL =
+	"https://forno.celo.org";
+const CELO_CHAIN_TESTNET_URL =
+	"https://alfajores-forno.celo-testnet.org";
 
 const networksEnum = Object.freeze({
 	1: "Ethereum Main",
@@ -35,6 +39,8 @@ const networksEnum = Object.freeze({
 	42: "Kovan",
 	137: "Polygon",
 	80001: "Mumbai",
+	44787: "Celo Testnet",
+	42220: "Celo"
 });
 
 /**
@@ -50,8 +56,8 @@ class Application {
 		this.test = test;
 		global.IS_TEST = !mainnet;
 		this.mainnet = mainnet;
-		if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC')){
-			throw new Error("Network has to be ETH or DOT or BSC or MATIC");
+		if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network != 'CELO')){
+			throw new Error("Network has to be ETH or DOT or BSC or MATIC or CELO");
 		}
 		this.network = network;
 
@@ -81,6 +87,8 @@ class Application {
 			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
 		}else if(this.network == 'MATIC'){
 			this.web3 = new Web3((this.mainnet == true) ? POLYGON_CHAIN_URL : POLYGON_CHAIN_TESTNET_URL);
+		}else if(this.network == 'CELO'){
+			this.web3 = new Web3((this.mainnet == true) ? CELO_CHAIN_URL : CELO_CHAIN_TESTNET_URL);
 		}
 	}
 	
@@ -99,6 +107,8 @@ class Application {
 			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
 		}else if(this.network == 'MATIC'){
 			this.web3 = new Web3((this.mainnet == true) ? POLYGON_CHAIN_URL : POLYGON_CHAIN_TESTNET_URL);
+		}else if(this.network == 'CELO'){
+			this.web3 = new Web3((this.mainnet == true) ? CELO_CHAIN_URL : CELO_CHAIN_TESTNET_URL);
 		}
 
 		if((typeof window !== "undefined") && window.ethereum) {
