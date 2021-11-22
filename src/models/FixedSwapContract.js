@@ -923,12 +923,41 @@ class FixedSwapContract {
 	/* POST User Functions */
 
 	/**
+	 * @function swapWithSig
+	 * @description Swap tokens by Ethereum or ERC20
+	 * @param {Integer} tokenAmount
+	 * @param {string} accountMaxAmount Max alloc in wei
+	 * @param {string=} signature Signature for the offchain whitelist
+	*/
+	swapWithSig = async ({ tokenAmount, callback, signature, accountMaxAmount }) => {
+		let amountWithDecimals = Numbers.toSmartContractDecimals(
+			tokenAmount,
+			await this.getDecimals()
+		);
+
+		let cost = await this.getCostFromTokens({
+			tokenAmount,
+		});
+
+		let costToDecimals = Numbers.toSmartContractDecimals(cost, await this.getTradingDecimals());
+
+		return await this.client.sendTx(
+			this.params.web3,
+			this.acc,
+			this.params.contract,
+			this.params.contract.getContract().methods.swapWithSig(amountWithDecimals, accountMaxAmount, signature),
+			false,
+			await this.isETHTrade() ? costToDecimals : 0,
+			callback
+		);
+	}
+
+	/**
 	 * @function swap
 	 * @description Swap tokens by Ethereum or ERC20
 	 * @param {Integer} tokenAmount
 	 * @param {string=} signature Signature for the offchain whitelist
-	 */
-
+	*/
 	swap = async ({ tokenAmount, callback, signature }) => {
 		let amountWithDecimals = Numbers.toSmartContractDecimals(
 			tokenAmount,
