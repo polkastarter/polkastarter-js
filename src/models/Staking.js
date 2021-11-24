@@ -4,6 +4,7 @@ import Numbers from "../utils/Numbers";
 import ERC20TokenContract from "./ERC20TokenContract";
 import Client from "../utils/Client";
 import Addresses from "./Addresses";
+import Chains from "../utils/Chains";
 
 /**
  * Staking Object
@@ -37,9 +38,8 @@ import Addresses from "./Addresses";
         if (!web3) {
             throw new Error("Please provide a valid web3 provider");
         }
-        if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network !='CELO')){
-			throw new Error("Network has to be ETH or DOT or BSC or MATIC or CELO");
-		}
+
+		Chains.checkIfNetworkIsSupported(network);
         this.web3 = web3;
         this.version = "2.0";
         if (acc) {

@@ -7,42 +7,11 @@ import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
 import Staking from "./Staking";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
+import Chains from "../utils/Chains";
 
-const ETH_URL_MAINNET =
-	"https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
-const ETH_URL_TESTNET =
-	"https://kovan.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
-const MOONBEAM_TESTNET_URL =
-	"https://rpc.testnet.moonbeam.network";
-const BINANCE_CHAIN_TESTNET_URL =
-	"https://data-seed-prebsc-1-s1.binance.org:8545";
-const BINANCE_CHAIN_URL = 
-	"https://bsc-dataseed1.binance.org:443";
-const POLYGON_CHAIN_TESTNET_URL =
-	"https://rpc-mumbai.maticvigil.com/";
-const POLYGON_CHAIN_URL =
-	"https://rpc-mainnet.maticvigil.com/";
 const TEST_PRIVATE_KEY = 
-	"0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
-const CELO_CHAIN_URL =
-	"https://forno.celo.org";
-const CELO_CHAIN_TESTNET_URL =
-	"https://alfajores-forno.celo-testnet.org";
-
-const networksEnum = Object.freeze({
-	1: "Ethereum Main",
-	2: "Morden",
-	3: "Ropsten",
-	4: "Rinkeby",
-	56: "BSC Main",
-	97: "BSC Test",
-	42: "Kovan",
-	137: "Polygon",
-	80001: "Mumbai",
-	44787: "Celo Testnet",
-	42220: "Celo"
-});
-
+  "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
+  
 /**
  * Polkastarter Application Object
  * @constructor Application
@@ -56,9 +25,7 @@ class Application {
 		this.test = test;
 		global.IS_TEST = !mainnet;
 		this.mainnet = mainnet;
-		if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network != 'CELO')){
-			throw new Error("Network has to be ETH or DOT or BSC or MATIC or CELO");
-		}
+		Chains.checkIfNetworkIsSupported(network);
 		this.network = network;
 
 		if(this.test){
@@ -77,18 +44,9 @@ class Application {
 	 * @description Starts an instance of web3 for read-only methods
 	 */
 	startWithoutMetamask = () => {
-		if(this.network == 'DOT'){
-			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
-		}else if(this.network == 'BSC'){
-			this.web3 = new Web3(
-				(this.mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL
-			);
-		}else if(this.network == 'ETH'){
-			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
-		}else if(this.network == 'MATIC'){
-			this.web3 = new Web3((this.mainnet == true) ? POLYGON_CHAIN_URL : POLYGON_CHAIN_TESTNET_URL);
-		}else if(this.network == 'CELO'){
-			this.web3 = new Web3((this.mainnet == true) ? CELO_CHAIN_URL : CELO_CHAIN_TESTNET_URL);
+		const rpc = Chains.getRpcUrl(this.network, this.mainnet);
+		if (rpc) {
+			this.web3 = new Web3(rpc);
 		}
 	}
 	
@@ -97,18 +55,9 @@ class Application {
 	 * @description Starts an instance of web3
 	 */
 	start = () => {
-		if(this.network == 'DOT'){
-			this.web3 = new Web3(MOONBEAM_TESTNET_URL);
-		}else if(this.network == 'BSC'){
-			this.web3 = new Web3(
-				(this.mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL
-			);
-		}else if(this.network == 'ETH'){
-			this.web3 = new Web3((this.mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET);
-		}else if(this.network == 'MATIC'){
-			this.web3 = new Web3((this.mainnet == true) ? POLYGON_CHAIN_URL : POLYGON_CHAIN_TESTNET_URL);
-		}else if(this.network == 'CELO'){
-			this.web3 = new Web3((this.mainnet == true) ? CELO_CHAIN_URL : CELO_CHAIN_TESTNET_URL);
+		const rpc = Chains.getRpcUrl(this.network, this.mainnet);
+		if (rpc) {
+			this.web3 = new Web3(rpc);
 		}
 
 		if((typeof window !== "undefined") && window.ethereum) {
@@ -251,6 +200,7 @@ class Application {
 	*/
 	getETHNetwork = async () => {
 		const netId = await this.web3.eth.net.getId();
+		const networksEnum = Chains.getNetworksEnum();
 		const networkName = networksEnum.hasOwnProperty(netId)
 			? networksEnum[netId]
 			: "Unknown";
