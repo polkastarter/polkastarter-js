@@ -1,5 +1,7 @@
 /* istanbul ignore file */
 
+import Chains from "./Chains";
+
 /**
  * Network utils object
  * @constructor Network
@@ -9,9 +11,7 @@
 class Network {
 
     constructor(network='ETH', test = false, getETHNetwork) {
-        if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network !='CELO')){
-			throw new Error("Network has to be ETH or DOT or BSC or MATIC or CELO");
-		}
+        Chains.checkIfNetworkIsSupported(network);
         this.network = network;
         this.test = test;
         this.getETHNetwork = getETHNetwork;

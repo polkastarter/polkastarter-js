@@ -2,6 +2,8 @@
 
 import Addresses from "../models/Addresses";
 
+import Chains from "./Chains";
+
 /**
  * Wallet utils object
  * @constructor Wallet
@@ -11,9 +13,7 @@ import Addresses from "../models/Addresses";
 class Wallet {
 
     constructor(network='ETH', test = false) {
-        if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network !='CELO')){
-			throw new Error("Network has to be ETH or DOT or BSC or MATIC or CELO");
-		}
+        Chains.checkIfNetworkIsSupported(network);
         this.network = network;
         this.test = test;
         if (test) {
