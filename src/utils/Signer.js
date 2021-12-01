@@ -15,12 +15,26 @@ import Numbers from "./Numbers";
  * @property {string} signature - Signed Address
 */
 
+/**
+ * @typedef PersonalSignature
+ * @type {object}
+ * @property {string} sig - Signature
+ * @property {string} type - Type
+ * @property {string} message - Message
+ * @property {number} expires - Expire timestamp
+ * @property {number} version - Version
+*/
 
 /**
  * Signer object
  * @constructor Signer
 */
 class Signer {
+
+    constructor(web3, account) {
+		this.web3 = web3;
+        this.acc = account;
+	}
     
     /**
 	 * @function generateSignerAccount
@@ -33,6 +47,70 @@ class Signer {
         const wallet = ethers.Wallet.createRandom(entropy)
 
         return await wallet.encrypt(password);
+    }
+
+    /**
+     * @function personalSignature
+     * @param {string} message Message to sign
+     * @param {string} type Message type
+     * @returns {PersonalSignature} Signature response
+    */
+    async personalSignature({message, type}) {
+        const expirationTime = 1800; // 30 mins
+        const version = 1;
+
+        const expires = parseInt(new Date().getTime() / 1000) + expirationTime;
+
+        const sig = await this.web3.eth.personal.sign(
+            this.web3.utils.fromUtf8(
+                JSON.stringify(
+                    {
+                        type: type,
+                        message: message,
+                        version: version,
+                        expires: expires,
+                    }
+                )
+            ),
+            this.acc.getAddress()
+        );
+
+        return {
+            sig: sig,
+            expires: expires,
+            type: type,
+            message: message,
+            version: version,
+        }
+    }
+
+    /**
+     * @function getAddressFromPersonalSignature
+     * @param {string} signature Signature
+     * @param {string} type - Type
+     * @param {string} message - Message
+     * @param {number} expires - Expire timestamp
+     * @param {number} version - Version
+     * @returns {string} Address of the signer
+    */
+    getAddressFromPersonalSignature({signature, message, type, version, expires}) {
+        try {
+            const now = parseInt(new Date().getTime() / 1000);
+            if (now > expires) {
+                throw new BadRequestException('Expired signature');
+            }
+            return this.web3.eth.accounts.recover(
+                JSON.stringify({
+                    type: type,
+                    message: message,
+                    version: version,
+                    expires: expires,
+                }),
+                signature,
+            );
+        } catch (e) {
+            throw new BadRequestException('Invalid signature');
+        }
     }
 
     /**

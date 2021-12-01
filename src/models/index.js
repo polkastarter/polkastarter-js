@@ -11,7 +11,7 @@ import Chains from "../utils/Chains";
 
 const TEST_PRIVATE_KEY = 
   "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
-  
+
 /**
  * Polkastarter Application Object
  * @constructor Application
@@ -97,7 +97,7 @@ class Application {
 	 * @description Returns the Signer instance. 
 	*/
 	getSigner = () => {
-		return new Signer();
+		return new Signer(this.web3, this.test ? this.account : null);
 	}
 
 	/**

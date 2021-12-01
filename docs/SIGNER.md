@@ -11,6 +11,10 @@
 <dt><a href="#generateSignerAccount">generateSignerAccount(password, [entropy])</a> ⇒ <code>string</code></dt>
 <dd><p>Generates a new private key for signing the whitelist addresses</p>
 </dd>
+<dt><a href="#personalSignature">personalSignature(message, type)</a> ⇒ <code><a href="#PersonalSignature">PersonalSignature</a></code></dt>
+<dd></dd>
+<dt><a href="#getAddressFromPersonalSignature">getAddressFromPersonalSignature(signature, type, message, expires, version)</a> ⇒ <code>string</code></dt>
+<dd></dd>
 <dt><a href="#getAddressFromAccount">getAddressFromAccount(accountJson, password)</a> ⇒ <code>string</code></dt>
 <dd><p>Recovers an account given a json file</p>
 </dd>
@@ -38,6 +42,8 @@
 <dd></dd>
 <dt><a href="#SignedAddress">SignedAddress</a> : <code>object</code></dt>
 <dd></dd>
+<dt><a href="#PersonalSignature">PersonalSignature</a> : <code>object</code></dt>
+<dd></dd>
 </dl>
 
 <a name="Signer"></a>
@@ -61,6 +67,31 @@ Generates a new private key for signing the whitelist addresses
 | --- | --- | --- |
 | password | <code>string</code> | Password for encryption |
 | [entropy] | <code>string</code> | Add more entropy |
+
+<a name="personalSignature"></a>
+
+## personalSignature(message, type) ⇒ [<code>PersonalSignature</code>](#PersonalSignature)
+**Kind**: global function  
+**Returns**: [<code>PersonalSignature</code>](#PersonalSignature) - Signature response  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| message | <code>string</code> | Message to sign |
+| type | <code>string</code> | Message type |
+
+<a name="getAddressFromPersonalSignature"></a>
+
+## getAddressFromPersonalSignature(signature, type, message, expires, version) ⇒ <code>string</code>
+**Kind**: global function  
+**Returns**: <code>string</code> - Address of the signer  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| signature | <code>string</code> | Signature |
+| type | <code>string</code> | Type |
+| message | <code>string</code> | Message |
+| expires | <code>number</code> | Expire timestamp |
+| version | <code>number</code> | Version |
 
 <a name="getAddressFromAccount"></a>
 
@@ -178,4 +209,18 @@ Signer object
 | address | <code>string</code> | Address. |
 | allocation | <code>string</code> | Max Allocation. |
 | signature | <code>string</code> | Signed Address |
+
+<a name="PersonalSignature"></a>
+
+## PersonalSignature : <code>object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| sig | <code>string</code> | Signature |
+| type | <code>string</code> | Type |
+| message | <code>string</code> | Message |
+| expires | <code>number</code> | Expire timestamp |
+| version | <code>number</code> | Version |
 
