@@ -1,6 +1,6 @@
 {
     "name": "polkastarter-js",
-    "version": "2.2.1-celo-beta1",
+    "version": "2.2.1",
     "description": "",
     "main": "index.js",
     "engines": {
