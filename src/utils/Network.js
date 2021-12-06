@@ -1,3 +1,7 @@
+/* istanbul ignore file */
+
+import Chains from "./Chains";
+
 /**
  * Network utils object
  * @constructor Network
@@ -7,9 +11,7 @@
 class Network {
 
     constructor(network='ETH', test = false, getETHNetwork) {
-        if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC')){
-			throw new Error("Network has to be ETH or DOT or BSC or MATIC");
-		}
+        Chains.checkIfNetworkIsSupported(network);
         this.network = network;
         this.test = test;
         this.getETHNetwork = getETHNetwork;
@@ -45,6 +47,8 @@ class Network {
             await this.switchToPolygon();
         } else if (this.network == 'BSC') {
             await this.switchToBsc();
+        } else if (this.network == 'CELO') {
+            await this.switchToCelo();
         }
     }
 
@@ -63,6 +67,50 @@ class Network {
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: '0x1' }],
+                });
+            }
+        }
+    }
+
+    /**
+	 * @function switchToCelo
+	 * @description Request switch to the Celo chain
+	 */
+     async switchToCelo() {
+        if (window.ethereum) {
+            if (this.test) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0xAEF3',
+                        chainName: 'Celo Testnet',
+                        nativeCurrency: {
+                        name: 'CELO',
+                        symbol: 'CELO',
+                        decimals: 18,
+                        },
+                        rpcUrls: ['https://alfajores-forno.celo-testnet.org'],
+                        blockExplorerUrls: ['https://alfajores-blockscout.celo-testnet.org'],
+                    },
+                    ],
+                });
+            } else {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0xA4EC',
+                        chainName: 'Celo',
+                        nativeCurrency: {
+                        name: 'CELO',
+                        symbol: 'CELO',
+                        decimals: 18,
+                        },
+                        rpcUrls: ['https://forno.celo.org'],
+                        blockExplorerUrls: ['https://explorer.celo.org'],
+                    },
+                    ],
                 });
             }
         }

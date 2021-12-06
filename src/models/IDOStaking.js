@@ -35,6 +35,46 @@ import Client from "../utils/Client";
 		this.client = new Client();
     }
 
+	/**
+	 * @function deploy
+	 * @description Deploys the IDO Staking contracts
+	 * @param {string} owner Address of the owner
+	 * @param {string} rewardsDistribution Address of the distributor
+	 * @param {string} rewardsToken Address of the token we want to reward
+	 * @param {string} stakingToken Address of the token to be staked
+	 * @param {Integer} rewardsDuration Duration of the rewards
+	 * @returns {string} address The deployed contract address
+	 */
+	deploy = async ({
+		owner,
+        rewardsDistribution,
+        rewardsToken,
+        stakingToken,
+        rewardsDuration,
+		callback
+	}) => {
+		const params = [
+			owner,
+			rewardsDistribution,
+			rewardsToken,
+			stakingToken,
+			rewardsDuration
+		];
+		const res = await this.__deploy(params, callback);
+		this.params.contractAddress = res.contractAddress;
+		return res.contractAddress;
+	}
+
+	__deploy = async (params, callback) => {
+		return await this.params.contract.deploy(
+			this.acc,
+			this.params.contract.getABI(),
+			this.params.contract.getJSON().bytecode,
+			params,
+			callback
+		);
+	};
+
     /**
 	 * @function stake
 	 * @description Stakes tokens inside the stake contract
@@ -87,6 +127,25 @@ import Client from "../utils/Client";
 		});
 	};
 
+	/**
+	 * @function getAPY
+	 * @description Returns the APY that this pool is giving
+	 * @returns {Integer}
+	 */
+	getAPY = async () => {
+		const oneYear = 31556952;
+		const duration = await this.params.contract
+				.getContract()
+				.methods.rewardsDuration()
+				.call();
+		const rewardPerToken = await this.params.contract
+			.getContract()
+			.methods.rewardPerToken()
+			.call();
+
+		return parseInt((parseInt(rewardPerToken) * 100) / (parseInt(duration) / oneYear));
+	}
+
     /**
 	 * @function withdraw
 	 * @param {Integer} amount
@@ -123,6 +182,25 @@ import Client from "../utils/Client";
 				this.params.contract
 					.getContract()
 					.methods.withdrawAll()
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
+	/**
+	 * @function exit
+	 * @description Claims all the rewards and withdraws all the staked tokens
+	 */
+	exit = async () => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.exit()
 			);
 		} catch (err) {
 			throw err;
@@ -184,6 +262,30 @@ import Client from "../utils/Client";
 			await this.getRewardsDecimals(),
 		);
 	}
+	
+	/**
+	 * @function lastTimeRewardApplicable
+	 * @description Get the last time rewards are applicable
+	 * @returns {Date}
+	 */
+	 async lastTimeRewardApplicable() {
+		return Numbers.fromSmartContractTimeToMinutes(
+			await this.params.contract.getContract().methods.lastTimeRewardApplicable().call()
+		);
+	}
+
+
+	/**
+	 * @function totalStaked
+	 * @description Returns the total stake
+	 * @returns {Integer} totalStakeAmount
+	*/
+    totalStaked = async () => {
+		return Numbers.fromDecimals(
+            await this.params.contract.getContract().methods.totalSupply().call(),
+            await this.getDecimals()
+        );
+	}
 
     /**
 	 * @function stakeAmount
@@ -205,7 +307,7 @@ import Client from "../utils/Client";
 	*/
 	setTokenSaleAddress = async ({address}) => {
 		try {
-			return await this.client.sendTx(
+			await this.client.sendTx(
 				this.params.web3,
 				this.acc,
 				this.params.contract,
@@ -213,6 +315,7 @@ import Client from "../utils/Client";
 					.getContract()
 					.methods.setTokenSaleAddress(address)
 			);
+			return true;
 		} catch (err) {
 			throw err;
 		}

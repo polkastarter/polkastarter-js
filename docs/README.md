@@ -15,3 +15,5 @@ Welcome to the Polkastarter JS doc to integrate Polkastarter.
 #### [Staking](/docs/STAKING.md)
 
 #### [IDO Staking](/docs/IDOSTAKING.md)
+
+#### [Wallet](/docs/WALLET.md)

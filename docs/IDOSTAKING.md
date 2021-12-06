@@ -8,6 +8,9 @@
 ## Functions
 
 <dl>
+<dt><a href="#deploy">deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration)</a> ⇒ <code>string</code></dt>
+<dd><p>Deploys the IDO Staking contracts</p>
+</dd>
 <dt><a href="#stake">stake(amount)</a></dt>
 <dd><p>Stakes tokens inside the stake contract</p>
 </dd>
@@ -17,11 +20,17 @@
 <dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the address has approved the staking to deposit</p>
 </dd>
+<dt><a href="#getAPY">getAPY()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns the APY that this pool is giving</p>
+</dd>
 <dt><a href="#withdraw">withdraw(amount)</a></dt>
 <dd><p>Withdraw tokens from the stake contract</p>
 </dd>
 <dt><a href="#withdrawAll">withdrawAll()</a></dt>
 <dd><p>Withdraw all the tokens from the stake contract</p>
+</dd>
+<dt><a href="#exit">exit()</a></dt>
+<dd><p>Claims all the rewards and withdraws all the staked tokens</p>
 </dd>
 <dt><a href="#claim">claim()</a></dt>
 <dd><p>Claim rewards from the staking contract</p>
@@ -31,6 +40,12 @@
 </dd>
 <dt><a href="#userAccumulatedRewards">userAccumulatedRewards(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the accumulated rewards</p>
+</dd>
+<dt><a href="#lastTimeRewardApplicable">lastTimeRewardApplicable()</a> ⇒ <code>Date</code></dt>
+<dd><p>Get the last time rewards are applicable</p>
+</dd>
+<dt><a href="#totalStaked">totalStaked()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns the total stake</p>
 </dd>
 <dt><a href="#stakeAmount">stakeAmount(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the stake amount for a wallet</p>
@@ -55,6 +70,22 @@ IDO Staking Object
 | web3 | <code>Web3</code> |  |
 | contractAddress | <code>string</code> | The staking contract address. |
 | acc | <code>Account</code> |  |
+
+<a name="deploy"></a>
+
+## deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration) ⇒ <code>string</code>
+Deploys the IDO Staking contracts
+
+**Kind**: global function  
+**Returns**: <code>string</code> - address The deployed contract address  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| owner | <code>string</code> | Address of the owner |
+| rewardsDistribution | <code>string</code> | Address of the distributor |
+| rewardsToken | <code>string</code> | Address of the token we want to reward |
+| stakingToken | <code>string</code> | Address of the token to be staked |
+| rewardsDuration | <code>Integer</code> | Duration of the rewards |
 
 <a name="stake"></a>
 
@@ -90,6 +121,12 @@ Verify if the address has approved the staking to deposit
 | tokenAmount | <code>Integer</code> | 
 | address | <code>Address</code> | 
 
+<a name="getAPY"></a>
+
+## getAPY() ⇒ <code>Integer</code>
+Returns the APY that this pool is giving
+
+**Kind**: global function  
 <a name="withdraw"></a>
 
 ## withdraw(amount)
@@ -105,6 +142,12 @@ Withdraw tokens from the stake contract
 
 ## withdrawAll()
 Withdraw all the tokens from the stake contract
+
+**Kind**: global function  
+<a name="exit"></a>
+
+## exit()
+Claims all the rewards and withdraws all the staked tokens
 
 **Kind**: global function  
 <a name="claim"></a>
@@ -136,6 +179,19 @@ Returns the accumulated rewards
 | --- | --- |
 | address | <code>string</code> | 
 
+<a name="lastTimeRewardApplicable"></a>
+
+## lastTimeRewardApplicable() ⇒ <code>Date</code>
+Get the last time rewards are applicable
+
+**Kind**: global function  
+<a name="totalStaked"></a>
+
+## totalStaked() ⇒ <code>Integer</code>
+Returns the total stake
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - totalStakeAmount  
 <a name="stakeAmount"></a>
 
 ## stakeAmount(address) ⇒ <code>Integer</code>

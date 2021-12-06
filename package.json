@@ -1,6 +1,6 @@
 {
     "name": "polkastarter-js",
-    "version": "2.1.0-beta25",
+    "version": "2.2.1-celo-beta1",
     "description": "",
     "main": "index.js",
     "engines": {
@@ -55,8 +55,9 @@
         "docs:swap": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/utils/Numbers.js > docs/NUMBERS.md",
         "docs:network": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/utils/Network.js > docs/NETWORK.md",
         "docs:staking": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/models/Staking.js > docs/STAKING.md",
+        "docs:wallet": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/utils/Wallet.js > docs/WALLET.md",
         "docs:idostaking": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/models/IDOStaking.js > docs/IDOSTAKING.md",
-        "docs": "npm run docs:numbers && npm run docs:signer && npm run docs:swap && npm run docs:network && npm run docs:app && npm run docs:staking && npm run docs:idostaking",
+        "docs": "npm run docs:numbers && npm run docs:signer && npm run docs:swap && npm run docs:network && npm run docs:app && npm run docs:staking && npm run docs:idostaking && npm run docs:wallet",
         "docs:prepare": "gitbook install",
         "docs:build": "npm run docs:prepare && npm run docs && gitbook build",
         "docs:serve": "npm run docs:prepare && npm run docs && gitbook serve",

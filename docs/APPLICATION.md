@@ -23,6 +23,9 @@
 <dt><a href="#getNetworkUtils">getNetworkUtils()</a></dt>
 <dd><p>Returns the Network Utils instance.</p>
 </dd>
+<dt><a href="#getWalletUtils">getWalletUtils()</a></dt>
+<dd><p>Returns the Wallet Utils instance.</p>
+</dd>
 <dt><a href="#getStaking">getStaking([contractAddress], [tokenAddress])</a></dt>
 <dd><p>Returns the Staking Model instance.</p>
 </dd>
@@ -88,6 +91,12 @@ Returns the Signer instance.
 
 ## getNetworkUtils()
 Returns the Network Utils instance.
+
+**Kind**: global function  
+<a name="getWalletUtils"></a>
+
+## getWalletUtils()
+Returns the Wallet Utils instance.
 
 **Kind**: global function  
 <a name="getStaking"></a>
