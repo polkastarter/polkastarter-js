@@ -542,7 +542,7 @@ class FixedSwapContract {
 				.methods.unsoldTokensRedeemed()
 				.call();
 		} catch (e) {
-
+			console.error(e);
 		}
 		return await this.params.contract
 			.getContract()
