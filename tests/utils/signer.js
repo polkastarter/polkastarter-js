@@ -18,28 +18,44 @@ context('Signer', async () => {
     }));
 
     it('should sign addresses', mochaAsync(async () => {
-        const signs = await signer.signAddresses({addresses: [
-            '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
-            '0xA5E5fC6e75A19447544105995C0B6e8e405b63C2',
-            '0x00'
-        ], accountJson: JSON.stringify(jsonAccount), password: 'test1234'});     
+        const signs = await signer.signAddresses({
+            addresses: [
+                '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
+                '0xA5E5fC6e75A19447544105995C0B6e8e405b63C2',
+                '0x00'
+            ],
+            accountMaxAllocations: [
+                10,
+                20,
+                10
+            ],
+            decimals: 18,
+            contractAddress: '0xb8f7166496996a7da21cf1f1b04d9b3e26a3d077',
+            accountJson: JSON.stringify(jsonAccount), 
+            password: 'test1234'
+        }); 
+
         expect(signs).to.have.deep.members([
             {
               address: '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
-              signature: '0xb8f7e7882bedabecefdffd01db6a6a4368e84fb9f7f4d1c7bfc203b35262da3a5cfe1022ee3ce3312f9df629a1df5be6b323b289cfe863831670940307f6e7dc1b'
+              signature: '0x74f1e4aad1ed1aff418413052a519b856292bdf752558ad5eb56e05dcc52126b28fdabd9db2a72e09a205246f95984500fc7e8ad6e7043809f2d4bd53960e7831c',
+              allocation: '10000000000000000000'
             },
             {
               address: '0xA5E5fC6e75A19447544105995C0B6e8e405b63C2',
-              signature: '0x941193c43d758d0b1eeb9519c52f2382e42c5f6e049019885215edd2f5bfa06d21058ff317ad5b579906a1c276e61c36e4c59851293530b04e4ddee4c0bb31491b'
+              signature: '0x6f5f993225fdc5fc093f856ba658bc51bcd87bc4b1b3e91e526fd658982bfb5d4e1994d84eb39302af99d398d3a7cb890d06aedcdc429b48666795a433242e961c',
+              allocation: '20000000000000000000'
             }
         ]);
     }));
 
     it('should verify signature', mochaAsync(async () => {
         const verified = await signer.verifySignature({
-            signature: '0xb8f7e7882bedabecefdffd01db6a6a4368e84fb9f7f4d1c7bfc203b35262da3a5cfe1022ee3ce3312f9df629a1df5be6b323b289cfe863831670940307f6e7dc1b',
+            signature: '0x74f1e4aad1ed1aff418413052a519b856292bdf752558ad5eb56e05dcc52126b28fdabd9db2a72e09a205246f95984500fc7e8ad6e7043809f2d4bd53960e7831c',
             address: '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
-            signerAddress: '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355'
+            signerAddress: '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355',
+            accountMaxAllocation: '10000000000000000000',
+            contractAddress: '0xb8f7166496996a7da21cf1f1b04d9b3e26a3d077',
         });
         expect(verified).to.equal(true);
 
@@ -47,15 +63,27 @@ context('Signer', async () => {
         const signedWithAnotherAccount = await signer.verifySignature({
             signature: '0x76d620690fbc5324ed1602e617cbb185c33e93b0e895587a9402a41faefc9dca2d2e40809da5a04707727665219574021517d827a83903e8c1dc220f7da876831c',
             address: '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
-            signerAddress: '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355'
+            signerAddress: '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355',
+            accountMaxAllocation: '10000000000000000000',
+            contractAddress: '0xb8f7166496996a7da21cf1f1b04d9b3e26a3d077',
         });
         expect(signedWithAnotherAccount).to.equal(false);
 
+        const signedWithAnotherAllocation = await signer.verifySignature({
+            signature: '0x74f1e4aad1ed1aff418413052a519b856292bdf752558ad5eb56e05dcc52126b28fdabd9db2a72e09a205246f95984500fc7e8ad6e7043809f2d4bd53960e7831c',
+            address: '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
+            signerAddress: '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355',
+            accountMaxAllocation: '50000000000000000000',
+            contractAddress: '0xb8f7166496996a7da21cf1f1b04d9b3e26a3d077',
+        });
+        expect(signedWithAnotherAllocation).to.equal(false);
 
         const invalidSig = await signer.verifySignature({
             signature: '0x76d620690fbc5324ed1602e617cbb185c33e93b0e895587a9402a41faefc9dca2d2e40809da5a04707727665219574021517d827a83903e8c1dc220f7ba876831c',
             address: '0xB9a83B0EB888bD041fE5704F75aAd88886A2bb0d',
-            signerAddress: '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355'
+            signerAddress: '0x46d0e9eafe3a1eb66fc54cf40d949fd711e54355',
+            accountMaxAllocation: '10000000000000000000',
+            contractAddress: '0xb8f7166496996a7da21cf1f1b04d9b3e26a3d077',
         });
         expect(invalidSig).to.equal(false);
     }));

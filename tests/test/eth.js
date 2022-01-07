@@ -524,8 +524,16 @@ context('ETH Contract', async () => {
 
         const signs = await signer.signAddresses({
             addresses: [
-            '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB'
-        ], accountJson: account, password: 'test1234'});
+                '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB'
+            ],
+            accountMaxAllocations: [
+                tokenPurchaseAmount
+            ],
+            decimals: 18,
+            contractAddress: contractAddress,
+            accountJson: account, 
+            password: 'test1234'
+        });
 
         await swapContract.setSignerPublicAddress({
             address: ('0x' + JSON.parse(account).address).toLowerCase()
@@ -533,7 +541,12 @@ context('ETH Contract', async () => {
         await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
         await swapContract.fund({tokenAmount : tokenFundAmount});
         await forwardTime(3*60);
-        res = await swapContract.swap({tokenAmount : tokenPurchaseAmount, signature: signs[0].signature});
+        
+        res = await swapContract.swapWithSig({
+            tokenAmount : tokenPurchaseAmount,
+            signature: signs[0].signature,
+            accountMaxAmount: signs[0].allocation
+        });
         expect(res).to.not.equal(false);
     }));
 
