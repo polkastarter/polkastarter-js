@@ -1,6 +1,6 @@
 {
     "name": "polkastarter-js",
-    "version": "2.2.4-beta1",
+    "version": "2.2.4",
     "description": "",
     "main": "index.js",
     "engines": {
