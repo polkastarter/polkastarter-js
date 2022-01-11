@@ -178,6 +178,37 @@ class Application {
 	};
 	
 	/**
+	 * @function getFixedNFTSwapContract
+	 * @param {string=} contractAddress The swap contract address, in case t hat has already been instanced. (Default = null)
+	 * @description Returns Fixed NFT Swap instance
+	*/
+	getFixedNFTSwapContract = async ({contractAddress=null}) => {
+		let contract;
+		if(!contractAddress){
+			// Not deployed
+			return new FixedNFTSwapContract({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				acc : this.test ? this.account : null
+			});
+		}else{
+			// Deployed
+			try{
+				contract = new FixedNFTSwapContract({
+					web3: this.web3,
+					contractAddress: contractAddress,
+					acc : this.test ? this.account : null
+				});
+				await contract.isETHTrade();
+			}catch(err){
+					throw err;
+			}
+	
+			return contract;
+		}
+	};
+	
+	/**
 	 * @function getERC20TokenContract
 	 * @param {string} tokenAddress The token address
 	 * @description Returns ERC20 instance
