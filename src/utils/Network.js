@@ -49,6 +49,8 @@ class Network {
             await this.switchToBsc();
         } else if (this.network == 'CELO') {
             await this.switchToCelo();
+        } else if (this.network == 'AVAX') {
+            await this.switchToAvalanche();
         }
     }
 
@@ -67,6 +69,94 @@ class Network {
                 await window.ethereum.request({
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: '0x1' }],
+                });
+            }
+        }
+    }
+
+    /**
+	 * @function switchToAvalanche
+	 * @description Request switch to the Avalanche chain
+	 */
+     async switchToAvalanche() {
+        if (window.ethereum) {
+            if (this.test) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0xA869',
+                        chainName: 'Avalanche Testnet C-Chain',
+                        nativeCurrency: {
+                            name: 'Avalanche',
+                            symbol: 'AVAX',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://api.avax-test.network/ext/bc/C/rpc'],
+                        blockExplorerUrls: ['https://testnet.snowtrace.io/']
+                    },
+                    ],
+                });
+            } else {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0xA86A',
+                        chainName: 'Avalanche Mainnet C-Chain',
+                        nativeCurrency: {
+                            name: 'Avalanche',
+                            symbol: 'AVAX',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+                        blockExplorerUrls: ['https://snowtrace.io/']
+                    },
+                    ],
+                });
+            }
+        }
+    }
+
+    /**
+	 * @function switchToMoonbeam
+	 * @description Request switch to the Moonbeam chain
+	 */
+     async switchToMoonbeam() {
+        if (window.ethereum) {
+            if (this.test) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0x507',
+                        chainName: 'Moonbase Alpha',
+                        nativeCurrency: {
+                            name: 'DEV',
+                            symbol: 'DEV',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://rpc.api.moonbase.moonbeam.network'],
+                        blockExplorerUrls: ['https://moonbase.moonscan.io/']
+                    },
+                    ],
+                });
+            } else {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0x504',
+                        chainName: 'Moonbeam',
+                        nativeCurrency: {
+                            name: 'GLMR',
+                            symbol: 'GLMR',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://rpc.api.moonbeam.network'],
+                        blockExplorerUrls: ['https://moonscan.io']
+                    },
+                    ],
                 });
             }
         }

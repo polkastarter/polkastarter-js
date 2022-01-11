@@ -17,6 +17,12 @@
 <dt><a href="#switchToEthereum">switchToEthereum()</a></dt>
 <dd><p>Request switch to the ETH chain</p>
 </dd>
+<dt><a href="#switchToAvalanche">switchToAvalanche()</a></dt>
+<dd><p>Request switch to the Avalanche chain</p>
+</dd>
+<dt><a href="#switchToMoonbeam">switchToMoonbeam()</a></dt>
+<dd><p>Request switch to the Moonbeam chain</p>
+</dd>
 <dt><a href="#switchToCelo">switchToCelo()</a></dt>
 <dd><p>Request switch to the Celo chain</p>
 </dd>
@@ -72,6 +78,18 @@ Request the wallet to change to the current chain
 
 ## switchToEthereum()
 Request switch to the ETH chain
+
+**Kind**: global function  
+<a name="switchToAvalanche"></a>
+
+## switchToAvalanche()
+Request switch to the Avalanche chain
+
+**Kind**: global function  
+<a name="switchToMoonbeam"></a>
+
+## switchToMoonbeam()
+Request switch to the Moonbeam chain
 
 **Kind**: global function  
 <a name="switchToCelo"></a>
