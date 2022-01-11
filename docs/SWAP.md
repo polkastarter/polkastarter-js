@@ -158,6 +158,9 @@
 <dt><a href="#getDistributionInformation">getDistributionInformation()</a> ⇒ <code>Integer</code> | <code>Integer</code> | <code>Array</code> | <code>Integer</code> | <code>Date</code></dt>
 <dd><p>Get Distribution Information</p>
 </dd>
+<dt><a href="#swapWithSig">swapWithSig(tokenAmount, accountMaxAmount, [signature])</a></dt>
+<dd><p>Swap tokens by Ethereum or ERC20</p>
+</dd>
 <dt><a href="#swap">swap(tokenAmount, [signature])</a></dt>
 <dd><p>Swap tokens by Ethereum or ERC20</p>
 </dd>
@@ -610,6 +613,19 @@ Get Distribution Information
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - currentSchedule (Ex : 1)<code>Integer</code> - vestingTime (Ex : 1)<code>Array</code> \| <code>Integer</code> - vestingSchedule (Ex : [100])<code>Date</code> - vestingStart  
+<a name="swapWithSig"></a>
+
+## swapWithSig(tokenAmount, accountMaxAmount, [signature])
+Swap tokens by Ethereum or ERC20
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| tokenAmount | <code>Integer</code> |  |
+| accountMaxAmount | <code>string</code> | Max alloc in wei |
+| [signature] | <code>string</code> | Signature for the offchain whitelist |
+
 <a name="swap"></a>
 
 ## swap(tokenAmount, [signature])

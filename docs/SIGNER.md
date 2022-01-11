@@ -14,19 +14,19 @@
 <dt><a href="#getAddressFromAccount">getAddressFromAccount(accountJson, password)</a> ⇒ <code>string</code></dt>
 <dd><p>Recovers an account given a json file</p>
 </dd>
-<dt><a href="#signAddresses">signAddresses(addresses, accountJson, password)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
+<dt><a href="#signAddresses">signAddresses(addresses, accountJson, accountMaxAllocations, decimals, contractAddress, password)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
 <dd><p>Signs an array of addresses. Will ignore malformed addresses.</p>
 </dd>
-<dt><a href="#signAddressesWithSigner">signAddressesWithSigner(addresses, signer)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
+<dt><a href="#signAddressesWithSigner">signAddressesWithSigner(addresses, accountMaxAllocations, decimals, contractAddress, signer)</a> ⇒ <code><a href="#SignedAddress">Array.&lt;SignedAddress&gt;</a></code></dt>
 <dd><p>Signs an array of addresses. Will ignore malformed addresses.</p>
 </dd>
 <dt><a href="#signMessage">signMessage(signer, message)</a> ⇒ <code>string</code></dt>
 <dd><p>Signs a message given an account</p>
 </dd>
-<dt><a href="#verifySignature">verifySignature(signature, address, signerAddress)</a> ⇒ <code>boolean</code></dt>
+<dt><a href="#verifySignature">verifySignature(signature, address, contractAddress, accountMaxAllocation, signerAddress)</a> ⇒ <code>boolean</code></dt>
 <dd><p>Verifies if an address has been signed with the signer address</p>
 </dd>
-<dt><a href="#signAddress">signAddress(signer, address)</a> ⇒ <code>string</code></dt>
+<dt><a href="#signAddress">signAddress(signer, address, contractAddress, accountMaxAllocation)</a> ⇒ <code>string</code></dt>
 <dd><p>Signs a address given an account</p>
 </dd>
 </dl>
@@ -77,7 +77,7 @@ Recovers an account given a json file
 
 <a name="signAddresses"></a>
 
-## signAddresses(addresses, accountJson, password) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
+## signAddresses(addresses, accountJson, accountMaxAllocations, decimals, contractAddress, password) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
 Signs an array of addresses. Will ignore malformed addresses.
 
 **Kind**: global function  
@@ -87,11 +87,14 @@ Signs an array of addresses. Will ignore malformed addresses.
 | --- | --- | --- |
 | addresses | <code>Array.&lt;string&gt;</code> | List of addresses to sign |
 | accountJson | <code>string</code> | Account in a json format |
+| accountMaxAllocations | <code>Array.&lt;number&gt;</code> | List of mac allocations in wei |
+| decimals | <code>number</code> | Decimals for the max allocation |
+| contractAddress | <code>string</code> | Pool |
 | password | <code>string</code> | Password to unlock the account |
 
 <a name="signAddressesWithSigner"></a>
 
-## signAddressesWithSigner(addresses, signer) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
+## signAddressesWithSigner(addresses, accountMaxAllocations, decimals, contractAddress, signer) ⇒ [<code>Array.&lt;SignedAddress&gt;</code>](#SignedAddress)
 Signs an array of addresses. Will ignore malformed addresses.
 
 **Kind**: global function  
@@ -100,6 +103,9 @@ Signs an array of addresses. Will ignore malformed addresses.
 | Param | Type | Description |
 | --- | --- | --- |
 | addresses | <code>Array.&lt;string&gt;</code> | List of addresses to sign |
+| accountMaxAllocations | <code>Array.&lt;number&gt;</code> | List of mac allocations in wei |
+| decimals | <code>number</code> | Decimals for the max allocation |
+| contractAddress | <code>string</code> | Pool |
 | signer | [<code>Signer</code>](#Signer) | Signer object |
 
 <a name="signMessage"></a>
@@ -117,7 +123,7 @@ Signs a message given an account
 
 <a name="verifySignature"></a>
 
-## verifySignature(signature, address, signerAddress) ⇒ <code>boolean</code>
+## verifySignature(signature, address, contractAddress, accountMaxAllocation, signerAddress) ⇒ <code>boolean</code>
 Verifies if an address has been signed with the signer address
 
 **Kind**: global function  
@@ -127,11 +133,13 @@ Verifies if an address has been signed with the signer address
 | --- | --- | --- |
 | signature | <code>string</code> | Signature |
 | address | <code>string</code> | Address signed |
+| contractAddress | <code>string</code> | Pool contract address |
+| accountMaxAllocation | <code>string</code> | Max allocation |
 | signerAddress | <code>string</code> | Address who signed the message |
 
 <a name="signAddress"></a>
 
-## signAddress(signer, address) ⇒ <code>string</code>
+## signAddress(signer, address, contractAddress, accountMaxAllocation) ⇒ <code>string</code>
 Signs a address given an account
 
 **Kind**: global function  
@@ -141,6 +149,8 @@ Signs a address given an account
 | --- | --- | --- |
 | signer | [<code>Signer</code>](#Signer) | Signer object |
 | address | <code>string</code> | Address to sign |
+| contractAddress | <code>string</code> | Pool contract address |
+| accountMaxAllocation | <code>string</code> | Max allocation |
 
 <a name="Signer"></a>
 
@@ -166,5 +176,6 @@ Signer object
 | Name | Type | Description |
 | --- | --- | --- |
 | address | <code>string</code> | Address. |
+| allocation | <code>string</code> | Max Allocation. |
 | signature | <code>string</code> | Signed Address |
 
