@@ -1,7 +1,7 @@
 ## Classes
 
 <dl>
-<dt><a href="#FixedSwapContract">FixedSwapContract</a></dt>
+<dt><a href="#FixedNFTSwapContract">FixedNFTSwapContract</a></dt>
 <dd></dd>
 </dl>
 
@@ -179,14 +179,14 @@
 </dd>
 </dl>
 
-<a name="FixedSwapContract"></a>
+<a name="FixedNFTSwapContract"></a>
 
-## FixedSwapContract
+## FixedNFTSwapContract
 **Kind**: global class  
-<a name="new_FixedSwapContract_new"></a>
+<a name="new_FixedNFTSwapContract_new"></a>
 
-### new FixedSwapContract(web3, contractAddress)
-Fixed Swap Object
+### new FixedNFTSwapContract(web3, contractAddress)
+Fixed NFT Swap Object
 
 
 | Param | Type | Description |

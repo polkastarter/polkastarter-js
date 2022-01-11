@@ -4,14 +4,11 @@ import ERC20TokenContract from "./ERC20TokenContract";
 import Numbers from "../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
-const RESIDUAL_ETH = 0.00001;
-import { Decimal } from 'decimal.js';
-import * as ethers from 'ethers';
 import Client from "../utils/Client";
 
 /**
- * Fixed Swap Object
- * @constructor FixedSwapContract
+ * Fixed NFT Swap Object
+ * @constructor FixedNFTSwapContract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
  */

@@ -6,6 +6,8 @@ Welcome to the Polkastarter JS doc to integrate Polkastarter.
 
 #### [FixedSwap](/docs/SWAP.md)
 
+#### [FixedNFTSwap](/docs/NFT_SWAP.md)
+
 #### [Numbers Utils](/docs/NUMBERS.md)
 
 #### [Signer](/docs/SIGNER.md)
