@@ -119,6 +119,50 @@ class Network {
     }
 
     /**
+	 * @function switchToMoonbeam
+	 * @description Request switch to the Moonbeam chain
+	 */
+     async switchToMoonbeam() {
+        if (window.ethereum) {
+            if (this.test) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0x507',
+                        chainName: 'Moonbase Alpha',
+                        nativeCurrency: {
+                            name: 'DEV',
+                            symbol: 'DEV',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://rpc.api.moonbase.moonbeam.network'],
+                        blockExplorerUrls: ['https://moonbase.moonscan.io/']
+                    },
+                    ],
+                });
+            } else {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0x504',
+                        chainName: 'Moonbeam',
+                        nativeCurrency: {
+                            name: 'GLMR',
+                            symbol: 'GLMR',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://rpc.api.moonbeam.network'],
+                        blockExplorerUrls: ['https://moonscan.io']
+                    },
+                    ],
+                });
+            }
+        }
+    }
+
+    /**
 	 * @function switchToCelo
 	 * @description Request switch to the Celo chain
 	 */

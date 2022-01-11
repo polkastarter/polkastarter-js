@@ -3,8 +3,10 @@ const ETH_URL_MAINNET =
   "https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
 const ETH_URL_TESTNET =
   "https://kovan.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
+const MOONBEAM_URL =
+  "https://rpc.api.moonbeam.network";
 const MOONBEAM_TESTNET_URL =
-  "https://rpc.testnet.moonbeam.network";
+  "https://rpc.api.moonbase.moonbeam.network";
 const BINANCE_CHAIN_TESTNET_URL =
   "https://data-seed-prebsc-1-s1.binance.org:8545";
 const BINANCE_CHAIN_URL = 
@@ -35,7 +37,9 @@ const networksEnum = Object.freeze({
   44787: "Celo Testnet",
   42220: "Celo",
   43114: "Avalanche",
-  43113: "Avalanche Testnet"
+  43113: "Avalanche Testnet",
+  1284: "Moonbeam",
+  1287: "Moonbeam Testnet"
 });
 
 /**
@@ -60,7 +64,7 @@ class chains {
 
   getRpcUrl(network, mainnet = true) {
     if(network == 'DOT') {
-			return MOONBEAM_TESTNET_URL;
+      return (mainnet == true) ? MOONBEAM_URL : MOONBEAM_TESTNET_URL;
 		} else if(network == 'BSC') {
 			return (mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL;
 		} else if(network == 'ETH') {
