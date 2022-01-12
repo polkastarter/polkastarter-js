@@ -5,6 +5,7 @@ import Network from "../utils/Network";
 import Wallet from "../utils/Wallet";
 import Account from './Account';
 import ERC20TokenContract from "./ERC20TokenContract";
+import FixedNFTSwapContract from "./FixedNFTSwapContract";
 import Staking from "./Staking";
 import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
 import Chains from "../utils/Chains";

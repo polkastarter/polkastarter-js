@@ -214,7 +214,7 @@ class FixedNFTSwapContract {
 				.getContract()
 				.methods.individualMaximumAmount()
 				.call()),
-			await this.getDecimals()
+			await this.getTradingDecimals()
 		);
 	}
 
@@ -229,22 +229,7 @@ class FixedNFTSwapContract {
 				.getContract()
 				.methods.minimumRaise()
 				.call()),
-			await this.getDecimals()
-		);
-	}
-
-	/**
-	 * @function tokensAllocated
-	 * @description Get Total tokens Allocated already, therefore the tokens spent until now
-	 * @returns {Integer} Amount in Tokens
-	 */
-	async tokensAllocated() {
-		return Numbers.fromDecimals(
-			(await this.params.contract
-				.getContract()
-				.methods.tokensAllocated()
-				.call()),
-			await this.getDecimals()
+			await this.getTradingDecimals()
 		);
 	}
 
@@ -277,19 +262,30 @@ class FixedNFTSwapContract {
 	}
 
 	/**
-	 * @function tokensAvailable
-	 * @description Get Total tokens owned by the Pool
+	 * @function tokensLeft
+	 * @description Get Total tokens owned by category
+	 * @param {Integer} categoryId
 	 * @returns {Integer} Amount in Tokens
 	 */
-	async tokensAvailable() { //TODO REVISAR
-		return Numbers.fromDecimals(
-			await this.params.contract
+	async tokensLeft({categoryId}) {
+		return await this.params.contract
 				.getContract()
-				.methods.availableTokens()
-				.call(),
-			await this.getDecimals()
-		);
+				.methods.tokensLeft(categoryId)
+				.call();
 	}
+
+	/**
+	 * @function withdrawFunds
+	 * @description Withdraw all funds from tokens sold
+	 */
+	 withdrawFunds = async () => {
+		return await this.client.sendTx(
+			this.params.web3,
+			this.acc,
+			this.params.contract,
+			this.params.contract.getContract().methods.withdrawFunds()
+		);
+	};
 
 	/**
 	 * @function setSignerPublicAddress
@@ -511,7 +507,7 @@ class FixedNFTSwapContract {
 	 * @param {Integer} purchase_id
 	 * @returns {Integer} _id
 	 * @returns {Integer} categoryId
-	 * @returns {Integer} amountPurchased
+	 * @returns {Integer} amount
      * @returns {Integer} amountContributed
 	 * @returns {Address} purchaser
 	 * @returns {Date} timestamp
@@ -523,12 +519,12 @@ class FixedNFTSwapContract {
 			.methods.getPurchase(purchase_id)
 			.call();
 
-		let amountContributed = Numbers.fromDecimals(res.amountContributed, await this.getDecimals());
+		let amountContributed = Numbers.fromDecimals(res.amountContributed, await this.getTradingDecimals());
         
 		return {
 			_id: purchase_id,
             categoryId: res.categoryId,
-            amountPurchased: res.amountPurchased,
+            amount: res.amountPurchased,
             amountContributed,
 			purchaser: res.purchaser,
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res.timestamp),
@@ -582,7 +578,7 @@ class FixedNFTSwapContract {
 			this.params.web3,
 			this.acc,
 			this.params.contract,
-			this.params.contract.getContract().methods.myPurchases(address),
+			this.params.contract.getContract().methods.getMyPurchases(address),
 			true
 		);
 		return res.map((id) => Numbers.fromHex(id));
@@ -629,15 +625,15 @@ class FixedNFTSwapContract {
 	/**
 	 * @function swap
 	 * @description Swap tokens by Ethereum or ERC20
-	 * @param {Integer} amount
+	 * @param {Integer} tokenAmount
 	 * @param {Integer} categoryId
 	 * @param {string=} signature Signature for the offchain whitelist
 	 */
 
-	swap = async ({ amount, categoryId, callback, signature }) => {
+	swap = async ({ tokenAmount, categoryId, callback, signature }) => {
 
 		let cost = await this.getCost({
-			amount, 
+			amount: tokenAmount, 
 			categoryId
 		});
 
@@ -651,7 +647,7 @@ class FixedNFTSwapContract {
 			this.params.web3,
 			this.acc,
 			this.params.contract,
-			this.params.contract.getContract().methods.swapWithSig(amount, categoryId, 0, signature),
+			this.params.contract.getContract().methods.swapWithSig(tokenAmount, categoryId, 0, signature),
 			false,
 			await this.isETHTrade() ? costToDecimals : 0,
 			callback
@@ -701,7 +697,7 @@ class FixedNFTSwapContract {
 	 setIndividualMaximumAmount = async ( { individualMaximumAmount } ) => {
 		const maxAmount = Numbers.toSmartContractDecimals(
 			individualMaximumAmount,
-			await this.getDecimals()
+			await this.getTradingDecimals()
 		);
 		return await this.client.sendTx(
 			this.params.web3,
@@ -770,7 +766,7 @@ class FixedNFTSwapContract {
 		for(let i = 0; i < categoriesPrice.length; i++) {
 			finalcategoriesPrice[i] = Numbers.toSmartContractDecimals(
 				categoriesPrice[i],
-				await this.getDecimals()
+				await this.getTradingDecimals()
 			)
 		};
 		return await this.client.sendTx(
@@ -972,6 +968,15 @@ class FixedNFTSwapContract {
 		if (feePercentage < 1) {
 			throw new Error("Fee Amount has to be >= 1");
 		}
+
+
+		if(ERC20TradingAddress != '0x0000000000000000000000000000000000000000' && (tradingDecimals == 0)){
+			throw new Error("If an ERC20 Trading Address please add the 'tradingDecimals' field to the trading address (Ex : USDT -> 6)");
+		}else{
+			/* is ETH Trade */
+			tradingDecimals = 18;
+		}
+
 		let totalRaise = 0; 
 		let finalcategoriesPrice = [];
 		for(let i = 0; i < categoriesSupply.length; i++) {
@@ -1003,13 +1008,6 @@ class FixedNFTSwapContract {
 				throw new Error("Individual Maximum Amount should be smaller than total Tokens For Sale")
 			}
 		}
-
-		if(ERC20TradingAddress != '0x0000000000000000000000000000000000000000' && (tradingDecimals == 0)){
-			throw new Error("If an ERC20 Trading Address please add the 'tradingDecimals' field to the trading address (Ex : USDT -> 6)");
-		}else{
-			/* is ETH Trade */
-			tradingDecimals = 18;
-		}
 	
 		if(individualMaximumAmount == 0){
 			individualMaximumAmount = totalRaise; /* Set Max Amount to Unlimited if 0 */
@@ -1021,9 +1019,9 @@ class FixedNFTSwapContract {
 			Numbers.timeToSmartContractTime(distributionDate),
 			Numbers.toSmartContractDecimals(
 				individualMaximumAmount,
-				await this.getDecimals()
+				await this.getTradingDecimals()
 			),
-			Numbers.toSmartContractDecimals(minimumRaise, await this.getDecimals()),
+			Numbers.toSmartContractDecimals(minimumRaise, await this.getTradingDecimals()),
 			parseInt(feePercentage),
 			hasWhitelisting,
 			ERC20TradingAddress,
@@ -1031,6 +1029,7 @@ class FixedNFTSwapContract {
 			categoriesSupply,
 			finalcategoriesPrice
 		];
+		console.log('Params', params);
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */
