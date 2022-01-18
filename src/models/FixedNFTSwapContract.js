@@ -275,6 +275,18 @@ class FixedNFTSwapContract {
 	}
 
 	/**
+	 * @function totalCost
+	 * @description Get Total costo for buying all the nfts
+	 * @returns {Integer} Amount in Tokens
+	 */
+	async totalCost() {
+		return await this.params.contract
+				.getContract()
+				.methods.maximumRaise()
+				.call();
+	}
+
+	/**
 	 * @function withdrawFunds
 	 * @description Withdraw all funds from tokens sold
 	 */

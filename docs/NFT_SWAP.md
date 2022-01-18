@@ -44,17 +44,20 @@
 <dt><a href="#minimumRaise">minimumRaise()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Minimum Raise amount for Token Sale</p>
 </dd>
-<dt><a href="#tokensAllocated">tokensAllocated()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get Total tokens Allocated already, therefore the tokens spent until now</p>
-</dd>
 <dt><a href="#hasMinimumRaise">hasMinimumRaise()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>See if hasMinimumRaise</p>
 </dd>
 <dt><a href="#minimumReached">minimumReached()</a> ⇒ <code>Integer</code></dt>
 <dd><p>See if minimumRaise was Reached</p>
 </dd>
-<dt><a href="#tokensAvailable">tokensAvailable()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get Total tokens owned by the Pool</p>
+<dt><a href="#tokensLeft">tokensLeft(categoryId)</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Total tokens owned by category</p>
+</dd>
+<dt><a href="#totalCost">totalCost()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Total costo for buying all the nfts</p>
+</dd>
+<dt><a href="#withdrawFunds">withdrawFunds()</a></dt>
+<dd><p>Withdraw all funds from tokens sold</p>
 </dd>
 <dt><a href="#setSignerPublicAddress">setSignerPublicAddress(address)</a></dt>
 <dd><p>Set the public address of the signer</p>
@@ -120,7 +123,7 @@
 <dt><a href="#getCost">getCost(amount, categoryId)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Cost for category and amount</p>
 </dd>
-<dt><a href="#swap">swap(amount, categoryId, [signature])</a></dt>
+<dt><a href="#swap">swap(tokenAmount, categoryId, [signature])</a></dt>
 <dd><p>Swap tokens by Ethereum or ERC20</p>
 </dd>
 <dt><a href="#redeemGivenMinimumGoalNotAchieved(isStandard)">redeemGivenMinimumGoalNotAchieved(purchase_id)</a></dt>
@@ -283,13 +286,6 @@ Get Minimum Raise amount for Token Sale
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
-<a name="tokensAllocated"></a>
-
-## tokensAllocated() ⇒ <code>Integer</code>
-Get Total tokens Allocated already, therefore the tokens spent until now
-
-**Kind**: global function  
-**Returns**: <code>Integer</code> - Amount in Tokens  
 <a name="hasMinimumRaise"></a>
 
 ## hasMinimumRaise() ⇒ <code>Boolean</code>
@@ -302,13 +298,31 @@ See if hasMinimumRaise
 See if minimumRaise was Reached
 
 **Kind**: global function  
-<a name="tokensAvailable"></a>
+<a name="tokensLeft"></a>
 
-## tokensAvailable() ⇒ <code>Integer</code>
-Get Total tokens owned by the Pool
+## tokensLeft(categoryId) ⇒ <code>Integer</code>
+Get Total tokens owned by category
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
+
+| Param | Type |
+| --- | --- |
+| categoryId | <code>Integer</code> | 
+
+<a name="totalCost"></a>
+
+## totalCost() ⇒ <code>Integer</code>
+Get Total costo for buying all the nfts
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="withdrawFunds"></a>
+
+## withdrawFunds()
+Withdraw all funds from tokens sold
+
+**Kind**: global function  
 <a name="setSignerPublicAddress"></a>
 
 ## setSignerPublicAddress(address)
@@ -421,7 +435,7 @@ Verify if the Token Sale in not open yet
 Get Purchase based on ID
 
 **Kind**: global function  
-**Returns**: <code>Integer</code> - _id<code>Integer</code> - categoryId<code>Integer</code> - amountPurchased<code>Integer</code> - amountContributed<code>Address</code> - purchaser<code>Date</code> - timestamp<code>Boolean</code> - reverted  
+**Returns**: <code>Integer</code> - _id<code>Integer</code> - categoryId<code>Integer</code> - amount<code>Integer</code> - amountContributed<code>Address</code> - purchaser<code>Date</code> - timestamp<code>Boolean</code> - reverted  
 
 | Param | Type |
 | --- | --- |
@@ -486,14 +500,14 @@ Get Cost for category and amount
 
 <a name="swap"></a>
 
-## swap(amount, categoryId, [signature])
+## swap(tokenAmount, categoryId, [signature])
 Swap tokens by Ethereum or ERC20
 
 **Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| amount | <code>Integer</code> |  |
+| tokenAmount | <code>Integer</code> |  |
 | categoryId | <code>Integer</code> |  |
 | [signature] | <code>string</code> | Signature for the offchain whitelist |
 
