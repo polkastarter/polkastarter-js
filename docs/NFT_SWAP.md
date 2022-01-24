@@ -50,11 +50,20 @@
 <dt><a href="#minimumReached">minimumReached()</a> ⇒ <code>Integer</code></dt>
 <dd><p>See if minimumRaise was Reached</p>
 </dd>
+<dt><a href="#tokensAllocated">tokensAllocated()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Total tokens spent in the contract, therefore the tokens bought until now</p>
+</dd>
+<dt><a href="#tokensForSale">tokensForSale(categoryId)</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Total tokens for sale by category</p>
+</dd>
+<dt><a href="#soldByCategoryId">soldByCategoryId(categoryId)</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Total tokens for sold by category</p>
+</dd>
 <dt><a href="#tokensLeft">tokensLeft(categoryId)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens owned by category</p>
 </dd>
 <dt><a href="#totalCost">totalCost()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get Total costo for buying all the nfts</p>
+<dd><p>Get Total cost for buying all the nfts</p>
 </dd>
 <dt><a href="#withdrawFunds">withdrawFunds()</a></dt>
 <dd><p>Withdraw all funds from tokens sold</p>
@@ -298,6 +307,37 @@ See if hasMinimumRaise
 See if minimumRaise was Reached
 
 **Kind**: global function  
+<a name="tokensAllocated"></a>
+
+## tokensAllocated() ⇒ <code>Integer</code>
+Get Total tokens spent in the contract, therefore the tokens bought until now
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="tokensForSale"></a>
+
+## tokensForSale(categoryId) ⇒ <code>Integer</code>
+Get Total tokens for sale by category
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - Amount in Tokens  
+
+| Param | Type |
+| --- | --- |
+| categoryId | <code>Integer</code> | 
+
+<a name="soldByCategoryId"></a>
+
+## soldByCategoryId(categoryId) ⇒ <code>Integer</code>
+Get Total tokens for sold by category
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - Amount in Tokens  
+
+| Param | Type |
+| --- | --- |
+| categoryId | <code>Integer</code> | 
+
 <a name="tokensLeft"></a>
 
 ## tokensLeft(categoryId) ⇒ <code>Integer</code>
@@ -313,7 +353,7 @@ Get Total tokens owned by category
 <a name="totalCost"></a>
 
 ## totalCost() ⇒ <code>Integer</code>
-Get Total costo for buying all the nfts
+Get Total cost for buying all the nfts
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  

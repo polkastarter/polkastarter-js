@@ -262,6 +262,47 @@ class FixedNFTSwapContract {
 	}
 
 	/**
+	 * @function tokensAllocated
+	 * @description Get Total tokens spent in the contract, therefore the tokens bought until now
+	 * @returns {Integer} Amount in Tokens
+	 */
+	 async tokensAllocated() {
+		return Numbers.fromDecimals(
+			(await this.params.contract
+				.getContract()
+				.methods.tokensAllocated()
+				.call()),
+			await this.getTradingDecimals()
+		);
+	}
+
+	/**
+	 * @function tokensForSale
+	 * @description Get Total tokens for sale by category
+	 * @param {Integer} categoryId
+	 * @returns {Integer} Amount in Tokens
+	 */
+	 async tokensForSale({categoryId}) {
+		return (await this.params.contract
+				.getContract()
+				.methods.categories(categoryId)
+				.call()).supply;
+	}
+
+	/**
+	 * @function soldByCategoryId
+	 * @description Get Total tokens for sold by category
+	 * @param {Integer} categoryId
+	 * @returns {Integer} Amount in Tokens
+	 */
+	 async soldByCategoryId({categoryId}) {
+		return await this.params.contract
+				.getContract()
+				.methods.soldByCategoryId(categoryId)
+				.call();
+	}
+
+	/**
 	 * @function tokensLeft
 	 * @description Get Total tokens owned by category
 	 * @param {Integer} categoryId
@@ -276,7 +317,7 @@ class FixedNFTSwapContract {
 
 	/**
 	 * @function totalCost
-	 * @description Get Total costo for buying all the nfts
+	 * @description Get Total cost for buying all the nfts
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async totalCost() {
