@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "engines": {
-        "node": ">=10.13.0 <=14.18.2"
+        "node": ">=10.13.0 <=^14"
     },
     "directories": {
         "test": "test"
