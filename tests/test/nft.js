@@ -133,6 +133,20 @@ context('NFT Contract', async () => {
         expect(Number(tokens).noExponents()).to.equal(Number(tokenFundAmount).noExponents());
     }));
 
+    it('should edit end Date', mochaAsync(async () => {
+        let oldEndDate = await swapContract.endDate();
+
+        const newEndDate = new Date(oldEndDate.getTime() + (86400 * 1000));
+        await swapContract.setEndDate({endDate: newEndDate});
+        let res = await swapContract.endDate();
+        expect(res.getTime()).to.equal(newEndDate.getTime());
+
+        await swapContract.setEndDate({endDate: oldEndDate});
+        res = await swapContract.endDate();
+        expect(res.getTime()).to.equal(oldEndDate.getTime());
+
+    }));
+
     it('GET - isSaleOpen - before Start', mochaAsync(async () => {     
         await forwardTime(4*60);   
         let res = await swapContract.isOpen();
@@ -155,20 +169,6 @@ context('NFT Contract', async () => {
         let res = await swapContract.endDate();
         res = isDate(res);
         expect(res).to.equal(true);
-    }));
-
-    it('should edit end Date', mochaAsync(async () => {
-        let oldEndDate = await swapContract.endDate();
-
-        const newEndDate = new Date(oldEndDate.getTime() + (86400 * 1000));
-        await swapContract.setEndDate({endDate: newEndDate});
-        let res = await swapContract.endDate();
-        expect(res.getTime()).to.equal(newEndDate.getTime());
-
-        await swapContract.setEndDate({endDate: oldEndDate});
-        res = await swapContract.endDate();
-        expect(res.getTime()).to.equal(oldEndDate.getTime());
-
     }));
 
     it('GET - individualMaximumAmount ', mochaAsync(async () => {        
