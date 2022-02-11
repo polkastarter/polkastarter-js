@@ -90,7 +90,7 @@ context('NFT Contract', async () => {
    
     it('should deploy Fixed NFT Swap Contract', mochaAsync(async () => {
         /* Create Contract */
-        swapContract = await app.getFixedNFTSwapContract({tokenAddress : ERC20TokenAddress});
+        swapContract = await app.getFixedNFTSwapContract({});
         /* Deploy */
         let res = await swapContract.deploy({
             individualMaximumAmount : 0.1,
@@ -98,7 +98,6 @@ context('NFT Contract', async () => {
             endDate : moment().add(8, 'minutes'),
             distributionDate: moment().add(9, 'minutes'),
             hasWhitelisting : false,
-            isETHTrade : true,
             categoryIds: [1, 2],
             categoriesSupply: [tokenFundAmount, 3],
             categoriesPrice: [tradeValue, 0.02]
