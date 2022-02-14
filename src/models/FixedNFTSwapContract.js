@@ -555,13 +555,16 @@ class FixedNFTSwapContract {
 		let purchaseIds = await this.params.contract
 			.getContract()
 			.methods
-			.myPurchases(address)
+			.getMyPurchases(address)
 			.call();
 		let purchases = [];
-		for (let i = 0; i < pucharseIds.length; i++) {
-			purchases.push(
-				await this.getPurchase(purchaseIds[i])
-			);
+		
+		for (let id of purchaseIds) {
+			if (id != undefined) {
+				purchases.push(
+					await this.getPurchase({purchaseId: Number(id)})
+				);
+			}
 		};
 		return purchases;
 	};
@@ -578,18 +581,18 @@ class FixedNFTSwapContract {
 	 * @returns {Date} timestamp
 	 * @returns {Boolean} reverted
 	 */
-	getPurchase = async ({ purchase_id }) => {
+	getPurchase = async ({ purchaseId }) => {
 		let res = await this.params.contract
 			.getContract()
-			.methods.getPurchase(purchase_id)
+			.methods.getPurchase(purchaseId)
 			.call();
 
 		let amountContributed = Numbers.fromDecimals(res.amountContributed, await this.getTradingDecimals());
 
 		return {
-			_id: purchase_id,
-			categoryId: res.categoryId,
-			amount: res.amountPurchased,
+			_id: purchaseId,
+			categoryId: Number(res.categoryId),
+			amount: Number(res.amountPurchased),
 			amountContributed,
 			purchaser: res.purchaser,
 			timestamp: Numbers.fromSmartContractTimeToMinutes(res.timestamp),
@@ -660,7 +663,8 @@ class FixedNFTSwapContract {
 			this.params.web3,
 			this.acc,
 			this.params.contract,
-			this.params.contract.getContract().methods.getIsClaimedCategoryForUser(address, categoryId)
+			this.params.contract.getContract().methods.getIsClaimedCategoryForUser(address, categoryId),
+			true
 		);
 	}
 

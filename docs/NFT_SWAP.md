@@ -65,6 +65,8 @@
 <dt><a href="#totalCost">totalCost()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total cost for buying all the nfts</p>
 </dd>
+<dt><a href="#getCategoryIds">getCategoryIds()</a> ⇒ <code>Array.&lt;Number&gt;</code></dt>
+<dd></dd>
 <dt><a href="#withdrawFunds">withdrawFunds()</a></dt>
 <dd><p>Withdraw all funds from tokens sold</p>
 </dd>
@@ -132,7 +134,7 @@
 <dt><a href="#getCost">getCost(amount, categoryId)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Cost for category and amount</p>
 </dd>
-<dt><a href="#swap">swap(tokenAmount, categoryId, [signature])</a></dt>
+<dt><a href="#swap">swap(tokenAmount, categoryId, maxAllocation, [signature])</a></dt>
 <dd><p>Swap tokens by Ethereum or ERC20</p>
 </dd>
 <dt><a href="#redeemGivenMinimumGoalNotAchieved(isStandard)">redeemGivenMinimumGoalNotAchieved(purchase_id)</a></dt>
@@ -357,6 +359,11 @@ Get Total cost for buying all the nfts
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="getCategoryIds"></a>
+
+## getCategoryIds() ⇒ <code>Array.&lt;Number&gt;</code>
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Number&gt;</code> - an array containig all category ids  
 <a name="withdrawFunds"></a>
 
 ## withdrawFunds()
@@ -540,7 +547,7 @@ Get Cost for category and amount
 
 <a name="swap"></a>
 
-## swap(tokenAmount, categoryId, [signature])
+## swap(tokenAmount, categoryId, maxAllocation, [signature])
 Swap tokens by Ethereum or ERC20
 
 **Kind**: global function  
@@ -549,6 +556,7 @@ Swap tokens by Ethereum or ERC20
 | --- | --- | --- |
 | tokenAmount | <code>Integer</code> |  |
 | categoryId | <code>Integer</code> |  |
+| maxAllocation | <code>Integer</code> |  |
 | [signature] | <code>string</code> | Signature for the offchain whitelist |
 
 <a name="redeemGivenMinimumGoalNotAchieved(isStandard)"></a>

@@ -12,8 +12,8 @@ import * as ethers from 'ethers';
 
 // const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
+var contractAddressWithMinimumRaise = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
-
 const expect = chai.expect;
 let tokenPurchaseAmount = 0.01;
 const tokenFundAmount = 5;
@@ -22,6 +22,7 @@ const tradeValue = 0.01;
 context('NFT Contract', async () => {
     var ERC20TokenAddress;
     var swapContract;
+    var swapContractWithMinimumRaise;
     var app;
     var ethersProvider;
     var isFunded, isSaleOpen, tokensLeft, indiviMinAmount, indivMaxAmount, cost, tokensAvailable;
@@ -39,7 +40,7 @@ context('NFT Contract', async () => {
             accounts: [
                 {
                     secretKey: userPrivateKey,
-                    balance: 10000000000000000000
+                    balance: 1000000000000000000000
                 }
             ]
         });
@@ -106,6 +107,27 @@ context('NFT Contract', async () => {
         expect(res).to.not.equal(false);
 
         expect(await swapContract.getTradingDecimals()).to.equal(18);
+    }));
+
+    it('should deploy Fixed NFT Swap Contract with minimumRaise', mochaAsync(async () => {
+        /* Create Contract */
+        swapContractWithMinimumRaise = await app.getFixedNFTSwapContract({});
+        /* Deploy */
+        let res = await swapContractWithMinimumRaise.deploy({
+            individualMaximumAmount : 0.2,
+            startDate : moment().add(4, 'minutes'),
+            endDate : moment().add(8, 'minutes'),
+            distributionDate: moment().add(9, 'minutes'),
+            minimumRaise: 0.1,
+            hasWhitelisting : false,
+            categoryIds: [1, 2],
+            categoriesSupply: [tokenFundAmount, 3],
+            categoriesPrice: [0.051, 0.1]
+        });
+        contractAddressWithMinimumRaise = swapContractWithMinimumRaise.getAddress();
+        expect(res).to.not.equal(false);
+
+        expect(await swapContractWithMinimumRaise.getTradingDecimals()).to.equal(18);
     }));
 
     it('should get the correct smart contract version', mochaAsync(async () => {
@@ -261,7 +283,7 @@ context('NFT Contract', async () => {
 
     it('GET - Purchase ID', mochaAsync(async () => {     
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
-        let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
+        let purchase = await swapContract.getPurchase({purchaseId : purchases[0]});
 
         const amountPurchase = Number(purchase.amount).noExponents();
 
@@ -289,6 +311,22 @@ context('NFT Contract', async () => {
         expect(buyers.length).to.equal(1);      
     }));
 
+    it("Check minimum raise before and after purchasing", mochaAsync(async () => {
+        let minimumReached = await swapContractWithMinimumRaise.minimumReached();
+        expect(minimumReached).to.equal(false);
+
+        await swapContractWithMinimumRaise.swap({tokenAmount : 2, categoryId: 1, maxAllocation: 0});
+        
+        let minimumReachedAfterPurchasing = await swapContractWithMinimumRaise.minimumReached();
+        expect(minimumReachedAfterPurchasing).to.equal(true);
+
+    }));
+    it("GET witdrawable funds on not finalized", mochaAsync(async () => {
+
+        let withdrawableFunds = await swapContractWithMinimumRaise.withdrawableFunds();
+        expect(Number(withdrawableFunds)).to.equal(0);
+    }));
+
     it('GET - Fixed Swap is Closed', mochaAsync(async () => {  
         await forwardTime(4*60); 
         let res = await swapContract.hasFinalized();
@@ -299,7 +337,7 @@ context('NFT Contract', async () => {
 
     it('GET - Purchase ID 2', mochaAsync(async () => {     
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
-        let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
+        let purchase = await swapContract.getPurchase({purchaseId : purchases[0]});
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.reverted).to.equal(false);
 
@@ -308,6 +346,41 @@ context('NFT Contract', async () => {
     it("GET - HasMinimumRaise", mochaAsync(async () => {
         let hasMinimumRaise = await swapContract.hasMinimumRaise();
         expect(hasMinimumRaise).to.equal(false);
+    }));
+
+    it("GET - Minimum Raise Having", mochaAsync(async () => {
+        let minimumRaise = await swapContractWithMinimumRaise.minimumRaise();
+        expect(Number(minimumRaise)).to.equal(0.1);
+    }));
+
+    it("GET - Minimum Raise Not having", mochaAsync(async () => {
+        let minimumRaise = await swapContract.minimumRaise();
+        expect(Number(minimumRaise)).to.equal(0);
+    }));
+
+    it("GET - MinimumReached with no minimum", mochaAsync(async () => {
+        let minimumReached = await swapContract.minimumReached();
+        expect(minimumReached).to.equal(true);
+    }));
+
+    it("GET - MinimumReached with minimum not satisfied", mochaAsync(async () => {
+        let minimumReached = await swapContract.minimumReached();
+        expect(minimumReached).to.equal(true);
+    }));
+
+    it("GET - HasMinimumRaise in another contract", mochaAsync(async () => {
+        let hasMinimumRaise = await swapContractWithMinimumRaise.hasMinimumRaise();
+        expect(hasMinimumRaise).to.equal(true);
+    }));
+
+    it("GET - Allocated tokens", mochaAsync(async () => {
+        let tokensAllocated = await swapContract.tokensAllocated();
+        expect(Number(tokensAllocated)).to.equal(2 * tradeValue);
+    }));
+
+    it("GET - Tokens for sale", mochaAsync(async() => {
+        let tokensForSale = await swapContract.tokensForSale({categoryId: 1});
+        expect(Number(tokensForSale)).to.equal(tokenFundAmount);
     }));
 
     it('Remove ETH From Purchases - Admin', mochaAsync(async () => {  
@@ -325,5 +398,28 @@ context('NFT Contract', async () => {
         let res = await swapContract.removeFromBlacklist({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'});
         expect(res).to.not.equal(false);
         expect(await swapContract.isBlacklisted({address: '0xfAadFace3FbD81CE37B0e19c0B65fF4234148132'})).to.equal(false);
+    }));
+
+    it("GET witdrawable funds on finalized", mochaAsync(async () => {
+        let withdrawableFunds = await swapContractWithMinimumRaise.withdrawableFunds();
+        expect(Number(withdrawableFunds)).to.equal(0.102);
+    }));
+
+    it("GET User purchases", mochaAsync( async () => {
+        let purchases = await swapContract.getUserPurchases({address: app.account.getAddress()});
+        expect(purchases.length).to.equal(1);
+        expect(purchases[0].categoryId).to.equal(1);
+        expect(purchases[0].amount).to.equal(2);
+    }));
+
+    it("GET User purchase", mochaAsync( async () => {
+        let purchase = await swapContract.getPurchase({purchaseId: 0});
+        expect(purchase.categoryId).to.equal(1);
+        expect(purchase.amount).to.equal(2);
+    }));
+
+    it("GET Is Claimed category", mochaAsync( async () => {
+        let claimed = await swapContract.getIsClaimedCategoryForUser({address: app.account.getAddress(), categoryId: 1});
+        expect(claimed).to.equal(false);
     }));
 });
