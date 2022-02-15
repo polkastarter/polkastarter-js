@@ -65,7 +65,7 @@
 <dt><a href="#totalCost">totalCost()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total cost for buying all the nfts</p>
 </dd>
-<dt><a href="#getCategoryIds">getCategoryIds()</a> ⇒ <code>Array.&lt;Number&gt;</code></dt>
+<dt><a href="#categoryIds">categoryIds()</a> ⇒ <code>Array.&lt;Number&gt;</code></dt>
 <dd></dd>
 <dt><a href="#withdrawFunds">withdrawFunds()</a></dt>
 <dd><p>Withdraw all funds from tokens sold</p>
@@ -359,9 +359,9 @@ Get Total cost for buying all the nfts
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
-<a name="getCategoryIds"></a>
+<a name="categoryIds"></a>
 
-## getCategoryIds() ⇒ <code>Array.&lt;Number&gt;</code>
+## categoryIds() ⇒ <code>Array.&lt;Number&gt;</code>
 **Kind**: global function  
 **Returns**: <code>Array.&lt;Number&gt;</code> - an array containig all category ids  
 <a name="withdrawFunds"></a>

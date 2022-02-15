@@ -328,7 +328,7 @@ class FixedNFTSwapContract {
 	}
 
 	/**
-	 * @function getCategoryIds
+	 * @function categoryIds
 	 * @returns {Number[]} an array containig all category ids
 	 */
 	async categoryIds() {
