@@ -171,7 +171,7 @@ context('NFT Contract', async () => {
     it('should edit end Date', mochaAsync(async () => {
         let oldEndDate = await swapContract.endDate();
 
-        const newEndDate = new Date(oldEndDate.getTime() + (86400 * 1000));
+        const newEndDate = new Date(oldEndDate.getTime() + (30 * 1000));
         await swapContract.setEndDate({endDate: newEndDate});
         let res = await swapContract.endDate();
         expect(res.getTime()).to.equal(newEndDate.getTime());
