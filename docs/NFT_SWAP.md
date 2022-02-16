@@ -170,7 +170,7 @@
 <dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the Admin has approved the pool to use receive the tokens for sale</p>
 </dd>
-<dt><a href="#addWhitelistedAddress">addWhitelistedAddress(Addresses)</a></dt>
+<dt><a href="#addWhitelistedAddress">addWhitelistedAddress(address)</a></dt>
 <dd><p>add WhiteListed Address</p>
 </dd>
 <dt><a href="#removeWhitelistedAddress">removeWhitelistedAddress(addresses, index)</a></dt>
@@ -688,14 +688,14 @@ Verify if the Admin has approved the pool to use receive the tokens for sale
 
 <a name="addWhitelistedAddress"></a>
 
-## addWhitelistedAddress(Addresses)
+## addWhitelistedAddress(address)
 add WhiteListed Address
 
 **Kind**: global function  
 
 | Param | Type |
 | --- | --- |
-| Addresses | <code>Array</code> \| <code>Addresses</code> | 
+| address | <code>Address</code> | 
 
 <a name="removeWhitelistedAddress"></a>
 

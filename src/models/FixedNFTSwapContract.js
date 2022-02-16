@@ -914,10 +914,10 @@ class FixedNFTSwapContract {
 	/**
 	 * @function addWhitelistedAddress
 	 * @description add WhiteListed Address
-	 * @param { Array | Addresses} Addresses
+	 * @param { Address} address
 	 */
-	addWhitelistedAddress = async ({ addresses }) => {
-
+	addWhitelistedAddress = async ({ address }) => {
+		let addresses = [address];
 		if (!addresses || !addresses.length || addresses.length == 0) {
 			throw new Error("Addresses not well setup");
 		}
@@ -938,11 +938,11 @@ class FixedNFTSwapContract {
 		})
 
 		return await this.client.sendTx(
-			this.params.web3,
-			this.acc,
-			this.params.contract,
-			this.params.contract.getContract().methods.add(addressesClean)
-		);
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract.getContract().methods.addToWhitelist(address)
+		); 
 	};
 
 	/**
