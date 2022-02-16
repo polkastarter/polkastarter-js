@@ -328,7 +328,7 @@ class FixedNFTSwapContract {
 	}
 
 	/**
-	 * @function getCategoryIds
+	 * @function categoryIds
 	 * @returns {Number[]} an array containig all category ids
 	 */
 	async categoryIds() {
@@ -962,15 +962,30 @@ class FixedNFTSwapContract {
 
 
 	/**
-	 * @function safePull
-	 * @description Safe Pull all tokens & ETH
+	 * @function safePullETH
+	 * @description Safe Pull all ETH
 	 */
-	safePull = async () => {
+	 safePullETH = async () => {
 		return await this.client.sendTx(
 			this.params.web3,
 			this.acc,
 			this.params.contract,
-			this.params.contract.getContract().methods.safePull(),
+			this.params.contract.getContract().methods.safePullETH(),
+			null,
+			0
+		);
+	};
+
+	/**
+	 * @function safePullTradeToken
+	 * @description Safe Pull all trading tokens
+	 */
+	 safePullTradeToken = async () => {
+		return await this.client.sendTx(
+			this.params.web3,
+			this.acc,
+			this.params.contract,
+			this.params.contract.getContract().methods.safePullTradeToken(),
 			null,
 			0
 		);

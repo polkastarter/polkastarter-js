@@ -65,7 +65,7 @@
 <dt><a href="#totalCost">totalCost()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total cost for buying all the nfts</p>
 </dd>
-<dt><a href="#getCategoryIds">getCategoryIds()</a> ⇒ <code>Array.&lt;Number&gt;</code></dt>
+<dt><a href="#categoryIds">categoryIds()</a> ⇒ <code>Array.&lt;Number&gt;</code></dt>
 <dd></dd>
 <dt><a href="#withdrawFunds">withdrawFunds()</a></dt>
 <dd><p>Withdraw all funds from tokens sold</p>
@@ -176,8 +176,11 @@
 <dt><a href="#removeWhitelistedAddress">removeWhitelistedAddress(addresses, index)</a></dt>
 <dd><p>remove WhiteListed Address</p>
 </dd>
-<dt><a href="#safePull">safePull()</a></dt>
-<dd><p>Safe Pull all tokens &amp; ETH</p>
+<dt><a href="#safePullETH">safePullETH()</a></dt>
+<dd><p>Safe Pull all ETH</p>
+</dd>
+<dt><a href="#safePullTradeToken">safePullTradeToken()</a></dt>
+<dd><p>Safe Pull all trading tokens</p>
 </dd>
 <dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a></dt>
 <dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
@@ -359,9 +362,9 @@ Get Total cost for buying all the nfts
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
-<a name="getCategoryIds"></a>
+<a name="categoryIds"></a>
 
-## getCategoryIds() ⇒ <code>Array.&lt;Number&gt;</code>
+## categoryIds() ⇒ <code>Array.&lt;Number&gt;</code>
 **Kind**: global function  
 **Returns**: <code>Array.&lt;Number&gt;</code> - an array containig all category ids  
 <a name="withdrawFunds"></a>
@@ -709,10 +712,16 @@ remove WhiteListed Address
 | addresses | <code>Array</code> \| <code>Addresses</code> | 
 | index | <code>Integer</code> | 
 
-<a name="safePull"></a>
+<a name="safePullETH"></a>
 
-## safePull()
-Safe Pull all tokens & ETH
+## safePullETH()
+Safe Pull all ETH
+
+**Kind**: global function  
+<a name="safePullTradeToken"></a>
+
+## safePullTradeToken()
+Safe Pull all trading tokens
 
 **Kind**: global function  
 <a name="removeOtherERC20Tokens"></a>
