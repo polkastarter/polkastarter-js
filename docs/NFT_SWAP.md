@@ -176,8 +176,11 @@
 <dt><a href="#removeWhitelistedAddress">removeWhitelistedAddress(addresses, index)</a></dt>
 <dd><p>remove WhiteListed Address</p>
 </dd>
-<dt><a href="#safePull">safePull()</a></dt>
-<dd><p>Safe Pull all tokens &amp; ETH</p>
+<dt><a href="#safePullETH">safePullETH()</a></dt>
+<dd><p>Safe Pull all ETH</p>
+</dd>
+<dt><a href="#safePullTradeToken">safePullTradeToken()</a></dt>
+<dd><p>Safe Pull all trading tokens</p>
 </dd>
 <dt><a href="#removeOtherERC20Tokens">removeOtherERC20Tokens(tokenAddress, toAddress)</a></dt>
 <dd><p>Remove Tokens from other ERC20 Address (in case of accident)</p>
@@ -709,10 +712,16 @@ remove WhiteListed Address
 | addresses | <code>Array</code> \| <code>Addresses</code> | 
 | index | <code>Integer</code> | 
 
-<a name="safePull"></a>
+<a name="safePullETH"></a>
 
-## safePull()
-Safe Pull all tokens & ETH
+## safePullETH()
+Safe Pull all ETH
+
+**Kind**: global function  
+<a name="safePullTradeToken"></a>
+
+## safePullTradeToken()
+Safe Pull all trading tokens
 
 **Kind**: global function  
 <a name="removeOtherERC20Tokens"></a>
