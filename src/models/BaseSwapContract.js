@@ -4,8 +4,8 @@ import Numbers from "../utils/Numbers";
 
 
 /**
- * Base Whitelist Contract Object
- * @constructor WhitelistContract
+ * Base Swap Contract Object
+ * @constructor BaseSwapContract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
  */

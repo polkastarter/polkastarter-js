@@ -1,7 +1,7 @@
 ## Classes
 
 <dl>
-<dt><a href="#WhitelistContract">WhitelistContract</a></dt>
+<dt><a href="#BaseSwapContract">BaseSwapContract</a></dt>
 <dd></dd>
 </dl>
 
@@ -139,14 +139,14 @@
 </dd>
 </dl>
 
-<a name="WhitelistContract"></a>
+<a name="BaseSwapContract"></a>
 
-## WhitelistContract
+## BaseSwapContract
 **Kind**: global class  
-<a name="new_WhitelistContract_new"></a>
+<a name="new_BaseSwapContract_new"></a>
 
-### new WhitelistContract(web3, contractAddress)
-Base Whitelist Contract Object
+### new BaseSwapContract(web3, contractAddress)
+Base Swap Contract Object
 
 
 | Param | Type | Description |
