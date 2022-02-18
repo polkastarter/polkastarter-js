@@ -1041,7 +1041,6 @@ class FixedSwapContractLegacy {
 			parseInt(feeAmount),
 			hasWhitelisting
 		];
-		console.log("params", params);
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */

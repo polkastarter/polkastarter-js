@@ -160,21 +160,6 @@ context('NFT Contract With Whitelisting', async () => {
         expect(res.getTime()).to.equal(oldStartDate.getTime());
 
     }));
-
-    it('should edit end Date', mochaAsync(async () => {
-        let oldEndDate = await swapContract.endDate();
-
-        const newEndDate = new Date(oldEndDate.getTime() + (86400 * 1000));
-        await swapContract.setEndDate({endDate: newEndDate});
-        let res = await swapContract.endDate();
-        expect(res.getTime()).to.equal(newEndDate.getTime());
-
-        await swapContract.setEndDate({endDate: oldEndDate});
-        res = await swapContract.endDate();
-        expect(res.getTime()).to.equal(oldEndDate.getTime());
-
-    }));
-
     it('should edit distribution date', mochaAsync(async () => {
         let oldDistributionDate = await swapContract.distributionDate();
         const newDistributionDate = new Date(oldDistributionDate.getTime() + (86400 * 1000));
@@ -260,7 +245,6 @@ context('NFT Contract With Whitelisting', async () => {
 
     it('should do a non atomic swap on the Contract with signature', mochaAsync(async () => {
         await forwardTime(5);
-        console.log("ALLOCAT => " + signs[0].allocation);
         let res = await swapContract.swap({tokenAmount : 1, categoryId: 1, maxAllocation: signs[0].allocation, signature: signs[0].signature});
         expect(res).to.not.equal(false);
     }));
@@ -268,7 +252,6 @@ context('NFT Contract With Whitelisting', async () => {
     it('should do a non atomic swap on the Contract after adding address to whitelist', mochaAsync(async () => {
         await swapContract.addWhitelistedAddress({address: app.account.getAddress()});
         let res = await swapContract.swap({tokenAmount : 1, categoryId: 1, maxAllocation: signs[0].allocation});
-        console.log(res);
         expect(res).to.not.equal(false);
     }));
 
