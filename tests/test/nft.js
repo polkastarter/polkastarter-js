@@ -7,8 +7,8 @@ import moment, { isDate } from 'moment';
 import Application from '../../src/models';
 import { ierc20 } from "../../src/interfaces";
 import Numbers from "../../src/utils/Numbers";
-import Contract from "../../src/models/Contract";
 import * as ethers from 'ethers';
+import Contract from "../../src/models/base/Contract";
 
 // const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
