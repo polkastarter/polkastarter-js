@@ -1,16 +1,16 @@
-import { fixedswap } from "../interfaces";
-import Contract from "./Contract";
-import ERC20TokenContract from "./ERC20TokenContract";
+import { fixedswap } from "../../interfaces";
+import Contract from "../base/Contract";
+import ERC20TokenContract from "../base/ERC20TokenContract";
 import IDOStaking from "./IDOStaking";
-import Numbers from "../utils/Numbers";
+import Numbers from "../../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
 const RESIDUAL_ETH = 0.00001;
 import { Decimal } from 'decimal.js';
 import * as ethers from 'ethers';
-import Client from "../utils/Client";
-import { deploy } from '../services/DeploymentService'
-import BaseSwapContract from "./BaseSwapContract";
+import Client from "../../utils/Client";
+import { deploy } from '../../services/DeploymentService'
+import BaseSwapContract from "./base/BaseSwapContract";
 
 /**
  * Fixed Swap Object

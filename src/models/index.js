@@ -1,13 +1,13 @@
 import Web3 from "web3";
-import FixedSwapContract from "./FixedSwapContract";
+import FixedSwapContract from "./contracts/FixedSwapContract";
 import Signer from "../utils/Signer";
 import Network from "../utils/Network";
 import Wallet from "../utils/Wallet";
-import Account from './Account';
-import ERC20TokenContract from "./ERC20TokenContract";
-import FixedNFTSwapContract from "./FixedNFTSwapContract";
-import Staking from "./Staking";
-import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
+import Account from './base/Account';
+import ERC20TokenContract from "./base/ERC20TokenContract";
+import FixedNFTSwapContract from "./contracts/FixedNFTSwapContract";
+import Staking from "./base/Staking";
+import FixedSwapContractLegacy from "./contracts/legacy/FixedSwapContractLegacy";
 import Chains from "../utils/Chains";
 
 const TEST_PRIVATE_KEY = 

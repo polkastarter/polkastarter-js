@@ -1,10 +1,10 @@
-import { fixednftswap } from "../interfaces";
-import ERC20TokenContract from "./ERC20TokenContract";
-import Numbers from "../utils/Numbers";
+import { fixednftswap } from "../../interfaces";
+import ERC20TokenContract from "../base/ERC20TokenContract";
+import Numbers from "../../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
-import { deploy } from '../services/DeploymentService';
-import BaseSwapContract from './BaseSwapContract';
+import { deploy } from '../../services/DeploymentService';
+import BaseSwapContract from './base/BaseSwapContract';
 
 /**
  * Fixed NFT Swap Object

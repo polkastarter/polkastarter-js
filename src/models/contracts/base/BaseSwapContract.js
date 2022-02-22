@@ -1,6 +1,6 @@
-import Contract from "./Contract";
-import Client from "../utils/Client";
-import Numbers from "../utils/Numbers";
+import Contract from "../../base/Contract";
+import Client from "../../../utils/Client";
+import Numbers from "../../../utils/Numbers";
 
 
 /**
