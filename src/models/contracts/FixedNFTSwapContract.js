@@ -3,8 +3,8 @@ import ERC20TokenContract from "../base/ERC20TokenContract";
 import Numbers from "../../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
-import { deploy } from '../../services/DeploymentService';
 import BaseSwapContract from './base/BaseSwapContract';
+import DeploymentService from "../../services/DeploymentService";
 
 /**
  * Fixed NFT Swap Object
@@ -120,7 +120,7 @@ class FixedNFTSwapContract extends BaseSwapContract {
 			categoriesSupply,
 			finalcategoriesPrice
 		];
-		let res = await deploy(
+		let res = await new DeploymentService().deploy(
 			this.acc,
 			this.params.contract,
 			params,

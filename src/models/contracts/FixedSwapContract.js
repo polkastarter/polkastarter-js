@@ -9,7 +9,7 @@ const RESIDUAL_ETH = 0.00001;
 import { Decimal } from 'decimal.js';
 import * as ethers from 'ethers';
 import Client from "../../utils/Client";
-import { deploy } from '../../services/DeploymentService'
+import DeploymentService from "../../services/DeploymentService";
 import BaseSwapContract from "./base/BaseSwapContract";
 
 /**
@@ -179,7 +179,7 @@ class FixedSwapContract extends BaseSwapContract {
 
 		];
 
-		let res = await deploy(
+		let res = await new DeploymentService().deploy(
 			this.acc,
 			this.params.contract,
 			params,
