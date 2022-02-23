@@ -1,7 +1,7 @@
 import Contract from "../../base/Contract";
 import Client from "../../../utils/Client";
 import Numbers from "../../../utils/Numbers";
-
+import ERC20TokenContract from "../../base/ERC20TokenContract";
 
 /**
  * Base Swap Contract Object

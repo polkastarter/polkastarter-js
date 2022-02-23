@@ -1,5 +1,4 @@
 import { fixednftswap } from "../../interfaces";
-import ERC20TokenContract from "../base/ERC20TokenContract";
 import Numbers from "../../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
