@@ -449,7 +449,6 @@ class BaseSwapContract {
 			contractAddress: tradeAddress,
 			acc: this.acc
 		});
-		console.log("CONTRACT => ")
 		return await contract.getDecimals();
 	}
 

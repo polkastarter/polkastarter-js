@@ -4,6 +4,7 @@ import _ from "lodash";
 import moment from 'moment';
 import BaseSwapContract from './base/BaseSwapContract';
 import DeploymentService from "../../services/DeploymentService";
+import ERC20TokenContract from "../base/ERC20TokenContract";
 
 /**
  * Fixed NFT Swap Object
@@ -59,12 +60,19 @@ class FixedNFTSwapContract extends BaseSwapContract {
 			throw new Error("Fee Amount has to be >= 1");
 		}
 
-
 		if (ERC20TradingAddress != '0x0000000000000000000000000000000000000000' && (tradingDecimals == 0)) {
 			throw new Error("If an ERC20 Trading Address please add the 'tradingDecimals' field to the trading address (Ex : USDT -> 6)");
 		} else {
 			/* is ETH Trade */
 			tradingDecimals = 18;
+		}
+
+		if (ERC20TradingAddress) {
+			this.params.erc20TokenContract = new ERC20TokenContract({
+				web3: this.web3,
+				contractAddress: ERC20TradingAddress,
+				acc: this.acc
+			});
 		}
 
 		let totalRaise = 0;
