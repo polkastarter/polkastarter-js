@@ -251,16 +251,18 @@ context('NFT ERC20 Contract', async () => {
         await forwardTime(5);
         let res = await swapContract.swap({tokenAmount : 2, categoryId: 1, maxAllocation: 0});
         expect(res).to.not.equal(false);
+        res = await swapContract.swap({tokenAmount : 1, categoryId: 1, maxAllocation: 0});
+        expect(res).to.not.equal(false);
     }));
 
     it('GET - Purchases', mochaAsync(async () => {        
         let purchases = await swapContract.getPurchaseIds();
-        expect(purchases.length).to.equal(1);
+        expect(purchases.length).to.equal(2);
     }));
 
     it('GET - My Purchases', mochaAsync(async () => {        
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()});
-        expect(purchases.length).to.equal(1);
+        expect(purchases.length).to.equal(2);
     }));
 
     it('GET - Purchase ID', mochaAsync(async () => {     
@@ -279,18 +281,18 @@ context('NFT ERC20 Contract', async () => {
     it('GET - tokensLeft after Swap', mochaAsync(async () => {        
         let tokens = await swapContract.tokensLeft({categoryId: 1});
         tokens = Number(tokens).noExponents();
-        tokensLeft = Number(tokenFundAmount-2).noExponents();
+        tokensLeft = Number(tokenFundAmount-3).noExponents();
         expect(Number(tokens).toFixed(2)).to.equal(Number(tokensLeft).toFixed(2));
     }));
 
     it('GET - soldByCategoryId', mochaAsync(async () => {
         let soldByCategoryId = await swapContract.soldByCategoryId({categoryId: 1});
-        expect(Number(soldByCategoryId)).to.equal(2);
+        expect(Number(soldByCategoryId)).to.equal(3);
     }));
 
     it('GET - Buyers', mochaAsync(async () => {  
         let buyers = await swapContract.getBuyers();
-        expect(buyers.length).to.equal(1);      
+        expect(buyers.length).to.equal(2);      
     }));
 
     it('GET - Fixed Swap is Closed', mochaAsync(async () => {  
@@ -332,7 +334,7 @@ context('NFT ERC20 Contract', async () => {
 
     it("GET - Allocated tokens", mochaAsync(async () => {
         let tokensAllocated = await swapContract.tokensAllocated();
-        expect(Number(tokensAllocated)).to.equal(2 * tradeValue);
+        expect(Number(tokensAllocated)).to.equal(3 * tradeValue);
     }));
 
     it("GET - Tokens for sale", mochaAsync(async() => {
@@ -359,7 +361,7 @@ context('NFT ERC20 Contract', async () => {
 
     it("GET User purchases", mochaAsync( async () => {
         let purchases = await swapContract.getUserPurchases({address: app.account.getAddress()});
-        expect(purchases.length).to.equal(1);
+        expect(purchases.length).to.equal(2);
         expect(purchases[0].categoryId).to.equal(1);
         expect(purchases[0].amount).to.equal(2);
     }));
