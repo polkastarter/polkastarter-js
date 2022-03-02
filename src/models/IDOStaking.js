@@ -310,6 +310,18 @@ import Client from "../utils/Client";
             await this.getDecimals()
         );
 	}
+	
+	/**
+	 * @function balanceRewardsToken
+	 * @description substract staked amount if staked token is the same as rewards token
+	 * @returns {Integer} totalRewardsAmount
+	*/
+    balanceRewardsToken = async () => {
+		return Numbers.fromDecimals(
+            await this.params.contract.getContract().methods.balanceRewardsToken().call(),
+            await this.getDecimals()
+        );
+	}
 
     /**
 	 * @function stakeAmount

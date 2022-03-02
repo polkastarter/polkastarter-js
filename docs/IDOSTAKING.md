@@ -38,6 +38,9 @@
 <dt><a href="#notifyRewardAmountSamePeriod">notifyRewardAmountSamePeriod(amount)</a></dt>
 <dd><p>add (more) rewards token to current/future period</p>
 </dd>
+<dt><a href="#transferRewardTokenSamePeriod">transferRewardTokenSamePeriod(amount)</a></dt>
+<dd><p>Transfer and add (more) rewards token to current/future period</p>
+</dd>
 <dt><a href="#userAccumulatedRewards">userAccumulatedRewards(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the accumulated rewards</p>
 </dd>
@@ -46,6 +49,9 @@
 </dd>
 <dt><a href="#totalStaked">totalStaked()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the total stake</p>
+</dd>
+<dt><a href="#balanceRewardsToken">balanceRewardsToken()</a> ⇒ <code>Integer</code></dt>
+<dd><p>substract staked amount if staked token is the same as rewards token</p>
 </dd>
 <dt><a href="#stakeAmount">stakeAmount(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the stake amount for a wallet</p>
@@ -167,6 +173,17 @@ add (more) rewards token to current/future period
 | --- | --- |
 | amount | <code>Integer</code> | 
 
+<a name="transferRewardTokenSamePeriod"></a>
+
+## transferRewardTokenSamePeriod(amount)
+Transfer and add (more) rewards token to current/future period
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| amount | <code>Integer</code> | 
+
 <a name="userAccumulatedRewards"></a>
 
 ## userAccumulatedRewards(address) ⇒ <code>Integer</code>
@@ -192,6 +209,13 @@ Returns the total stake
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - totalStakeAmount  
+<a name="balanceRewardsToken"></a>
+
+## balanceRewardsToken() ⇒ <code>Integer</code>
+substract staked amount if staked token is the same as rewards token
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - totalRewardsAmount  
 <a name="stakeAmount"></a>
 
 ## stakeAmount(address) ⇒ <code>Integer</code>
