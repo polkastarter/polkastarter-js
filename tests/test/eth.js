@@ -486,6 +486,7 @@ context('ETH Contract', async () => {
             expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0.083356481481480948');
             await app.getERC20TokenContract({tokenAddress: ERC20TokenAddress}).transferTokenAmount({toAddress: staking.params.contractAddress, tokenAmount: 500});
 
+            expect(await staking.balanceRewardsToken()).to.equal('500');
             await staking.claim();
 
             expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0');
@@ -496,6 +497,7 @@ context('ETH Contract', async () => {
             await staking.withdrawAll();
             expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0');
             expect(await staking.totalStaked()).to.equal('0');
+            expect(await staking.balanceRewardsToken()).to.equal('499.916620370370370904');
         }
 
     }));
