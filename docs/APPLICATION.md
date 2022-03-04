@@ -32,6 +32,9 @@
 <dt><a href="#getFixedSwapContract">getFixedSwapContract(tokenAddress, [contractAddress])</a></dt>
 <dd><p>Returns Fixed Swap instance</p>
 </dd>
+<dt><a href="#getFixedNFTSwapContract">getFixedNFTSwapContract([contractAddress])</a></dt>
+<dd><p>Returns Fixed NFT Swap instance</p>
+</dd>
 <dt><a href="#getERC20TokenContract">getERC20TokenContract(tokenAddress)</a></dt>
 <dd><p>Returns ERC20 instance</p>
 </dd>
@@ -121,6 +124,17 @@ Returns Fixed Swap instance
 | Param | Type | Description |
 | --- | --- | --- |
 | tokenAddress | <code>string</code> | The token address we want to trade |
+| [contractAddress] | <code>string</code> | The swap contract address, in case t hat has already been instanced. (Default = null) |
+
+<a name="getFixedNFTSwapContract"></a>
+
+## getFixedNFTSwapContract([contractAddress])
+Returns Fixed NFT Swap instance
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
 | [contractAddress] | <code>string</code> | The swap contract address, in case t hat has already been instanced. (Default = null) |
 
 <a name="getERC20TokenContract"></a>

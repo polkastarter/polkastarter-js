@@ -1,8 +1,8 @@
-import Contract from "./Contract";
-import { idostaking } from "../interfaces";
-import Numbers from "../utils/Numbers";
-import ERC20TokenContract from "./ERC20TokenContract";
-import Client from "../utils/Client";
+import Contract from "../base/Contract";
+import { idostaking } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
+import ERC20TokenContract from "../base/ERC20TokenContract";
+import Client from "../../utils/Client";
 
 /**
  * IDO Staking Object

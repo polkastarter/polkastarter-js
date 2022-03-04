@@ -1,7 +1,7 @@
 import contract from "./Contract";
-import { ierc20 } from "../interfaces";
-import Numbers from "../utils/Numbers";
-import Client from "../utils/Client";
+import { ierc20 } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
+import Client from "../../utils/Client";
 let self;
 
 class ERC20TokenContract {

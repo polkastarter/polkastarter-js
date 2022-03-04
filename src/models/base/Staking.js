@@ -1,10 +1,10 @@
 import Contract from "./Contract";
-import { staking } from "../interfaces";
-import Numbers from "../utils/Numbers";
+import { staking } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
 import ERC20TokenContract from "./ERC20TokenContract";
-import Client from "../utils/Client";
+import Client from "../../utils/Client";
 import Addresses from "./Addresses";
-import Chains from "../utils/Chains";
+import Chains from "../../utils/Chains";
 
 /**
  * Staking Object
