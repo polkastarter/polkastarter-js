@@ -322,7 +322,7 @@ context('ETH Contract', async () => {
         if (oldContract) {
             res = await swapContract.__oldSwap({tokenAmount : tokenPurchaseAmount});
         } else {
-            res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
+            res = await swapContract.swapWithSig({tokenAmount : tokenPurchaseAmount, signature: '', accountMaxAmount: 0});
         }
         expect(res).to.not.equal(false);
     }));

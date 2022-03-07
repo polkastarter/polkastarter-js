@@ -687,6 +687,10 @@ class FixedSwapContract extends BaseSwapContract {
 
 		let costToDecimals = Numbers.toSmartContractDecimals(cost, await this.getTradingDecimals());
 
+		if (!signature) {
+			signature = '0x00';
+		}
+		
 		return await this.executeContractMethod(
 			this.getContractMethods().swapWithSig(amountWithDecimals, accountMaxAmount, signature),
 			false,
