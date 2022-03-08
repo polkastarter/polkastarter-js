@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import Addresses from "../models/Addresses";
+import Addresses from "../models/base/Addresses";
 
 import Chains from "./Chains";
 

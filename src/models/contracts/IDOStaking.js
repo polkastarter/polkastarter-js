@@ -1,8 +1,8 @@
-import Contract from "./Contract";
-import { idostaking } from "../interfaces";
-import Numbers from "../utils/Numbers";
-import ERC20TokenContract from "./ERC20TokenContract";
-import Client from "../utils/Client";
+import Contract from "../base/Contract";
+import { idostaking } from "../../interfaces";
+import Numbers from "../../utils/Numbers";
+import ERC20TokenContract from "../base/ERC20TokenContract";
+import Client from "../../utils/Client";
 
 /**
  * IDO Staking Object
@@ -250,6 +250,30 @@ import Client from "../utils/Client";
 		}
 	};
 
+	/**
+	 * @function transferRewardTokenSamePeriod
+	 * @description Transfer and add (more) rewards token to current/future period
+	 * @param {Integer} amount
+	 */
+	 transferRewardTokenSamePeriod = async ({reward}) => {
+		try {
+			const amount = Numbers.toSmartContractDecimals(
+				reward,
+				await this.getRewardsDecimals()
+			);
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.transferRewardTokenSamePeriod(amount)
+			);
+		} catch (err) {
+			throw err;
+		}
+	};
+
     /**
 	 * @function userAccumulatedRewards
 	 * @description Returns the accumulated rewards
@@ -283,6 +307,18 @@ import Client from "../utils/Client";
     totalStaked = async () => {
 		return Numbers.fromDecimals(
             await this.params.contract.getContract().methods.totalSupply().call(),
+            await this.getDecimals()
+        );
+	}
+	
+	/**
+	 * @function balanceRewardsToken
+	 * @description substract staked amount if staked token is the same as rewards token
+	 * @returns {Integer} totalRewardsAmount
+	*/
+    balanceRewardsToken = async () => {
+		return Numbers.fromDecimals(
+            await this.params.contract.getContract().methods.balanceRewardsToken().call(),
             await this.getDecimals()
         );
 	}

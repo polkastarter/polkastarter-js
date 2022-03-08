@@ -1,7 +1,7 @@
-import { fixedswap_legacy } from "../interfaces";
-import Contract from "./Contract";
-import ERC20TokenContract from "./ERC20TokenContract";
-import Numbers from "../utils/Numbers";
+import { fixedswap_legacy } from "../../../interfaces";
+import Contract from "../../base/Contract";
+import ERC20TokenContract from "../../base/ERC20TokenContract";
+import Numbers from "../../../utils/Numbers";
 import _ from "lodash";
 import moment from 'moment';
 /**
@@ -1041,7 +1041,6 @@ class FixedSwapContractLegacy {
 			parseInt(feeAmount),
 			hasWhitelisting
 		];
-		console.log("params", params);
 		let res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
 		/* Call to Backend API */

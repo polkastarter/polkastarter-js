@@ -1,12 +1,13 @@
 import Web3 from "web3";
-import FixedSwapContract from "./FixedSwapContract";
+import FixedSwapContract from "./contracts/FixedSwapContract";
 import Signer from "../utils/Signer";
 import Network from "../utils/Network";
 import Wallet from "../utils/Wallet";
-import Account from './Account';
-import ERC20TokenContract from "./ERC20TokenContract";
-import Staking from "./Staking";
-import FixedSwapContractLegacy from "./FixedSwapContractLegacy";
+import Account from './base/Account';
+import ERC20TokenContract from "./base/ERC20TokenContract";
+import FixedNFTSwapContract from "./contracts/FixedNFTSwapContract";
+import Staking from "./base/Staking";
+import FixedSwapContractLegacy from "./contracts/legacy/FixedSwapContractLegacy";
 import Chains from "../utils/Chains";
 
 const TEST_PRIVATE_KEY = 
@@ -171,6 +172,37 @@ class Application {
 					throw err;
 	
 				}
+			}
+	
+			return contract;
+		}
+	};
+	
+	/**
+	 * @function getFixedNFTSwapContract
+	 * @param {string=} contractAddress The swap contract address, in case t hat has already been instanced. (Default = null)
+	 * @description Returns Fixed NFT Swap instance
+	*/
+	getFixedNFTSwapContract = async ({contractAddress=null}) => {
+		let contract;
+		if(!contractAddress){
+			// Not deployed
+			return new FixedNFTSwapContract({
+				web3: this.web3,
+				contractAddress: contractAddress,
+				acc : this.test ? this.account : null
+			});
+		}else{
+			// Deployed
+			try{
+				contract = new FixedNFTSwapContract({
+					web3: this.web3,
+					contractAddress: contractAddress,
+					acc : this.test ? this.account : null
+				});
+				await contract.isETHTrade();
+			}catch(err){
+					throw err;
 			}
 	
 			return contract;

@@ -7,10 +7,10 @@ import moment, { isDate } from 'moment';
 import Application from '../../src/models';
 import { ierc20, idostaking } from "../../src/interfaces";
 import Numbers from "../../src/utils/Numbers";
-import Contract from "../../src/models/Contract";
+import Contract from "../../src/models/base/Contract";
 import * as ethers from 'ethers';
 import { ERC20TokenContract } from '../..';
-import IDOStaking from '../../src/models/IDOStaking';
+import IDOStaking from '../../src/models/contracts/IDOStaking';
 
 // const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
@@ -143,6 +143,7 @@ context('ETH Contract', async () => {
                 hasWhitelisting : false,
                 isETHTrade : true
             });
+
         }
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
@@ -321,7 +322,7 @@ context('ETH Contract', async () => {
         if (oldContract) {
             res = await swapContract.__oldSwap({tokenAmount : tokenPurchaseAmount});
         } else {
-            res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
+            res = await swapContract.swapWithSig({tokenAmount : tokenPurchaseAmount, signature: '', accountMaxAmount: 0});
         }
         expect(res).to.not.equal(false);
     }));
@@ -485,6 +486,7 @@ context('ETH Contract', async () => {
             expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0.083356481481480948');
             await app.getERC20TokenContract({tokenAddress: ERC20TokenAddress}).transferTokenAmount({toAddress: staking.params.contractAddress, tokenAmount: 500});
 
+            expect(await staking.balanceRewardsToken()).to.equal('500');
             await staking.claim();
 
             expect(await staking.userAccumulatedRewards({address: app.account.getAddress()})).to.equal('0');
@@ -495,6 +497,7 @@ context('ETH Contract', async () => {
             await staking.withdrawAll();
             expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0');
             expect(await staking.totalStaked()).to.equal('0');
+            expect(await staking.balanceRewardsToken()).to.equal('499.916620370370370904');
         }
 
     }));
