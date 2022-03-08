@@ -14,7 +14,7 @@ const BINANCE_CHAIN_URL =
 const POLYGON_CHAIN_TESTNET_URL =
   "https://rpc-mumbai.maticvigil.com/";
 const POLYGON_CHAIN_URL =
-  "https://rpc-mainnet.maticvigil.com/";
+  "https://polygon-rpc.com";
 const CELO_CHAIN_URL =
   "https://forno.celo.org";
 const CELO_CHAIN_TESTNET_URL =
