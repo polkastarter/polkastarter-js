@@ -423,7 +423,7 @@ class FixedSwapContractLegacy {
 		if(await this.hasFinalized()
 		&& (!await this.wereUnsoldTokensReedemed())
 		){
-			if(await this.wasMinimumRaiseReached()){
+			if(await this.minimumReached()){
 				/* Minimum reached */
 				res = (await this.tokensForSale()) - (await this.tokensAllocated());
 			}else{
@@ -443,7 +443,7 @@ class FixedSwapContractLegacy {
 		var res = 0;
 		if(
 			await this.hasFinalized() &&
-			await this.wasMinimumRaiseReached()
+			await this.minimumReached()
 			){
 			res = await this.getBalance();
 		}
