@@ -8,7 +8,7 @@
 ## Functions
 
 <dl>
-<dt><a href="#deploy">deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration)</a> ⇒ <code>string</code></dt>
+<dt><a href="#deploy">deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration, tokenSaleAddress)</a> ⇒ <code>string</code></dt>
 <dd><p>Deploys the IDO Staking contracts</p>
 </dd>
 <dt><a href="#stake">stake(amount)</a></dt>
@@ -43,6 +43,9 @@
 </dd>
 <dt><a href="#userAccumulatedRewards">userAccumulatedRewards(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the accumulated rewards</p>
+</dd>
+<dt><a href="#recoverERC20">recoverERC20(address)</a></dt>
+<dd><p>Emergency withdrawal of tokens</p>
 </dd>
 <dt><a href="#lastTimeRewardApplicable">lastTimeRewardApplicable()</a> ⇒ <code>Date</code></dt>
 <dd><p>Get the last time rewards are applicable</p>
@@ -79,7 +82,7 @@ IDO Staking Object
 
 <a name="deploy"></a>
 
-## deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration) ⇒ <code>string</code>
+## deploy(owner, rewardsDistribution, rewardsToken, stakingToken, rewardsDuration, tokenSaleAddress) ⇒ <code>string</code>
 Deploys the IDO Staking contracts
 
 **Kind**: global function  
@@ -92,6 +95,7 @@ Deploys the IDO Staking contracts
 | rewardsToken | <code>string</code> | Address of the token we want to reward |
 | stakingToken | <code>string</code> | Address of the token to be staked |
 | rewardsDuration | <code>Integer</code> | Duration of the rewards |
+| tokenSaleAddress | <code>string</code> | Address of the pool |
 
 <a name="stake"></a>
 
@@ -195,6 +199,17 @@ Returns the accumulated rewards
 | Param | Type |
 | --- | --- |
 | address | <code>string</code> | 
+
+<a name="recoverERC20"></a>
+
+## recoverERC20(address)
+Emergency withdrawal of tokens
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | Token address |
 
 <a name="lastTimeRewardApplicable"></a>
 
