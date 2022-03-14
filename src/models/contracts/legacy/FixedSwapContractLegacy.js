@@ -372,7 +372,7 @@ class FixedSwapContractLegacy {
 	 * @description See if minimumRaise was Reached
 	 * @returns {Integer}
 	 */
-	async wasMinimumRaiseReached() {
+	async minimumReached() {
 		let hasMinimumRaise = await this.hasMinimumRaise();
 		if(hasMinimumRaise){
 			let tokensAllocated = await this.tokensAllocated();
