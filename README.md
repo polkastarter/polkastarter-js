@@ -78,6 +78,14 @@ To run the test suite vs a testnet real chain (Kovan, BSC Testnet, etc):
 CHAIN_NAME=ETH npm test
 ```
 
+## Testing old deployed pools
+
+This test will check that the current PSJS doesn't break the read method from already deployed pools, legacy or not.
+
+```bash
+npm run test-pools
+```
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)

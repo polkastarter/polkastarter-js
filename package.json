@@ -1,6 +1,6 @@
 {
     "name": "polkastarter-js",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "",
     "main": "index.js",
     "engines": {
@@ -47,6 +47,7 @@
     },
     "scripts": {
         "test": "nyc ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
+        "test-pools": "nyc ./node_modules/.bin/mocha ./tests/test/multi-pool.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
         "index": "babel-node ./index.js --presets es2015,stage-2",
         "docs:numbers": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/utils/Numbers.js > docs/NUMBERS.md",
         "docs:app": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/models/index.js > docs/APPLICATION.md",
