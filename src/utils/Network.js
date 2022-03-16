@@ -103,7 +103,7 @@ class Network {
                     params: [
                     {
                         chainId: '0xA86A',
-                        chainName: 'Avalanche Network',
+                        chainName: 'Avalanche C-Chain',
                         nativeCurrency: {
                             name: 'Avalanche',
                             symbol: 'AVAX',
