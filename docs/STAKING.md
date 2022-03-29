@@ -59,7 +59,7 @@ Staking Object
 | [contractAddress] | <code>string</code> | The staking contract address. (Default: Predefined addresses depending on the network) |
 | acc | <code>Account</code> |  |
 | [tokenAddress] | <code>string</code> | The staking token address. (Default: Predefined addresses depending on the network) |
-| [network] | <code>ETH</code> \| <code>BSC</code> \| <code>MATIC</code> \| <code>DOT</code> | The network where the staking contract is. (Default: ETH) |
+| [network] | <code>ETH</code> \| <code>BNB</code> \| <code>MATIC</code> \| <code>DOT</code> | The network where the staking contract is. (Default: ETH) |
 | [test] | <code>Boolean</code> | ? Specifies if we're on test env (Default: false) |
 
 <a name="stake"></a>

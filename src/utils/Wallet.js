@@ -7,7 +7,7 @@ import Chains from "./Chains";
 /**
  * Wallet utils object
  * @constructor Wallet
- * @param {(ETH|BSC|MATIC|DOT)=} network The network where the token contract is. (Default: ETH)
+ * @param {(ETH|BNB|MATIC|DOT)=} network The network where the token contract is. (Default: ETH)
  * @param {Boolean=} test ? Specifies if we're on test env (Default: false)
 */
 class Wallet {
