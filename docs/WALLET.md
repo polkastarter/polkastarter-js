@@ -25,7 +25,7 @@ Wallet utils object
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [network] | <code>ETH</code> \| <code>BNB</code> \| <code>MATIC</code> \| <code>DOT</code> | The network where the token contract is. (Default: ETH) |
+| [network] | <code>ETH</code> \| <code>BSC</code> \| <code>MATIC</code> \| <code>DOT</code> | The network where the token contract is. (Default: ETH) |
 | [test] | <code>Boolean</code> | ? Specifies if we're on test env (Default: false) |
 
 <a name="addTokenToWallet"></a>

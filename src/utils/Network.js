@@ -5,7 +5,7 @@ import Chains from "./Chains";
 /**
  * Network utils object
  * @constructor Network
- * @param {(ETH|BNB|MATIC|DOT)=} network The network where the staking contract is. (Default: ETH)
+ * @param {(ETH|BSC|MATIC|DOT)=} network The network where the staking contract is. (Default: ETH)
  * @param {Boolean=} test ? Specifies if we're on test env (Default: false)
 */
 class Network {
@@ -45,8 +45,8 @@ class Network {
             await this.switchToEthereum();
         } else if (this.network == 'MATIC') {
             await this.switchToPolygon();
-        } else if (this.network == 'BNB') {
-            await this.switchToBnb();
+        } else if (this.network == 'BSC') {
+            await this.switchToBsc();
         } else if (this.network == 'CELO') {
             await this.switchToCelo();
         } else if (this.network == 'AVAX') {
@@ -251,10 +251,10 @@ class Network {
     }
 
     /**
-	 * @function switchToBnb
+	 * @function switchToBsc
 	 * @description Request switch to the Binance smart chain
 	*/
-    async switchToBnb() {
+    async switchToBsc() {
         if (window.ethereum) {
             if (this.test) {
                 await window.ethereum.request({

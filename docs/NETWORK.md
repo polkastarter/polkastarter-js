@@ -29,7 +29,7 @@
 <dt><a href="#switchToPolygon">switchToPolygon()</a></dt>
 <dd><p>Request switch to the Polygon chain</p>
 </dd>
-<dt><a href="#switchToBnb">switchToBnb()</a></dt>
+<dt><a href="#switchToBsc">switchToBsc()</a></dt>
 <dd><p>Request switch to the Binance smart chain</p>
 </dd>
 </dl>
@@ -54,7 +54,7 @@ Network utils object
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [network] | <code>ETH</code> \| <code>BNB</code> \| <code>MATIC</code> \| <code>DOT</code> | The network where the staking contract is. (Default: ETH) |
+| [network] | <code>ETH</code> \| <code>BSC</code> \| <code>MATIC</code> \| <code>DOT</code> | The network where the staking contract is. (Default: ETH) |
 | [test] | <code>Boolean</code> | ? Specifies if we're on test env (Default: false) |
 
 <a name="onChainChanged"></a>
@@ -104,9 +104,9 @@ Request switch to the Celo chain
 Request switch to the Polygon chain
 
 **Kind**: global function  
-<a name="switchToBnb"></a>
+<a name="switchToBsc"></a>
 
-## switchToBnb()
+## switchToBsc()
 Request switch to the Binance smart chain
 
 **Kind**: global function  

@@ -72,7 +72,7 @@ To run the test suite vs a local chain (ganache):
 npm test
 ```
 
-To run the test suite vs a testnet real chain (Kovan, BNB Testnet, etc):
+To run the test suite vs a testnet real chain (Kovan, BSC Testnet, etc):
 
 ```bash
 CHAIN_NAME=ETH npm test

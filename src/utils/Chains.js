@@ -29,8 +29,8 @@ const networksEnum = Object.freeze({
   2: "Morden",
   3: "Ropsten",
   4: "Rinkeby",
-  56: "BNB Chain Main",
-  97: "BNB Test",
+  56: "BSC Main",
+  97: "BSC Test",
   42: "Kovan",
   137: "Polygon",
   80001: "Mumbai",
@@ -51,12 +51,12 @@ class chains {
 
   checkIfNetworkIsSupported(network)  {
     if(!this.isNetworkSupported(network)) {
-			throw new Error("Network has to be ETH, DOT, BNB, MATIC, CELO or AVAX");
+			throw new Error("Network has to be ETH, DOT, BSC, MATIC, CELO or AVAX");
 		}
   }
 
   isNetworkSupported(network) {
-    if((network != 'ETH') && (network != 'DOT') && (network != 'BNB') && (network !='MATIC') && (network != 'CELO') && (network != 'AVAX')){
+    if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network != 'CELO') && (network != 'AVAX')){
 			return false;
 		}
     return true;
@@ -65,7 +65,7 @@ class chains {
   getRpcUrl(network, mainnet = true) {
     if(network == 'DOT') {
       return (mainnet == true) ? MOONBEAM_URL : MOONBEAM_TESTNET_URL;
-		} else if(network == 'BNB') {
+		} else if(network == 'BSC') {
 			return (mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL;
 		} else if(network == 'ETH') {
 			return (mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET;

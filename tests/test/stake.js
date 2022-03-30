@@ -45,7 +45,7 @@ context('Staking Contract', async () => {
                     }
                 ]
             });
-            app = new Application({test : true, mainnet : false, network : 'BNB', web3:
+            app = new Application({test : true, mainnet : false, network : 'BSC', web3:
                 new Web3(ganacheProvider)
             });
             app.web3.eth.transactionConfirmationBlocks = 1;

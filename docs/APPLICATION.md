@@ -61,7 +61,7 @@ Polkastarter Application Object
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [network] | <code>ETH</code> \| <code>BNB</code> \| <code>MATIC</code> \| <code>DOT</code> | Current network (Default = ETH) |
+| [network] | <code>ETH</code> \| <code>BSC</code> \| <code>MATIC</code> \| <code>DOT</code> | Current network (Default = ETH) |
 | [mainnet] | <code>Boolean</code> | Specifies if we're on mainnet or tesnet (Default = true); |
 | [test] | <code>Boolean</code> | ? Specifies if we're on test env |
 | [web3] | <code>Web3</code> | Custom Web3 instance. If not provided the Application will instance it for you. (Default: undefined) |
