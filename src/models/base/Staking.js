@@ -13,17 +13,17 @@ import Chains from "../../utils/Chains";
  * @param {string=} contractAddress The staking contract address. (Default: Predefined addresses depending on the network)
  * @param {Account} acc
  * @param {string=} tokenAddress The staking token address. (Default: Predefined addresses depending on the network)
- * @param {(ETH|BSC|MATIC|DOT)=} network The network where the staking contract is. (Default: ETH)
+ * @param {(ETH|BNB|MATIC|DOT)=} network The network where the staking contract is. (Default: ETH)
  * @param {Boolean=} test ? Specifies if we're on test env (Default: false)
  */
  class Staking {
 
     stakingAddresses = {
-        'BSC': '0xD558675a8c8E1fd45002010BaC970B115163dE3a',
+        'BNB': '0xD558675a8c8E1fd45002010BaC970B115163dE3a',
         'ETH': '0xc24A365A870821EB83Fd216c9596eDD89479d8d7'
 	};
     stakingTestAddresses = {
-        'BSC': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',
+        'BNB': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',
         'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
     };
 

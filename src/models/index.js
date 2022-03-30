@@ -16,7 +16,7 @@ const TEST_PRIVATE_KEY =
 /**
  * Polkastarter Application Object
  * @constructor Application
- * @param {(ETH|BSC|MATIC|DOT)=} network Current network (Default = ETH)
+ * @param {(ETH|BNB|MATIC|DOT)=} network Current network (Default = ETH)
  * @param {Boolean=} mainnet Specifies if we're on mainnet or tesnet (Default = true);
  * @param {Boolean=} test ? Specifies if we're on test env
  * @param {Web3=} web3 Custom Web3 instance. If not provided the Application will instance it for you. (Default: undefined)
