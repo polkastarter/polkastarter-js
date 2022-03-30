@@ -255,7 +255,7 @@ class FixedSwapContract extends BaseSwapContract {
 	/* Get Functions */
 	/**
 	 * @function tradeValue
-	 * @description Get swapratio for the pool
+	 * @description Get trade value for the pool
 	 * @returns {Integer} trade value against ETH
 	 */
 	async tradeValue() {
@@ -266,6 +266,21 @@ class FixedSwapContract extends BaseSwapContract {
 				.call()),
 			await this.getTradingDecimals()
 		);
+	}
+
+	/**
+	 * @function swapRatio
+	 * @description Get swap ratio for the pool
+	 * @returns {Integer} trade value against 1 ETH
+	 */
+	 async swapRatio() {
+		return Numbers.safeDivide(1, Numbers.fromDecimals(
+			(await this.params.contract
+				.getContract()
+				.methods.tradeValue()
+				.call()),
+			await this.getTradingDecimals()
+		));
 	}
 
 	/**

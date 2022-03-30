@@ -21,7 +21,10 @@
 <dd><p>Get Token Address</p>
 </dd>
 <dt><a href="#tradeValue">tradeValue()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get swapratio for the pool</p>
+<dd><p>Get trade value for the pool</p>
+</dd>
+<dt><a href="#swapRatio">swapRatio()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get swap ratio for the pool</p>
 </dd>
 <dt><a href="#vestingStart">vestingStart()</a> ⇒ <code>Date</code></dt>
 <dd><p>Get Start Date of the Vesting</p>
@@ -178,10 +181,17 @@ Get Token Address
 <a name="tradeValue"></a>
 
 ## tradeValue() ⇒ <code>Integer</code>
-Get swapratio for the pool
+Get trade value for the pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - trade value against ETH  
+<a name="swapRatio"></a>
+
+## swapRatio() ⇒ <code>Integer</code>
+Get swap ratio for the pool
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - trade value against 1 ETH  
 <a name="vestingStart"></a>
 
 ## vestingStart() ⇒ <code>Date</code>
