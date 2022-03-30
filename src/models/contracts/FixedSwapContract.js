@@ -47,6 +47,7 @@ class FixedSwapContract extends BaseSwapContract {
 	* @function deploy
 	* @description Deploy the Pool Contract
 	* @param {Float} tradeValue Buy price
+	* @param {Float=} swapRatio Instead of the tradeValue you can optionally send the swap ratio, how much tokens for 1 eth/bnb (Default: null)
 	* @param {Float} tokensForSale Tokens for sale
 	* @param {String} endDate End date
 	* @param {String} startDate Start date
@@ -66,6 +67,7 @@ class FixedSwapContract extends BaseSwapContract {
 	*/
 	deploy = async ({
 		tradeValue,
+		swapRatio = null,
 		tokensForSale,
 		startDate,
 		endDate,
@@ -155,7 +157,7 @@ class FixedSwapContract extends BaseSwapContract {
 
 		let params = [
 			this.getTokenAddress(),
-			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
+			swapRatio != null ? Numbers.toSmartContractDecimals(Numbers.safeDivide(1, swapRatio), tradingDecimals) : Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
 			Numbers.toSmartContractDecimals(tokensForSale, await this.getDecimals()),
 			Numbers.timeToSmartContractTime(startDate),
 			Numbers.timeToSmartContractTime(endDate),

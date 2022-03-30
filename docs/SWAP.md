@@ -8,7 +8,7 @@
 ## Functions
 
 <dl>
-<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
+<dt><a href="#deploy">deploy(tradeValue, [swapRatio], tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
 <dt><a href="#setStakingRewards">setStakingRewards(address)</a> ⇒ <code>admin</code></dt>
@@ -125,7 +125,7 @@ Fixed Swap Object
 
 <a name="deploy"></a>
 
-## deploy(tradeValue, tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])
+## deploy(tradeValue, [swapRatio], tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])
 Deploy the Pool Contract
 
 **Kind**: global function  
@@ -133,6 +133,7 @@ Deploy the Pool Contract
 | Param | Type | Description |
 | --- | --- | --- |
 | tradeValue | <code>Float</code> | Buy price |
+| [swapRatio] | <code>Float</code> | Instead of the tradeValue you can optionally send the swap ratio, how much tokens for 1 eth/bnb (Default: null) |
 | tokensForSale | <code>Float</code> | Tokens for sale |
 | endDate | <code>String</code> | End date |
 | startDate | <code>String</code> | Start date |

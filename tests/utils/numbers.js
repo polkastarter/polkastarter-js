@@ -21,4 +21,8 @@ context('Numbers', async () => {
         expect(Numbers.fromDecimals("97000000000000000", 18)).to.equal("0.097");
     }));
 
+    it('should make divisions', mochaAsync(async () => {
+        const res = Numbers.safeDivide(1, 1092.25);
+        expect(Numbers.safeDivide(1, res)).to.equal(1092.25);
+    }));
 });
