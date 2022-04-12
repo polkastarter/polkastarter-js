@@ -488,6 +488,7 @@ class FixedSwapContract extends BaseSwapContract {
 			.getContract()
 			.methods.getPurchase(purchase_id)
 			.call();
+
 		let amount = Numbers.fromDecimals(res.amount, await this.getDecimals());
 		let costAmount = Numbers.fromDecimals(res.costAmount, await this.getTradingDecimals());
 		let amountReedemed = Numbers.fromDecimals(res.amountRedeemed, await this.getDecimals());
