@@ -89,6 +89,17 @@ class numbers {
   }
 
   /**
+	 * @function safeDivide
+	 * @description Performs a safe division
+   * @param {Float} value The number that you want to divide
+	 * @param {Float} valueToDivideTo  The number that you want to divide to
+	 * @returns {Float}
+	 */
+  safeDivide(value, valueToDivideTo) {
+    return parseFloat(this.math.chain(this.math.bignumber(value)).divide(this.math.bignumber(valueToDivideTo)).done());
+  }
+
+  /**
 	 * @function fromDecimals
 	 * @description Converts a number from his minimum unit to a human readable one.
    * @param {Float} value The number that you want to convert

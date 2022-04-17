@@ -183,6 +183,11 @@ context('ETH Contract', async () => {
         expect(td).to.equal(Number(tradeValue).noExponents());
     }));
 
+    it('GET - swapRatio', mochaAsync(async () => {        
+        let sr = await swapContract.swapRatio();
+        expect(sr).to.equal(100);
+    }));
+
     it('GET - tokensAvailable', mochaAsync(async () => {        
         let tokens = await swapContract.tokensAvailable();
         expect(tokens).to.equal(Number(0).noExponents());

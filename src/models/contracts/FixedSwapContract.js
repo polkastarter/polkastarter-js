@@ -47,6 +47,7 @@ class FixedSwapContract extends BaseSwapContract {
 	* @function deploy
 	* @description Deploy the Pool Contract
 	* @param {Float} tradeValue Buy price
+	* @param {Float=} swapRatio Instead of the tradeValue you can optionally send the swap ratio, how much tokens for 1 eth/bnb (Default: null)
 	* @param {Float} tokensForSale Tokens for sale
 	* @param {String} endDate End date
 	* @param {String} startDate Start date
@@ -66,6 +67,7 @@ class FixedSwapContract extends BaseSwapContract {
 	*/
 	deploy = async ({
 		tradeValue,
+		swapRatio = null,
 		tokensForSale,
 		startDate,
 		endDate,
@@ -155,7 +157,7 @@ class FixedSwapContract extends BaseSwapContract {
 
 		let params = [
 			this.getTokenAddress(),
-			Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
+			swapRatio != null ? Numbers.toSmartContractDecimals(Numbers.safeDivide(1, swapRatio), tradingDecimals) : Numbers.toSmartContractDecimals(tradeValue, tradingDecimals),
 			Numbers.toSmartContractDecimals(tokensForSale, await this.getDecimals()),
 			Numbers.timeToSmartContractTime(startDate),
 			Numbers.timeToSmartContractTime(endDate),
@@ -253,7 +255,7 @@ class FixedSwapContract extends BaseSwapContract {
 	/* Get Functions */
 	/**
 	 * @function tradeValue
-	 * @description Get swapratio for the pool
+	 * @description Get trade value for the pool
 	 * @returns {Integer} trade value against ETH
 	 */
 	async tradeValue() {
@@ -264,6 +266,21 @@ class FixedSwapContract extends BaseSwapContract {
 				.call()),
 			await this.getTradingDecimals()
 		);
+	}
+
+	/**
+	 * @function swapRatio
+	 * @description Get swap ratio for the pool
+	 * @returns {Integer} trade value against 1 ETH
+	 */
+	 async swapRatio() {
+		return Numbers.safeDivide(1, Numbers.fromDecimals(
+			(await this.params.contract
+				.getContract()
+				.methods.tradeValue()
+				.call()),
+			await this.getTradingDecimals()
+		));
 	}
 
 	/**
@@ -471,6 +488,7 @@ class FixedSwapContract extends BaseSwapContract {
 			.getContract()
 			.methods.getPurchase(purchase_id)
 			.call();
+
 		let amount = Numbers.fromDecimals(res.amount, await this.getDecimals());
 		let costAmount = Numbers.fromDecimals(res.costAmount, await this.getTradingDecimals());
 		let amountReedemed = Numbers.fromDecimals(res.amountRedeemed, await this.getDecimals());

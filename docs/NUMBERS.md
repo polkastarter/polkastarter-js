@@ -11,6 +11,9 @@
 <dt><a href="#toSmartContractDecimals">toSmartContractDecimals(value, decimals)</a> ⇒ <code>string</code></dt>
 <dd><p>Converts a &quot;human&quot; number to the minimum unit.</p>
 </dd>
+<dt><a href="#safeDivide">safeDivide(value, valueToDivideTo)</a> ⇒ <code>Float</code></dt>
+<dd><p>Performs a safe division</p>
+</dd>
 <dt><a href="#fromDecimals">fromDecimals(value, decimals)</a> ⇒ <code>string</code></dt>
 <dd><p>Converts a number from his minimum unit to a human readable one.</p>
 </dd>
@@ -36,6 +39,18 @@ Converts a "human" number to the minimum unit.
 | --- | --- | --- |
 | value | <code>Float</code> | The number that you want to convert |
 | decimals | <code>Integer</code> | Number of decimals |
+
+<a name="safeDivide"></a>
+
+## safeDivide(value, valueToDivideTo) ⇒ <code>Float</code>
+Performs a safe division
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>Float</code> | The number that you want to divide |
+| valueToDivideTo | <code>Float</code> | The number that you want to divide to |
 
 <a name="fromDecimals"></a>
 
