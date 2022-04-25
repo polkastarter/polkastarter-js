@@ -338,9 +338,10 @@ context('ETH Contract', async () => {
     }));
 
     it('GET - Distribution Information', mochaAsync(async () => {    
-        // ToDo        
         let info = await swapContract.getDistributionInformation();
-        console.log(info);
+        expect(info.currentSchedule).to.equal(0);
+        expect(info.vestingTime).to.equal(0);
+        expect(info.vestingSchedule.length).to.equal(0);
     }));
 
     it('GET - My Purchases', mochaAsync(async () => {        
@@ -395,7 +396,6 @@ context('ETH Contract', async () => {
     it('GET - Purchase ID 2', mochaAsync(async () => {     
         let purchases = await swapContract.getAddressPurchaseIds({address : app.account.getAddress()}); 
         let purchase = await swapContract.getPurchase({purchase_id : purchases[0]});
-        console.log(purchase);
         expect(purchase.purchaser).to.equal(app.account.getAddress());
         expect(purchase.wasFinalized).to.equal(true);
         expect(purchase.reverted).to.equal(false);
@@ -468,6 +468,16 @@ context('ETH Contract', async () => {
 
         await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
         await swapContract.fund({tokenAmount : tokenFundAmount});
+
+        let failedBeforeStart = false;
+
+        try {
+            await swapContract.swap({tokenAmount : tokenPurchaseAmount});
+        } catch (e) {
+            expect(e.results[Object.keys(e.results)[0]].reason).to.equal('sale has to be open');
+            failedBeforeStart = true;
+        }
+        expect(failedBeforeStart).to.equal(true);
         await forwardTime(3*60);
         res = await swapContract.swap({tokenAmount : tokenPurchaseAmount});
         expect(res).to.not.equal(false);
@@ -611,6 +621,7 @@ context('ETH Contract', async () => {
                 expect(res).to.not.equal(false);
             } catch (e) {
                 failed = true;
+                expect(e.message).to.equal('VM Exception while processing transaction: revert token sale not finalized');
             }
             expect(failed).to.equal(true);
             await forwardTime(4 * 60);
@@ -641,6 +652,7 @@ context('ETH Contract', async () => {
                 expect(res).to.not.equal(false);
             } catch (e) {
                 failed = true;
+                expect(e.results[Object.keys(e.results)[0]].reason).to.equal('all token already redeemed');
             }
             expect(failed).to.equal(true);
         };
