@@ -8,7 +8,7 @@
 ## Functions
 
 <dl>
-<dt><a href="#deploy">deploy(tradeValue, tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
+<dt><a href="#deploy">deploy(tradeValue, [swapRatio], tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])</a></dt>
 <dd><p>Deploy the Pool Contract</p>
 </dd>
 <dt><a href="#setStakingRewards">setStakingRewards(address)</a> ⇒ <code>admin</code></dt>
@@ -21,7 +21,10 @@
 <dd><p>Get Token Address</p>
 </dd>
 <dt><a href="#tradeValue">tradeValue()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get swapratio for the pool</p>
+<dd><p>Get trade value for the pool</p>
+</dd>
+<dt><a href="#swapRatio">swapRatio()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get swap ratio for the pool</p>
 </dd>
 <dt><a href="#vestingStart">vestingStart()</a> ⇒ <code>Date</code></dt>
 <dd><p>Get Start Date of the Vesting</p>
@@ -125,7 +128,7 @@ Fixed Swap Object
 
 <a name="deploy"></a>
 
-## deploy(tradeValue, tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])
+## deploy(tradeValue, [swapRatio], tokensForSale, endDate, startDate, [ERC20TradingAddress], [individualMinimumAmount], [individualMaximumAmount], [isTokenSwapAtomic], [minimumRaise], [feeAmount], [tradingDecimals], [hasWhitelisting], [isPOLSWhitelist], [vestingSchedule], [vestingStart], [vestingCliff], [vestingDuration])
 Deploy the Pool Contract
 
 **Kind**: global function  
@@ -133,6 +136,7 @@ Deploy the Pool Contract
 | Param | Type | Description |
 | --- | --- | --- |
 | tradeValue | <code>Float</code> | Buy price |
+| [swapRatio] | <code>Float</code> | Instead of the tradeValue you can optionally send the swap ratio, how much tokens for 1 eth/bnb (Default: null) |
 | tokensForSale | <code>Float</code> | Tokens for sale |
 | endDate | <code>String</code> | End date |
 | startDate | <code>String</code> | Start date |
@@ -177,10 +181,17 @@ Get Token Address
 <a name="tradeValue"></a>
 
 ## tradeValue() ⇒ <code>Integer</code>
-Get swapratio for the pool
+Get trade value for the pool
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - trade value against ETH  
+<a name="swapRatio"></a>
+
+## swapRatio() ⇒ <code>Integer</code>
+Get swap ratio for the pool
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - trade value against 1 ETH  
 <a name="vestingStart"></a>
 
 ## vestingStart() ⇒ <code>Date</code>

@@ -43,6 +43,7 @@ import Client from "../../utils/Client";
 	 * @param {string} rewardsToken Address of the token we want to reward
 	 * @param {string} stakingToken Address of the token to be staked
 	 * @param {Integer} rewardsDuration Duration of the rewards
+	 * @param {string} tokenSaleAddress Address of the pool
 	 * @returns {string} address The deployed contract address
 	 */
 	deploy = async ({
@@ -51,6 +52,7 @@ import Client from "../../utils/Client";
         rewardsToken,
         stakingToken,
         rewardsDuration,
+		tokenSaleAddress = '0x0000000000000000000000000000000000000000',
 		callback
 	}) => {
 		const params = [
@@ -58,7 +60,8 @@ import Client from "../../utils/Client";
 			rewardsDistribution,
 			rewardsToken,
 			stakingToken,
-			rewardsDuration
+			rewardsDuration,
+			tokenSaleAddress
 		];
 		const res = await this.__deploy(params, callback);
 		this.params.contractAddress = res.contractAddress;
@@ -284,6 +287,22 @@ import Client from "../../utils/Client";
 		return Numbers.fromDecimals(
 			await this.params.contract.getContract().methods.earned(address).call(),
 			await this.getRewardsDecimals(),
+		);
+	}
+
+	/**
+	 * @function recoverERC20
+	 * @description Emergency withdrawal of tokens
+	 * @param {string} address Token address
+	*/
+    recoverERC20 = async ({address}) => {
+		await this.client.sendTx(
+			this.params.web3,
+			this.acc,
+			this.params.contract,
+			this.params.contract
+				.getContract()
+				.methods.recoverERC20(address)
 		);
 	}
 	

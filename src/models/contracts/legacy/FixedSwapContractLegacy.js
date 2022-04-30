@@ -796,13 +796,13 @@ class FixedSwapContractLegacy {
 	 * @function redeemGivenMinimumGoalNotAchieved
 	 * @variation isStandard
 	 * @description Reedem Ethereum from sale that did not achieve minimum goal
-	 * @param {Integer} purchase_id
+	 * @param {Integer} purchaseId
 	 */
-	redeemGivenMinimumGoalNotAchieved = async ({ purchase_id }) => {
+	redeemGivenMinimumGoalNotAchieved = async ({ purchaseId }) => {
 		return await this.__sendTx(
 			this.params.contract
 				.getContract()
-				.methods.redeemGivenMinimumGoalNotAchieved(purchase_id)
+				.methods.redeemGivenMinimumGoalNotAchieved(purchaseId)
 		);
 	};
 
