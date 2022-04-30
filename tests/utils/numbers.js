@@ -25,4 +25,20 @@ context('Numbers', async () => {
         const res = Numbers.safeDivide(1, 1092.25);
         expect(Numbers.safeDivide(1, res)).to.equal(1092.25);
     }));
+
+    it('should convert hex to string', mochaAsync(async () => {
+        const res = Numbers.fromHex(0x01);
+        expect(res).to.equal('1');
+    }));
+
+    it('should convert to float', mochaAsync(async () => {
+        const res = Numbers.toFloat('1.1413');
+        expect(res).to.equal(1.14);
+    }));
+
+    it('should convert time to smart contract time', mochaAsync(async () => {
+        const res = Numbers.timeToSmartContractTime(new Date('2022-02-20 10:00:00'));
+        expect(res).to.equal(1645347600);
+    }));
+
 });

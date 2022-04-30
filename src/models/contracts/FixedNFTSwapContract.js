@@ -240,6 +240,21 @@ class FixedNFTSwapContract extends BaseSwapContract {
 	}
 
 	/**
+	 * @function tokensAllocated
+	 * @description Get Total tokens spent in the contract, therefore the tokens bought until now
+	 * @returns {Integer} Amount in Tokens
+	 */
+	 async tokensAllocated() {
+		return Numbers.fromDecimals(
+			(await this.params.contract
+				.getContract()
+				.methods.tokensAllocated()
+				.call()),
+			await this.getTradingDecimals()
+		);
+	}
+	
+	/**
 	 * @function tokensLeft
 	 * @description Get Total tokens owned by category
 	 * @param {Integer} categoryId
