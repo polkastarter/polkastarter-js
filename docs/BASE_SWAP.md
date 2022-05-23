@@ -47,9 +47,6 @@
 <dt><a href="#minimumReached">minimumReached()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>See if minimumRaise was Reached</p>
 </dd>
-<dt><a href="#tokensAllocated">tokensAllocated()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Get Total tokens spent in the contract, therefore the tokens bought until now</p>
-</dd>
 <dt><a href="#safePull">safePull()</a></dt>
 <dd><p>Safe Pull all tokens &amp; ETH</p>
 </dd>
@@ -272,13 +269,6 @@ See if hasMinimumRaise
 See if minimumRaise was Reached
 
 **Kind**: global function  
-<a name="tokensAllocated"></a>
-
-## tokensAllocated() ⇒ <code>Integer</code>
-Get Total tokens spent in the contract, therefore the tokens bought until now
-
-**Kind**: global function  
-**Returns**: <code>Integer</code> - Amount in Tokens  
 <a name="safePull"></a>
 
 ## safePull()

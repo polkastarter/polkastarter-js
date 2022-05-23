@@ -317,6 +317,16 @@ import Client from "../../utils/Client";
 		);
 	}
 
+	/**
+	 * @function periodFinish
+	 * @description Get when the staking finishes
+	 * @returns {Date}
+	 */
+	 async periodFinish() {
+		return Numbers.fromSmartContractTimeToMinutes(
+			await this.params.contract.getContract().methods.periodFinish().call()
+		);
+	}
 
 	/**
 	 * @function totalStaked

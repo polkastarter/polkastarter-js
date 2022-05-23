@@ -50,6 +50,9 @@
 <dt><a href="#lastTimeRewardApplicable">lastTimeRewardApplicable()</a> ⇒ <code>Date</code></dt>
 <dd><p>Get the last time rewards are applicable</p>
 </dd>
+<dt><a href="#periodFinish">periodFinish()</a> ⇒ <code>Date</code></dt>
+<dd><p>Get when the staking finishes</p>
+</dd>
 <dt><a href="#totalStaked">totalStaked()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the total stake</p>
 </dd>
@@ -215,6 +218,12 @@ Emergency withdrawal of tokens
 
 ## lastTimeRewardApplicable() ⇒ <code>Date</code>
 Get the last time rewards are applicable
+
+**Kind**: global function  
+<a name="periodFinish"></a>
+
+## periodFinish() ⇒ <code>Date</code>
+Get when the staking finishes
 
 **Kind**: global function  
 <a name="totalStaked"></a>
