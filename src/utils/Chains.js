@@ -23,6 +23,10 @@ const AVAX_CHAIN_URL =
   "https://api.avax.network/ext/bc/C/rpc";
 const AVAX_CHAIN_TESTNET_URL =
   "https://api.avax-test.network/ext/bc/C/rpc";
+const SOLANA_CHAIN_URL =
+  "https://solana-mainnet.phantom.app/";
+const SOLANA_CHAIN_TESTNET_URL =
+  "http://127.0.0.1:8899";
 
 const networksEnum = Object.freeze({
   1: "Ethereum Main",
@@ -51,12 +55,12 @@ class chains {
 
   checkIfNetworkIsSupported(network)  {
     if(!this.isNetworkSupported(network)) {
-			throw new Error("Network has to be ETH, DOT, BNB, MATIC, CELO or AVAX");
+			throw new Error("Network has to be ETH, DOT, BNB, MATIC, CELO, AVAX or SOLANA");
 		}
   }
 
   isNetworkSupported(network) {
-    if((network != 'ETH') && (network != 'DOT') && (network != 'BNB') && (network !='MATIC') && (network != 'CELO') && (network != 'AVAX')){
+    if((network != 'ETH') && (network != 'DOT') && (network != 'BNB') && (network !='MATIC') && (network != 'CELO') && (network != 'AVAX') && (network != 'SOLANA')){
 			return false;
 		}
     return true;
@@ -75,6 +79,8 @@ class chains {
 			return (mainnet == true) ? CELO_CHAIN_URL : CELO_CHAIN_TESTNET_URL;
 		} else if(network == 'AVAX') {
 			return (mainnet == true) ? AVAX_CHAIN_URL : AVAX_CHAIN_TESTNET_URL;
+		} else if(network == 'SOLANA') {
+			return (mainnet == true) ? SOLANA_CHAIN_URL : SOLANA_CHAIN_TESTNET_URL;
 		}
   }
 

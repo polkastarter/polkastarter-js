@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import FixedSwapContract from "./contracts/FixedSwapContract";
+import SolanaFixedSwapContract from "./contracts/SolanaFixedSwapContract";
 import Signer from "../utils/Signer";
 import Network from "../utils/Network";
 import Wallet from "../utils/Wallet";
@@ -142,6 +143,20 @@ class Application {
 	*/
 	getFixedSwapContract = async ({tokenAddress, contractAddress=null}) => {
 		let contract;
+		if (this.network == 'SOLANA') {
+			if(!contractAddress){
+				// Not deployed
+				return new SolanaFixedSwapContract();
+			} else {
+				contract = new SolanaFixedSwapContract({
+					web3: this.web3,
+					tokenAddress: tokenAddress,
+					contractAddress: contractAddress,
+					acc : this.test ? this.account : null
+				});
+				await contract.isETHTrade();
+			}
+		}
 		if(!contractAddress){
 			// Not deployed
 			return new FixedSwapContract({
