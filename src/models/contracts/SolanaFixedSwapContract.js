@@ -3,35 +3,37 @@ import Numbers from "../../utils/Numbers";
 import moment from 'moment';
 import { Decimal } from 'decimal.js';
 import * as ethers from 'ethers';
-import FixedSwapContract from '../../solana-sdk/src/models/FixedSwap';
+import * as FixedSwapContract from '../../solana-sdk/src/models/FixedSwap';
 import SolanaWallet from "../../utils/SolanaWallet";
+import * as anchor from '@project-serum/anchor';
 
 /**
  * Fixed Swap Object
  * @constructor SolanaFixedSwapContract
- * @param {Anchor} anchor
  * @param {Address} tokenAddress
  * @param {Address} contractAddress ? (opt)
  * @extends BaseSwapContract
  */
 class SolanaFixedSwapContract {
 	constructor({
-		anchor,
 		tokenAddress,
 		contractAddress = null, /* If not deployed */
 		acc
 	}) {
+		this.anchor = anchor;
 		this.connection = new anchor.web3.Connection(
 			'http://127.0.0.1:8899', // ToDo
 			{
 				commitment: 'finalized'
 			}
 		);
-		this.anchor = anchor;
+		this.provider = new anchor.AnchorProvider(this.connection, acc, { commitment: 'finalized' });
+		anchor.setProvider(this.provider);
+
 		this.tokenAddress = tokenAddress;
 		this.contractAddress = contractAddress;
 		this.params = {};
-		this.solanaWallet = new SolanaWallet();
+		this.solanaWallet = new SolanaWallet(this.connection);
 		this.acc = acc;
 	}
 
@@ -78,36 +80,31 @@ class SolanaFixedSwapContract {
 		vestingCliff = 0,
 		vestingDuration = 0
 	}) => {
-		let [deployInstruction, expectedAddress, id] = await FixedSwapContract.deploy(
-            this.connection,
-            this.acc.publicKey,
-            tradeValue,
-            tokenFundAmount,
-            startDate,
-            endDate,
-            0,
-            tokenFundAmount,
-            false,
-            undefined,
-            undefined,
-            false,
-            ()=>{},
-            this.tokenAddress,
-            this.anchor.web3.PublicKey.default, // ToDo
-            false,
-            [],
-            undefined,
-            undefined,
-            undefined
-        )
+		console.log('Deploying!');
+		console.log(this.acc);
+		console.log(this.anchor.web3.PublicKey.default);
+		// ToDo Check all params
+
+		const tokenFundAmount = 3;
+		tradeValue = 1;
+		startDate = new Date(Date.now() + 1 * 60 * 1000);
+        endDate = new Date(Date.now() + 4 * 60 * 1000);
+		let [deployInstruction, expectedAddress, id] = await FixedSwapContract.FixedSwapContract.deploy(
+			this.connection, this.acc.payer.publicKey, tradeValue, tokenFundAmount, startDate, endDate, 0,
+			tokenFundAmount, false, undefined, undefined, false, () => { }, this.tokenAddress,
+			this.anchor.web3.PublicKey.default, // ToDo
+			false, [], undefined, undefined, undefined
+		)
+
+		console.log(deployInstruction, expectedAddress, id);
         let tx = new this.anchor.web3.Transaction();
         tx.add(deployInstruction);
-        let txsig = await this.solanaWallet.signAndSendTx(tx);
+        let txsig = await this.solanaWallet.signAndSendTx(tx, this.acc.payer);
         await this.connection.confirmTransaction(txsig, 'finalized');
 		this.params.contractAddress = expectedAddress;
 		this.contractAddress = this.params.contractAddress;
 		this.params.id = id;
-        return await FixedSwapContract.fromAddress(this.connection, expectedAddress, id, undefined, DeployerWallet.payer, 'finalized');
+        return await FixedSwapContract.FixedSwapContract.fromAddress(this.connection, expectedAddress, id, this.provider, this.acc.payer, 'finalized');
 	};
 
 
@@ -327,6 +324,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isETHTrade() {
+		return true; // ToDo
 	}
 
 	/**

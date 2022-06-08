@@ -10,6 +10,8 @@ import FixedNFTSwapContract from "./contracts/FixedNFTSwapContract";
 import Staking from "./base/Staking";
 import FixedSwapContractLegacy from "./contracts/legacy/FixedSwapContractLegacy";
 import Chains from "../utils/Chains";
+import * as anchor from '@project-serum/anchor';
+import buffer from 'buffer';
 
 const TEST_PRIVATE_KEY = 
   "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
@@ -144,15 +146,23 @@ class Application {
 	getFixedSwapContract = async ({tokenAddress, contractAddress=null}) => {
 		let contract;
 		if (this.network == 'SOLANA') {
+			const deployerKeypair = anchor.web3.Keypair.fromSecretKey(buffer.Buffer.from(
+				[
+					236,103,81,106,243,224,125,54,140,219,24,193,30,31,44,138,230,183,101,86,81,116,236,157,246,189,69,175,169,233,200,240,192,211,109,31,48,140,9,114,171,129,144,40,99,54,112,14,241,165,25,45,61,184,134,89,63,83,253,125,144,146,128,30
+				]
+			));
 			if(!contractAddress){
 				// Not deployed
-				return new SolanaFixedSwapContract();
-			} else {
-				contract = new SolanaFixedSwapContract({
-					web3: this.web3,
+				return new SolanaFixedSwapContract({
 					tokenAddress: tokenAddress,
 					contractAddress: contractAddress,
-					acc : this.test ? this.account : null
+					acc : new anchor.Wallet(deployerKeypair) //ToDo
+				});
+			} else {
+				contract = new SolanaFixedSwapContract({
+					tokenAddress: tokenAddress,
+					contractAddress: contractAddress,
+					acc : new anchor.Wallet(deployerKeypair) //ToDo
 				});
 				await contract.isETHTrade();
 			}

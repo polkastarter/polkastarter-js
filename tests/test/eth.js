@@ -11,6 +11,10 @@ import Contract from "../../src/models/base/Contract";
 import * as ethers from 'ethers';
 import { ERC20TokenContract } from '../..';
 import IDOStaking from '../../src/models/contracts/IDOStaking';
+import * as Helpers from '../../src/solana-sdk/src/utils/helpers';
+
+import * as anchor from '@project-serum/anchor';
+import buffer from 'buffer';
 
 // const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
@@ -79,23 +83,63 @@ context('ETH Contract', async () => {
             app.web3.eth.transactionConfirmationBlocks = 1;
             
             // Deploy the ERC20
-            const contract = new Contract(app.web3, ierc20.abi);
-            const response = await contract.deploy(
-                app.account,
-                ierc20.abi,
-                ierc20.bytecode,
-                [],
-                undefined
-            );
-            ERC20TokenAddress = response.contractAddress;
+            if (process.env.CHAIN_NAME !== 'SOLANA') {
+                const contract = new Contract(app.web3, ierc20.abi);
+                const response = await contract.deploy(
+                    app.account,
+                    ierc20.abi,
+                    ierc20.bytecode,
+                    [],
+                    undefined
+                );
+                ERC20TokenAddress = response.contractAddress;
+            } else {
+                let connection = new anchor.web3.Connection(
+                    'http://127.0.0.1:8899', // ToDo
+                    {
+                        commitment: 'finalized'
+                    }
+                );
+
+                const deployerKeypair = anchor.web3.Keypair.fromSecretKey(buffer.Buffer.from(
+                    [
+                        236,103,81,106,243,224,125,54,140,219,24,193,30,31,44,138,230,183,101,86,81,116,236,157,246,189,69,175,169,233,200,240,192,211,109,31,48,140,9,114,171,129,144,40,99,54,112,14,241,165,25,45,61,184,134,89,63,83,253,125,144,146,128,30
+                    ]
+                ));
+                const creator = new anchor.Wallet(deployerKeypair);
+                console.log(creator);
+                console.log(creator.payer.publicKey);
+                const spltoken = require("@solana/spl-token");
+                ERC20TokenAddress = (await spltoken.createMint(
+                    connection, // Conn
+                    creator.payer, // Payer
+                    creator.payer.publicKey, // Mint Authority
+                    null, // Freeze Authority
+                    8,
+                    undefined,
+                    {
+                        commitment: "finalized"
+                    }
+                ));
+                console.log(ERC20TokenAddress);
+                /* await spltoken.mintTo(connection, creator.payer, ERC20TokenAddress, creator.payer, creator.payer.publicKey, BigInt(1000000000000), [creator.payer], {
+                    commitment: 'finalized'
+                }); */
+            }
             resolve();
         });
     }));
 
    
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
+        console.log('1!!!!');
         /* Create Contract */
-    swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
+        try {
+            swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
+        } catch (e) {
+            console.error(e);
+        }
+        console.log('2!!!!');
         /* Deploy */
         let res;
         if (oldContract) {
@@ -133,16 +177,25 @@ context('ETH Contract', async () => {
             );
             swapContract = await app.getFixedSwapContract({tokenAddress: ERC20TokenAddress, contractAddress: contract.address});
         } else {
-            res = await swapContract.deploy({
-                tradeValue : tradeValue, 
-                tokensForSale : tokenFundAmount, 
-                isTokenSwapAtomic : false,
-                individualMaximumAmount : tokenFundAmount,
-                startDate : moment().add(4, 'minutes'),
-                endDate : moment().add(8, 'minutes'),
-                hasWhitelisting : false,
-                isETHTrade : true
-            });
+
+            console.log('3!!!!');
+            try {
+                res = await swapContract.deploy({
+                    tradeValue : tradeValue, 
+                    tokensForSale : tokenFundAmount, 
+                    isTokenSwapAtomic : false,
+                    individualMaximumAmount : tokenFundAmount,
+                    startDate : moment().add(4, 'minutes'),
+                    endDate : moment().add(8, 'minutes'),
+                    hasWhitelisting : false,
+                    isETHTrade : true
+                });
+            } catch (e) {
+                console.error(e);
+            }
+
+            console.log('4!!!!');
+            console.log(res);
 
         }
         contractAddress = swapContract.getAddress();

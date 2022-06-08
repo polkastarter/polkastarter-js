@@ -14,7 +14,7 @@ class SolanaWallet {
 	 * @description Signs and send a tx
     */
     async signAndSendTx(transaction, signer) {
-        if (!window) {
+        if(typeof window === 'undefined') {            
             return await this.connection.sendTransaction(transaction, [signer], {});
         } else {
             await window.solana.signAndSendTx(transaction);
