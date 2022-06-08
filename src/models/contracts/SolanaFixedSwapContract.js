@@ -80,17 +80,15 @@ class SolanaFixedSwapContract {
 		vestingCliff = 0,
 		vestingDuration = 0
 	}) => {
-		// ToDo Check all params
+		const feeAddress = undefined; // ToDo
 
-		const tokenFundAmount = 3;
-		tradeValue = 1;
-		startDate = new Date(Date.now() + 1 * 60 * 1000);
-        endDate = new Date(Date.now() + 4 * 60 * 1000);
+		// ToDo Check swap ratio
+
 		let [deployInstruction, expectedAddress, id] = await FixedSwapContract.FixedSwapContract.deploy(
-			this.connection, this.acc.payer.publicKey, tradeValue, tokenFundAmount, startDate, endDate, 0,
-			tokenFundAmount, false, undefined, undefined, false, () => { }, this.tokenAddress,
-			this.anchor.web3.PublicKey.default, // ToDo
-			false, [], undefined, undefined, undefined
+			this.connection, this.acc.payer.publicKey, tradeValue, tokensForSale, startDate, endDate, individualMinimumAmount,
+			individualMaximumAmount, isTokenSwapAtomic, minimumRaise, feeAmount, hasWhitelisting, callback, this.tokenAddress,
+			this.anchor.web3.PublicKey.default,
+			isPOLSWhitelist, vestingSchedule, vestingStart, new this.anchor.BN(vestingCliff), new this.anchor.BN(vestingDuration), undefined, feeAddress
 		)
 
 		console.log(deployInstruction, expectedAddress, id);
@@ -101,7 +99,8 @@ class SolanaFixedSwapContract {
 		this.params.contractAddress = expectedAddress;
 		this.contractAddress = this.params.contractAddress;
 		this.params.id = id;
-        return await FixedSwapContract.FixedSwapContract.fromAddress(this.connection, expectedAddress, id, this.provider, this.acc.payer, 'finalized');
+        this.params.solanaSwap = await FixedSwapContract.FixedSwapContract.fromAddress(this.connection, expectedAddress, id, this.provider, this.acc.payer, 'finalized');
+		return this.params.solanaSwap;
 	};
 
 
@@ -330,6 +329,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async getTradingDecimals() {
+		return await this.params.solanaSwap.getTradingDecimals();
 	}
 
 	/**************************************

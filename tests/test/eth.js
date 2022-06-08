@@ -187,8 +187,11 @@ context('ETH Contract', async () => {
         }
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
-
-        expect(await swapContract.getTradingDecimals()).to.equal(18);
+        if (process.env.CHAIN_NAME !== 'SOLANA') {
+            expect(await swapContract.getTradingDecimals()).to.equal(18);
+        } else {
+            expect(await swapContract.getTradingDecimals()).to.equal(9);
+        }
     }));
 
     it('should get the correct smart contract version', mochaAsync(async () => {
