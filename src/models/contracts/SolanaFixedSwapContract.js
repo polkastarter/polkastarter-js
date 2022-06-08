@@ -80,9 +80,6 @@ class SolanaFixedSwapContract {
 		vestingCliff = 0,
 		vestingDuration = 0
 	}) => {
-		console.log('Deploying!');
-		console.log(this.acc);
-		console.log(this.anchor.web3.PublicKey.default);
 		// ToDo Check all params
 
 		const tokenFundAmount = 3;

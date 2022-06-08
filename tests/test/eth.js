@@ -107,8 +107,6 @@ context('ETH Contract', async () => {
                     ]
                 ));
                 const creator = new anchor.Wallet(deployerKeypair);
-                console.log(creator);
-                console.log(creator.payer.publicKey);
                 const spltoken = require("@solana/spl-token");
                 ERC20TokenAddress = (await spltoken.createMint(
                     connection, // Conn
@@ -121,10 +119,12 @@ context('ETH Contract', async () => {
                         commitment: "finalized"
                     }
                 ));
-                console.log(ERC20TokenAddress);
-                /* await spltoken.mintTo(connection, creator.payer, ERC20TokenAddress, creator.payer, creator.payer.publicKey, BigInt(1000000000000), [creator.payer], {
+                const deployerTokenAccount = await spltoken.createAccount(connection, creator.payer, ERC20TokenAddress, creator.payer.publicKey, undefined, {
                     commitment: 'finalized'
-                }); */
+                })
+                await spltoken.mintTo(connection, creator.payer, ERC20TokenAddress, deployerTokenAccount, creator.payer.publicKey, BigInt(1000000000000), [creator.payer], {
+                    commitment: 'finalized'
+                });
             }
             resolve();
         });
@@ -132,14 +132,8 @@ context('ETH Contract', async () => {
 
    
     it('should deploy Fixed Swap Contract', mochaAsync(async () => {
-        console.log('1!!!!');
         /* Create Contract */
-        try {
-            swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
-        } catch (e) {
-            console.error(e);
-        }
-        console.log('2!!!!');
+        swapContract = await app.getFixedSwapContract({tokenAddress : ERC20TokenAddress});
         /* Deploy */
         let res;
         if (oldContract) {
@@ -177,24 +171,17 @@ context('ETH Contract', async () => {
             );
             swapContract = await app.getFixedSwapContract({tokenAddress: ERC20TokenAddress, contractAddress: contract.address});
         } else {
+            res = await swapContract.deploy({
+                tradeValue : tradeValue, 
+                tokensForSale : tokenFundAmount, 
+                isTokenSwapAtomic : false,
+                individualMaximumAmount : tokenFundAmount,
+                startDate : moment().add(4, 'minutes'),
+                endDate : moment().add(8, 'minutes'),
+                hasWhitelisting : false,
+                isETHTrade : true
+            });
 
-            console.log('3!!!!');
-            try {
-                res = await swapContract.deploy({
-                    tradeValue : tradeValue, 
-                    tokensForSale : tokenFundAmount, 
-                    isTokenSwapAtomic : false,
-                    individualMaximumAmount : tokenFundAmount,
-                    startDate : moment().add(4, 'minutes'),
-                    endDate : moment().add(8, 'minutes'),
-                    hasWhitelisting : false,
-                    isETHTrade : true
-                });
-            } catch (e) {
-                console.error(e);
-            }
-
-            console.log('4!!!!');
             console.log(res);
 
         }
