@@ -26,16 +26,16 @@
 <dt><a href="#getWalletUtils">getWalletUtils()</a></dt>
 <dd><p>Returns the Wallet Utils instance.</p>
 </dd>
-<dt><a href="#getStaking">getStaking([contractAddress], [tokenAddress])</a></dt>
+<dt><a href="#getStaking">getStaking([contractAddress], [tokenAddress], [client])</a></dt>
 <dd><p>Returns the Staking Model instance.</p>
 </dd>
-<dt><a href="#getFixedSwapContract">getFixedSwapContract(tokenAddress, [contractAddress])</a></dt>
+<dt><a href="#getFixedSwapContract">getFixedSwapContract(tokenAddress, [contractAddress], [client])</a></dt>
 <dd><p>Returns Fixed Swap instance</p>
 </dd>
-<dt><a href="#getFixedNFTSwapContract">getFixedNFTSwapContract([contractAddress])</a></dt>
+<dt><a href="#getFixedNFTSwapContract">getFixedNFTSwapContract([contractAddress], [client])</a></dt>
 <dd><p>Returns Fixed NFT Swap instance</p>
 </dd>
-<dt><a href="#getERC20TokenContract">getERC20TokenContract(tokenAddress)</a></dt>
+<dt><a href="#getERC20TokenContract">getERC20TokenContract(tokenAddress, [client])</a></dt>
 <dd><p>Returns ERC20 instance</p>
 </dd>
 <dt><a href="#getETHNetwork">getETHNetwork()</a></dt>
@@ -104,7 +104,7 @@ Returns the Wallet Utils instance.
 **Kind**: global function  
 <a name="getStaking"></a>
 
-## getStaking([contractAddress], [tokenAddress])
+## getStaking([contractAddress], [tokenAddress], [client])
 Returns the Staking Model instance.
 
 **Kind**: global function  
@@ -113,10 +113,11 @@ Returns the Staking Model instance.
 | --- | --- | --- |
 | [contractAddress] | <code>string</code> | The staking contract address. (Default: Predefined addresses depending on the network) |
 | [tokenAddress] | <code>string</code> | The staking token address. (Default: Predefined addresses depending on the network) |
+| [client] | <code>Client</code> | Ethereum client |
 
 <a name="getFixedSwapContract"></a>
 
-## getFixedSwapContract(tokenAddress, [contractAddress])
+## getFixedSwapContract(tokenAddress, [contractAddress], [client])
 Returns Fixed Swap instance
 
 **Kind**: global function  
@@ -125,10 +126,11 @@ Returns Fixed Swap instance
 | --- | --- | --- |
 | tokenAddress | <code>string</code> | The token address we want to trade |
 | [contractAddress] | <code>string</code> | The swap contract address, in case t hat has already been instanced. (Default = null) |
+| [client] | <code>Client</code> | Ethereum client |
 
 <a name="getFixedNFTSwapContract"></a>
 
-## getFixedNFTSwapContract([contractAddress])
+## getFixedNFTSwapContract([contractAddress], [client])
 Returns Fixed NFT Swap instance
 
 **Kind**: global function  
@@ -136,10 +138,11 @@ Returns Fixed NFT Swap instance
 | Param | Type | Description |
 | --- | --- | --- |
 | [contractAddress] | <code>string</code> | The swap contract address, in case t hat has already been instanced. (Default = null) |
+| [client] | <code>Client</code> | Ethereum client |
 
 <a name="getERC20TokenContract"></a>
 
-## getERC20TokenContract(tokenAddress)
+## getERC20TokenContract(tokenAddress, [client])
 Returns ERC20 instance
 
 **Kind**: global function  
@@ -147,6 +150,7 @@ Returns ERC20 instance
 | Param | Type | Description |
 | --- | --- | --- |
 | tokenAddress | <code>string</code> | The token address |
+| [client] | <code>Client</code> | Ethereum client |
 
 <a name="getETHNetwork"></a>
 

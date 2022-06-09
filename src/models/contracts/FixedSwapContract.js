@@ -18,6 +18,7 @@ import BaseSwapContract from "./base/BaseSwapContract";
  * @param {Web3} web3
  * @param {Address} tokenAddress
  * @param {Address} contractAddress ? (opt)
+ * @param {Client=} client Ethereum client
  * @extends BaseSwapContract
  */
 class FixedSwapContract extends BaseSwapContract {
@@ -26,14 +27,16 @@ class FixedSwapContract extends BaseSwapContract {
 		tokenAddress,
 		contractAddress = null /* If not deployed */,
 		acc,
+		client
 	}) {
-		super({ web3, contractAddress, acc, contractInterface: fixedswap });
+		super({ web3, contractAddress, acc, contractInterface: fixedswap, client });
 		try {
 			if (tokenAddress) {
 				this.params.erc20TokenContract = new ERC20TokenContract({
 					web3: web3,
 					contractAddress: tokenAddress,
-					acc
+					acc,
+					client: this.client
 				});
 			} else {
 				if (!contractAddress) { throw new Error("Please provide a contractAddress if already deployed") }
@@ -199,13 +202,15 @@ class FixedSwapContract extends BaseSwapContract {
 		this.params.erc20TokenContract = new ERC20TokenContract({
 			web3: this.web3,
 			contractAddress: tokenAddress,
-			acc: this.acc
+			acc: this.acc,
+			client: this.client
 		});
 		if (!(await this.isETHTrade())) {
 			this.params.tradingERC20Contract = new ERC20TokenContract({
 				web3: this.web3,
 				contractAddress: await this.getTradingERC20Address(),
-				acc: this.acc
+				acc: this.acc,
+				client: this.client
 			});
 		};
 	}
@@ -236,7 +241,8 @@ class FixedSwapContract extends BaseSwapContract {
 		return new IDOStaking({
 			acc: this.acc,
 			web3: this.web3,
-			contractAddress: contractAddr
+			contractAddress: contractAddr,
+			client: this.client
 		});
 	}
 

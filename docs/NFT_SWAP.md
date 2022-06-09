@@ -77,7 +77,7 @@
 **Extends**: <code>BaseSwapContract</code>  
 <a name="new_FixedNFTSwapContract_new"></a>
 
-### new FixedNFTSwapContract(web3, contractAddress)
+### new FixedNFTSwapContract(web3, contractAddress, [client])
 Fixed NFT Swap Object
 
 
@@ -85,6 +85,7 @@ Fixed NFT Swap Object
 | --- | --- | --- |
 | web3 | <code>Web3</code> |  |
 | contractAddress | <code>Address</code> | ? (opt) |
+| [client] | <code>Client</code> | Ethereum client |
 
 <a name="deploy"></a>
 

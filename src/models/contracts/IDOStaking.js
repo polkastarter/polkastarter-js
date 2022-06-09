@@ -17,6 +17,7 @@ import Client from "../../utils/Client";
 		web3,
 		contractAddress,
 		acc,
+		client
 	}) {
         if (!web3) {
             throw new Error("Please provide a valid web3 provider");
@@ -32,7 +33,7 @@ import Client from "../../utils/Client";
             contractAddress: contractAddress,
             contract: new Contract(web3, idostaking, contractAddress),
         };
-		this.client = new Client();
+		this.client = client;
     }
 
 	/**
@@ -95,7 +96,12 @@ import Client from "../../utils/Client";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.stake(amount)
+					.methods.stake(amount),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.stake(amount).encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -165,7 +171,15 @@ import Client from "../../utils/Client";
 					.methods.withdraw(Numbers.toSmartContractDecimals(
 						amount,
 						await this.getDecimals()
-					))
+					)),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.withdraw(Numbers.toSmartContractDecimals(
+						amount,
+						await this.getDecimals()
+					)).encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -184,7 +198,12 @@ import Client from "../../utils/Client";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.withdrawAll()
+					.methods.withdrawAll(),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.withdrawAll().encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -203,7 +222,12 @@ import Client from "../../utils/Client";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.exit()
+					.methods.exit(),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.exit().encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -222,7 +246,12 @@ import Client from "../../utils/Client";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.getReward()
+					.methods.getReward(),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.getReward().encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -246,7 +275,12 @@ import Client from "../../utils/Client";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.notifyRewardAmountSamePeriod(amount)
+					.methods.notifyRewardAmountSamePeriod(amount),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.notifyRewardAmountSamePeriod(amount).encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -270,7 +304,12 @@ import Client from "../../utils/Client";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.transferRewardTokenSamePeriod(amount)
+					.methods.transferRewardTokenSamePeriod(amount),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.transferRewardTokenSamePeriod(amount).encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -302,7 +341,12 @@ import Client from "../../utils/Client";
 			this.params.contract,
 			this.params.contract
 				.getContract()
-				.methods.recoverERC20(address)
+				.methods.recoverERC20(address),
+			false,
+			undefined,
+			this.params.contract
+				.getContract()
+				.methods.recoverERC20(address).encodeABI()
 		);
 	}
 	
@@ -378,7 +422,12 @@ import Client from "../../utils/Client";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.setTokenSaleAddress(address)
+					.methods.setTokenSaleAddress(address),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.setTokenSaleAddress(address).encodeABI()
 			);
 			return true;
 		} catch (err) {
@@ -395,7 +444,8 @@ import Client from "../../utils/Client";
 			this.params.erc20TokenContract = new ERC20TokenContract({
 				web3: this.params.web3,
 				contractAddress: await this.params.contract.getContract().methods.stakingToken().call(),
-				acc: this.acc
+				acc: this.acc,
+				client: this.client
 			});
 		}
 		return this.params.erc20TokenContract;
@@ -410,7 +460,8 @@ import Client from "../../utils/Client";
 			this.params.erc20TokenRewardsContract = new ERC20TokenContract({
 				web3: this.params.web3,
 				contractAddress: await this.params.contract.getContract().methods.rewardsToken().call(),
-				acc: this.acc
+				acc: this.acc,
+				client: this.client
 			});
 		}
 		return this.params.erc20TokenRewardsContract;

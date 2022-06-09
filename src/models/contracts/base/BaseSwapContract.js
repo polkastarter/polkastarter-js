@@ -16,6 +16,7 @@ class BaseSwapContract {
 		contractAddress = null /* If not deployed */,
 		acc,
 		contractInterface,
+		client
 	}) {
 		try {
 			if (!web3) {
@@ -33,7 +34,7 @@ class BaseSwapContract {
 				contract: new Contract(web3, contractInterface, contractAddress),
 			};
 			this.contractInterface = contractInterface;
-			this.client = new Client();
+			this.client = client;
 		} catch (err) {
 			throw err;
 		}
@@ -432,7 +433,8 @@ class BaseSwapContract {
 		const contract = new ERC20TokenContract({
 			web3: this.web3,
 			contractAddress: tradeAddress,
-			acc: this.acc
+			acc: this.acc,
+			client: this.client
 		});
 		return await contract.getDecimals();
 	}
@@ -670,6 +672,7 @@ class BaseSwapContract {
 			methodToExecute,
 			call,
 			value,
+			methodToExecute.encodeABI(),
 			callback
 		);
 	}
@@ -679,7 +682,8 @@ class BaseSwapContract {
 			this.params.erc20TokenContract = new ERC20TokenContract({
 				web3: this.web3,
 				contractAddress: await this.getTradingERC20Address(),
-				acc: this.acc
+				acc: this.acc,
+				client: this.client
 			});
 		};
 	}

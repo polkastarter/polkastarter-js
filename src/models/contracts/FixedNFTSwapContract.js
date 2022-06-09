@@ -11,6 +11,7 @@ import ERC20TokenContract from "../base/ERC20TokenContract";
  * @constructor FixedNFTSwapContract
  * @param {Web3} web3
  * @param {Address} contractAddress ? (opt)
+ * @param {Client=} client Ethereum client
  * @extends BaseSwapContract
  */
 class FixedNFTSwapContract extends BaseSwapContract {
@@ -18,8 +19,9 @@ class FixedNFTSwapContract extends BaseSwapContract {
 		web3,
 		contractAddress = null /* If not deployed */,
 		acc,
+		client
 	}) {
-		super({ web3, contractAddress, acc, contractInterface: fixednftswap });
+		super({ web3, contractAddress, acc, contractInterface: fixednftswap, client });
 	}
 
 	/**
@@ -71,7 +73,8 @@ class FixedNFTSwapContract extends BaseSwapContract {
 			this.params.erc20TokenContract = new ERC20TokenContract({
 				web3: this.web3,
 				contractAddress: ERC20TradingAddress,
-				acc: this.acc
+				acc: this.acc,
+				client: this.client
 			});
 		}
 

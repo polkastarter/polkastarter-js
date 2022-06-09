@@ -33,7 +33,8 @@ import Chains from "../../utils/Chains";
 		acc,
         tokenAddress,
         network = 'ETH',
-        test = false
+        test = false,
+		client
 	}) {
         if (!web3) {
             throw new Error("Please provide a valid web3 provider");
@@ -77,9 +78,10 @@ import Chains from "../../utils/Chains";
         this.params.erc20TokenContract = new ERC20TokenContract({
             web3: web3,
             contractAddress: tokenAddress,
-            acc
+            acc,
+			client: client
         });
-        this.client = new Client();
+        this.client = client;
     }
 
     /**
@@ -99,7 +101,12 @@ import Chains from "../../utils/Chains";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.stake(amount)
+					.methods.stake(amount),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.stake(amount).encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -152,7 +159,12 @@ import Chains from "../../utils/Chains";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.withdraw(amount)
+					.methods.withdraw(amount),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.withdraw(amount).encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -171,7 +183,12 @@ import Chains from "../../utils/Chains";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.withdrawAll()
+					.methods.withdrawAll(),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.withdrawAll().encodeABI()
 			);
 		} catch (err) {
 			throw err;
@@ -190,7 +207,12 @@ import Chains from "../../utils/Chains";
 				this.params.contract,
 				this.params.contract
 					.getContract()
-					.methods.claim()
+					.methods.claim(),
+				false,
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.claim().encodeABI()
 			);
 		} catch (err) {
 			throw err;

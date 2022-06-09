@@ -9,6 +9,7 @@ import FixedNFTSwapContract from "./contracts/FixedNFTSwapContract";
 import Staking from "./base/Staking";
 import FixedSwapContractLegacy from "./contracts/legacy/FixedSwapContractLegacy";
 import Chains from "../utils/Chains";
+import Client from "../utils/Client";
 
 const TEST_PRIVATE_KEY = 
   "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
@@ -26,14 +27,17 @@ class Application {
 		this.test = test;
 		global.IS_TEST = !mainnet;
 		this.mainnet = mainnet;
-		Chains.checkIfNetworkIsSupported(network);
 		this.network = network;
+
+		if (!web3) {
+			Chains.checkIfNetworkIsSupported(network);
+		} else {
+			this.web3 = web3;
+		}
 
 		if(this.test){
 			if (!web3) {
 				this.start();
-			} else {
-				this.web3 = web3;
 			}
 			// this.login();
 			this.account = new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(TEST_PRIVATE_KEY));
@@ -121,16 +125,18 @@ class Application {
 	 * @function getStaking
 	 * @param {string=} contractAddress The staking contract address. (Default: Predefined addresses depending on the network)
 	 * @param {string=} tokenAddress The staking token address. (Default: Predefined addresses depending on the network)
+	 * @param {Client=} client Ethereum client
 	 * @description Returns the Staking Model instance. 
 	*/
-	getStaking = ({contractAddress=null, tokenAddress=null}) => {
+	getStaking = ({contractAddress=null, tokenAddress=null, client = new Client()}) => {
 		return new Staking({
 			web3: this.web3,
 			acc : this.test ? this.account : null,
 			contractAddress: contractAddress,
 			tokenAddress: tokenAddress,
 			network: this.network,
-			test: !this.mainnet
+			test: !this.mainnet,
+			client: client
 		});
 	}
 
@@ -138,9 +144,10 @@ class Application {
 	 * @function getFixedSwapContract
 	 * @param {string} tokenAddress The token address we want to trade
 	 * @param {string=} contractAddress The swap contract address, in case t hat has already been instanced. (Default = null)
+	 * @param {Client=} client Ethereum client
 	 * @description Returns Fixed Swap instance
 	*/
-	getFixedSwapContract = async ({tokenAddress, contractAddress=null}) => {
+	getFixedSwapContract = async ({tokenAddress, contractAddress=null, client = new Client()}) => {
 		let contract;
 		if(!contractAddress){
 			// Not deployed
@@ -148,7 +155,8 @@ class Application {
 				web3: this.web3,
 				tokenAddress: tokenAddress,
 				contractAddress: contractAddress,
-				acc : this.test ? this.account : null
+				acc : this.test ? this.account : null,
+				client: client
 			});
 		}else{
 			// Deployed
@@ -157,7 +165,8 @@ class Application {
 					web3: this.web3,
 					tokenAddress: tokenAddress,
 					contractAddress: contractAddress,
-					acc : this.test ? this.account : null
+					acc : this.test ? this.account : null,
+					client: client
 				});
 				await contract.isETHTrade();
 			}catch(err){
@@ -181,16 +190,18 @@ class Application {
 	/**
 	 * @function getFixedNFTSwapContract
 	 * @param {string=} contractAddress The swap contract address, in case t hat has already been instanced. (Default = null)
+	 * @param {Client=} client Ethereum client
 	 * @description Returns Fixed NFT Swap instance
 	*/
-	getFixedNFTSwapContract = async ({contractAddress=null}) => {
+	getFixedNFTSwapContract = async ({contractAddress=null, client = new Client()}) => {
 		let contract;
 		if(!contractAddress){
 			// Not deployed
 			return new FixedNFTSwapContract({
 				web3: this.web3,
 				contractAddress: contractAddress,
-				acc : this.test ? this.account : null
+				acc : this.test ? this.account : null,
+				client: client
 			});
 		}else{
 			// Deployed
@@ -198,7 +209,8 @@ class Application {
 				contract = new FixedNFTSwapContract({
 					web3: this.web3,
 					contractAddress: contractAddress,
-					acc : this.test ? this.account : null
+					acc : this.test ? this.account : null,
+					client: client
 				});
 				await contract.isETHTrade();
 			}catch(err){
@@ -212,14 +224,16 @@ class Application {
 	/**
 	 * @function getERC20TokenContract
 	 * @param {string} tokenAddress The token address
+	 * @param {Client=} client Ethereum client
 	 * @description Returns ERC20 instance
 	*/
-	getERC20TokenContract =  ({tokenAddress}) => {
+	getERC20TokenContract =  ({tokenAddress, client = new Client()}) => {
 		try{
 			return new ERC20TokenContract({
 				web3: this.web3,
 				contractAddress: tokenAddress,
-				acc : this.test ? this.account : null
+				acc : this.test ? this.account : null,
+				client: client
 			});
 		}catch(err){
 			throw err;

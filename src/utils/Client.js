@@ -32,7 +32,7 @@ class Client {
 		});
 	};
 
-	sendTx = async (web3, acc, contract, f, call = false, value, callback=()=>{}) => {
+	sendTx = async (web3, acc, contract, f, call = false, value, txData, callback=()=>{}) => {
 		var res;
 		if (!acc && !call) {
 			const accounts = await web3.eth.getAccounts();

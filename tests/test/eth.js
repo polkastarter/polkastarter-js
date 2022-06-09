@@ -7,6 +7,7 @@ import moment, { isDate } from 'moment';
 import Application from '../../src/models';
 import { ierc20, idostaking } from "../../src/interfaces";
 import Numbers from "../../src/utils/Numbers";
+import Client from "../../src/utils/Client";
 import Contract from "../../src/models/base/Contract";
 import * as ethers from 'ethers';
 import { ERC20TokenContract } from '../..';
@@ -450,6 +451,7 @@ context('ETH Contract', async () => {
             web3: app.web3,
             contractAddress: undefined,
             acc: app.account,
+            client: new Client()
         });
         const tenDays = 864000;
         await idoStakeToDeploy.deploy({

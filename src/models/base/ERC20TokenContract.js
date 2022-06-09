@@ -1,11 +1,10 @@
 import contract from "./Contract";
 import { ierc20 } from "../../interfaces";
 import Numbers from "../../utils/Numbers";
-import Client from "../../utils/Client";
 let self;
 
 class ERC20TokenContract {
-	constructor({contractAddress, web3, acc}) {
+	constructor({contractAddress, web3, acc, client}) {
 		if(acc){
 			this.acc = acc;
 		}
@@ -18,7 +17,7 @@ class ERC20TokenContract {
 		self = {
 			contract: new contract(web3, ierc20, contractAddress)
 		};
-		this.client = new Client();
+		this.client = client;
 	}
 
 	__assert() {
@@ -40,8 +39,13 @@ class ERC20TokenContract {
 				this.acc,
 				this.params.contract,
 				this.params.contract
-				.getContract()
-				.methods.transferOwnership(address)
+					.getContract()
+					.methods.transferOwnership(address),
+				false, 
+				undefined,
+				this.params.contract
+					.getContract()
+					.methods.transferOwnership(address).encodeABI()
 			);
 		} catch (err) {
 			console.log(err);
@@ -53,14 +57,19 @@ class ERC20TokenContract {
 			tokenAmount,
 			await this.getDecimals()
 		);
-		return await this.client.sendTx( 
-
+		return await this.client.sendTx(
 			this.params.web3,
 			this.acc,
 			this.params.contract,
 			this.params.contract
-			.getContract()
-			.methods.transfer(toAddress, amountWithDecimals)
+				.getContract()
+				.methods.transfer(toAddress, amountWithDecimals),
+			false,
+			undefined,
+			this.params.contract
+				.getContract()
+				.methods.transfer(toAddress, amountWithDecimals).encodeABI()
+			
 		);
 	}
 
@@ -93,10 +102,13 @@ class ERC20TokenContract {
 				this.acc,
 				this.params.contract, 
 				this.params.contract
-				.getContract()
-				.methods.allowance(address, spenderAddress),
+					.getContract()
+					.methods.allowance(address, spenderAddress),
 				true,
 				null,
+				this.params.contract
+					.getContract()
+					.methods.allowance(address, spenderAddress).encodeABI(),
 				callback
 			);
 
@@ -121,10 +133,13 @@ class ERC20TokenContract {
 				this.acc,
 				this.params.contract,
 				this.params.contract
-				.getContract()
-				.methods.approve(address, amountWithDecimals),
+					.getContract()
+					.methods.approve(address, amountWithDecimals),
 				null,
 				null,
+				this.params.contract
+					.getContract()
+					.methods.approve(address, amountWithDecimals).encodeABI(),
 				callback
 			);
 		} catch (err) {

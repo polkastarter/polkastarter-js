@@ -119,7 +119,7 @@
 **Extends**: <code>BaseSwapContract</code>  
 <a name="new_FixedSwapContract_new"></a>
 
-### new FixedSwapContract(web3, tokenAddress, contractAddress)
+### new FixedSwapContract(web3, tokenAddress, contractAddress, [client])
 Fixed Swap Object
 
 
@@ -128,6 +128,7 @@ Fixed Swap Object
 | web3 | <code>Web3</code> |  |
 | tokenAddress | <code>Address</code> |  |
 | contractAddress | <code>Address</code> | ? (opt) |
+| [client] | <code>Client</code> | Ethereum client |
 
 <a name="deploy"></a>
 
