@@ -124,7 +124,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isWhitelisted({ address }) {
-		return await this.params.solanaSwap.isWhitelisted(address); // ToDo formar string to anchor.web3.PublicKey
+		return await this.params.solanaSwap.isWhitelisted(new this.anchor.web3.PublicKey(address));
 	}
 
 	/**
@@ -143,7 +143,7 @@ class SolanaFixedSwapContract {
 	 * @param { Address} address
 	 */
 	addWhitelistedAddress = async ({ address }) => {
-		return await this.params.solanaSwap.addWhitelistedAddress(address); // ToDo formar string to anchor.web3.PublicKey
+		return await this.params.solanaSwap.addWhitelistedAddress(new this.anchor.web3.PublicKey(address));
 	};
 
 	/**
@@ -153,7 +153,7 @@ class SolanaFixedSwapContract {
 	 * @description remove WhiteListed Address
 	 */
 	removeWhitelistedAddress = async ({ address, index }) => {
-		return await this.params.solanaSwap.removeWhitelistedAddress(address); // ToDo formar string to anchor.web3.PublicKey
+		return await this.params.solanaSwap.removeWhitelistedAddress(new this.anchor.web3.PublicKey(address));
 	};
 
 	/**
@@ -452,7 +452,7 @@ class SolanaFixedSwapContract {
 	 * @param {string} address
 	 */
 	addToBlacklist = async ({ address }) => {
-		return await this.params.solanaSwap.addToBlacklist(address); // ToDo formar string to anchor.web3.PublicKey
+		return await this.params.solanaSwap.addToBlacklist(new this.anchor.web3.PublicKey(address));
 	};
 
 	/**
@@ -461,7 +461,7 @@ class SolanaFixedSwapContract {
 	 * @param {string} address
 	 */
 	removeFromBlacklist = async ({ address }) => {
-		return await this.params.solanaSwap.removeFromBlacklist(address); // ToDo formar string to anchor.web3.PublicKey
+		return await this.params.solanaSwap.removeFromBlacklist(new this.anchor.web3.PublicKey(address));
 	};
 
 	/**
@@ -471,7 +471,7 @@ class SolanaFixedSwapContract {
 	 * @returns {boolean} isBlackListed
 	 */
 	isBlacklisted = async ({ address }) => {
-		return await this.params.solanaSwap.isBlacklisted(address); // ToDo formar string to anchor.web3.PublicKey
+		return await this.params.solanaSwap.isBlacklisted(new this.anchor.web3.PublicKey(address));
 	}
 
 	/**************************************
@@ -760,10 +760,10 @@ class SolanaFixedSwapContract {
 	/**
 	 * @function getPurchaseIds
 	 * @description Get All Purchase Ids
-	 * @returns {(Array | Integer)} _ids
+	 * @returns {(Array | string)} _ids
 	 */
 	getPurchaseIds = async () => {
-		return await this.params.solanaSwap.getPurchaseIds(); // ToDo I think here we're returning string instead of ints
+		return (await this.params.solanaSwap.getPurchaseIds()).map(id => id.toBase58());
 	};
 
 	/**
@@ -773,7 +773,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Array | Integer} _ids
 	 */
 	getAddressPurchaseIds = async ({ address }) => {
-		return await this.params.solanaSwap.getAddressPurchaseIds(address); // ToDo formar string to anchor.web3.PublicKey
+		return await this.params.solanaSwap.getAddressPurchaseIds(new this.anchor.web3.PublicKey(address));
 	};
 
 	/**
@@ -829,10 +829,10 @@ class SolanaFixedSwapContract {
 	 * @function redeemTokens
 	 * @variation isStandard
 	 * @description Reedem tokens bought
-	 * @param {Integer} purchase_id
+	 * @param {string} purchase_id
 	 */
 	redeemTokens = async ({ purchase_id }) => {
-		return await this.params.solanaSwap.swap(purchase_id); // ToDo formar string to anchor.web3.PublicKey
+		return await this.params.solanaSwap.swap(new this.anchor.web3.PublicKey(purchase_id));
 	};
 
 	/**
