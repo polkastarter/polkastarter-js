@@ -114,6 +114,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async hasWhitelisting() {
+		return await this.params.solanaSwap.hasWhitelisting();
 	}
 
 	/**
@@ -123,6 +124,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isWhitelisted({ address }) {
+		return await this.params.solanaSwap.isWhitelisted(address); // ToDo formar string to anchor.web3.PublicKey
 	}
 
 	/**
@@ -132,6 +134,7 @@ class SolanaFixedSwapContract {
 	 * @description Modifies if the pool has whitelisting or not
 	 */
 	setHasWhitelisting = async ({ hasWhitelist }) => {
+		return await this.params.solanaSwap.setHasWhitelisting(hasWhitelist);
 	}
 
 	/**
@@ -140,6 +143,7 @@ class SolanaFixedSwapContract {
 	 * @param { Address} address
 	 */
 	addWhitelistedAddress = async ({ address }) => {
+		return await this.params.solanaSwap.addWhitelistedAddress(address); // ToDo formar string to anchor.web3.PublicKey
 	};
 
 	/**
@@ -149,6 +153,7 @@ class SolanaFixedSwapContract {
 	 * @description remove WhiteListed Address
 	 */
 	removeWhitelistedAddress = async ({ address, index }) => {
+		return await this.params.solanaSwap.removeWhitelistedAddress(address); // ToDo formar string to anchor.web3.PublicKey
 	};
 
 	/**
@@ -157,6 +162,7 @@ class SolanaFixedSwapContract {
 	 * @param {string} address
 	 */
 	setSignerPublicAddress = async ({ address }) => {
+		return await this.params.solanaSwap.setSignerPublicAddress(address);
 	};
 
 	/**
@@ -166,6 +172,7 @@ class SolanaFixedSwapContract {
 	 */
 
 	async signerPublicAddress() {
+		return await this.params.solanaSwap.signerPublicAddress();
 	}
 
 	/**
@@ -175,7 +182,7 @@ class SolanaFixedSwapContract {
 	 */
 
 	getWhitelistedAddresses = async () => {
-
+		return await this.params.solanaSwap.getWhitelistedAddresses();
 	}
 
 	/**************************************
@@ -188,6 +195,7 @@ class SolanaFixedSwapContract {
 	 * @param {Integer} Balance
 	 */
 	getBalance = async () => {
+		return await this.params.solanaSwap.getBalance();
 	}
 
 	/**
@@ -197,6 +205,7 @@ class SolanaFixedSwapContract {
 	 * @param {Address} toAddress
 	 */
 	removeOtherERC20Tokens = async ({ tokenAddress, toAddress }) => {
+		throw new Error('Not implemented');
 	};
 
 	/**
@@ -205,6 +214,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async minimumRaise() {
+		return await this.params.solanaSwap.minimumRaise();
 	}
 
 	/**
@@ -213,6 +223,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean} 
 	 */
 	async hasMinimumRaise() {
+		return await this.params.solanaSwap.hasMinimumRaise();
 	}
 
 	/**
@@ -221,6 +232,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async minimumReached() {
+		return await this.params.solanaSwap.minimumReached();
 	}
 
 	/**
@@ -228,6 +240,7 @@ class SolanaFixedSwapContract {
 	 * @description Safe Pull all tokens & ETH
 	 */
 	safePull = async () => {
+		throw new Error('Not implemented');
 	};
 
 	/**
@@ -235,6 +248,7 @@ class SolanaFixedSwapContract {
 	 * @description Withdraw all funds from tokens sold
 	 */
 	withdrawFunds = async () => {
+		return await this.params.solanaSwap.withdrawFunds();
 	};
 
 	/**
@@ -243,6 +257,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in ETH
 	 */
 	async withdrawableFunds() {
+		return await this.params.solanaSwap.withdrawableFunds();
 	}
 
 	/**
@@ -251,6 +266,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async wereUnsoldTokensReedemed() {
+		return await this.params.solanaSwap.wereUnsoldTokensReedemed();
 	}
 
 	/**
@@ -260,6 +276,7 @@ class SolanaFixedSwapContract {
 	 * @param {Integer} purchaseId
 	 */
 	redeemGivenMinimumGoalNotAchieved = async ({ purchaseId }) => {
+		return await this.params.solanaSwap.redeemGivenMinimumGoalNotAchieved(purchaseId);
 	};
 
 	/**
@@ -269,6 +286,7 @@ class SolanaFixedSwapContract {
 	 * @description Modifies the max allocation
 	 */
 	setIndividualMaximumAmount = async ({ individualMaximumAmount }) => {
+		return await this.params.solanaSwap.setIndividualMaximumAmount(individualMaximumAmount);
 	};
 
 	/**
@@ -277,6 +295,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async individualMaximumAmount() {
+		return await this.params.solanaSwap.individualMaximumAmount();
 	}
 
 	/**
@@ -287,6 +306,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	isApproved = async ({ tokenAmount, address }) => {
+		return true;
 	};
 
 	/**
@@ -296,6 +316,7 @@ class SolanaFixedSwapContract {
 	 * @description Verify if it is approved to invest
 	 */
 	isApprovedSwapERC20 = async ({ tokenAmount, address, callback }) => {
+		return true;
 	};
 
 	/**
@@ -304,6 +325,7 @@ class SolanaFixedSwapContract {
 	 * @description Approve the investor to use approved tokens for the sale
 	 */
 	approveSwapERC20 = async ({ tokenAmount, callback }) => {
+		throw new Error('Not implemented');
 	};
 
 	/**
@@ -312,6 +334,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Address}
 	 */
 	async getTradingERC20Address() {
+		return await this.params.solanaSwap.getTradingERC20Address();
 	}
 
 	/**
@@ -320,7 +343,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isETHTrade() {
-		return true; // ToDo
+		return await this.params.solanaSwap.isETHtrade();
 	}
 
 	/**
@@ -342,6 +365,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Date}
 	 */
 	async startDate() {
+		return await this.params.solanaSwap.startDate();
 	}
 
 	/**
@@ -350,6 +374,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Date}
 	 */
 	async endDate() {
+		return await this.params.solanaSwap.endDate();
 	}
 
 	/**
@@ -359,6 +384,7 @@ class SolanaFixedSwapContract {
 	 * @description Modifies the end date for the pool
 	 */
 	setEndDate = async ({ endDate }) => {
+		return await this.params.solanaSwap.setEndDate(endDate);
 	};
 
 	/**
@@ -368,6 +394,7 @@ class SolanaFixedSwapContract {
 	 * @description Modifies the start date for the pool
 	 */
 	setStartDate = async ({ startDate }) => {
+		return await this.params.solanaSwap.setStartDate(startDate);
 	}
 
 	/**
@@ -376,6 +403,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isFinalized() {
+		return await this.params.solanaSwap.hasFinalized();
 	}
 
 	/**
@@ -384,6 +412,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isOpen() {
+		return await this.params.solanaSwap.isOpen();
 	}
 
 	/**
@@ -392,6 +421,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async hasStarted() {
+		return await this.params.solanaSwap.hasStarted();
 	}
 
 	/**
@@ -400,6 +430,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async hasFinalized() {
+		return await this.params.solanaSwap.hasFinalized();
 	}
 
 	/**
@@ -408,6 +439,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isPreStart() {
+		return await this.params.solanaSwap.isPreStart();
 	}
 
 	/**************************************
@@ -420,6 +452,7 @@ class SolanaFixedSwapContract {
 	 * @param {string} address
 	 */
 	addToBlacklist = async ({ address }) => {
+		return await this.params.solanaSwap.addToBlacklist(address); // ToDo formar string to anchor.web3.PublicKey
 	};
 
 	/**
@@ -428,6 +461,7 @@ class SolanaFixedSwapContract {
 	 * @param {string} address
 	 */
 	removeFromBlacklist = async ({ address }) => {
+		return await this.params.solanaSwap.removeFromBlacklist(address); // ToDo formar string to anchor.web3.PublicKey
 	};
 
 	/**
@@ -437,6 +471,7 @@ class SolanaFixedSwapContract {
 	 * @returns {boolean} isBlackListed
 	 */
 	isBlacklisted = async ({ address }) => {
+		return await this.params.solanaSwap.isBlacklisted(address); // ToDo formar string to anchor.web3.PublicKey
 	}
 
 	/**************************************
@@ -450,6 +485,7 @@ class SolanaFixedSwapContract {
 	 */
 
 	async isPaused() {
+		return await this.params.solanaSwap.isPaused();
 	}
 
 	/**
@@ -458,6 +494,7 @@ class SolanaFixedSwapContract {
 	 * @description Pause Contract
 	 */
 	async pauseContract() {
+		return await this.params.solanaSwap.pauseContract();
 	}
 
 	/**
@@ -466,6 +503,7 @@ class SolanaFixedSwapContract {
 	 * @description Unpause Contract
 	 */
 	async unpauseContract() {
+		return await this.params.solanaSwap.unpauseContract();
 	}
 
 	/**
@@ -474,13 +512,15 @@ class SolanaFixedSwapContract {
 	 * @param {Address} Address
 	 */
 	getSmartContractVersion = async () => {
+		return 3100000;
 	}
 
 	getContractMethods() {
-
-	 }
+		throw new Error('Not implemented');
+	}
 
 	getDecimals = async () => {
+		return await this.params.solanaSwap.getDecimals();
 	}
 
 	getAddress() {
@@ -488,9 +528,11 @@ class SolanaFixedSwapContract {
 	}
 
 	getTokenAddress() {
+		return this.params.solanaSwap.getTokenAddress();
 	}
 
 	getTokenContract() {
+		return this.params.solanaSwap.getTokenContract();
 	}
 
 
@@ -528,6 +570,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Address} Token Address
 	 */
 	async erc20() {
+		return await this.params.solanaSwap.erc20();
 	}
 
 	/* Get Functions */
@@ -537,6 +580,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} trade value against ETH
 	 */
 	async tradeValue() {
+		return await this.params.solanaSwap.tradeValue();
 	}
 
 	/**
@@ -545,6 +589,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} trade value against 1 ETH
 	 */
 	 async swapRatio() {
+		return await this.params.solanaSwap.swapRatio();
 	}
 
 	/**
@@ -553,6 +598,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Date}
 	 */
 	async vestingStart() {
+		return await this.params.solanaSwap.vestingStart();
 	}
 
 	/**
@@ -561,6 +607,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async individualMinimumAmount() {
+		return await this.params.solanaSwap.individualMinimumAmount();
 	}
 
 	/**
@@ -569,6 +616,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async tokensForSale() {
+		return await this.params.solanaSwap.tokensForSale();
 	}
 
 	/**
@@ -577,6 +625,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async tokensAvailable() {
+		return await this.params.solanaSwap.tokensAvailable();
 	}
 
 	/**
@@ -585,6 +634,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async tokensLeft() {
+		return await this.params.solanaSwap.tokensLeft();
 	}
 
 	/**
@@ -593,6 +643,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer}
 	 */
 	 async individualMaximumAmount() {
+		return await this.params.solanaSwap.individualMaximumAmount();
 	}
 
 	/**
@@ -601,6 +652,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async withdrawableUnsoldTokens() {
+		return await this.params.solanaSwap.withdrawableUnsoldTokens();
 	}
 	
 	/**
@@ -609,6 +661,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async tokensAllocated() {
+		return await this.params.solanaSwap.tokensAllocated();
 	}
 
 	/**
@@ -617,6 +670,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isTokenSwapAtomic() {
+		return await this.params.solanaSwap.isTokenSwapAtomic();
 	}
 
 	/**
@@ -625,6 +679,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isFunded() {
+		return await this.params.solanaSwap.isFunded();
 	}
 
 	/**
@@ -633,6 +688,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isPOLSWhitelisted() {
+		return false;
 	}
 
 	/**
@@ -641,6 +697,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isAddressPOLSWhitelisted() {
+		return false;
 	}
 
 	/**
@@ -649,6 +706,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async getCurrentSchedule() {
+		return await this.params.solanaSwap.getCurrentSchedule();
 	}
 
 	/**
@@ -658,6 +716,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Array | Integer}
 	 */
 	async getVestingSchedule({ position }) {
+		return await this.params.solanaSwap.getVestingSchedule(position);
 	}
 
 	/**
@@ -675,6 +734,7 @@ class SolanaFixedSwapContract {
 	 */
 
 	getPurchase = async ({ purchase_id }) => {
+		// ToDo
 	};
 
 	/**
@@ -683,7 +743,9 @@ class SolanaFixedSwapContract {
 	 * @returns {Array | Address} addresses
 	 */
 
-	getWhitelistedAddresses = async () =>
+	getWhitelistedAddresses = async () => {
+		return await this.params.solanaSwap.getWhitelistedAddresses();
+	}
 
 	/**
 	 * @function getBuyers
@@ -692,7 +754,7 @@ class SolanaFixedSwapContract {
 	 */
 
 	getBuyers = async () => {
-
+		return await this.params.solanaSwap.getBuyers();
 	}
 
 	/**
@@ -701,6 +763,7 @@ class SolanaFixedSwapContract {
 	 * @returns {(Array | Integer)} _ids
 	 */
 	getPurchaseIds = async () => {
+		return await this.params.solanaSwap.getPurchaseIds(); // ToDo I think here we're returning string instead of ints
 	};
 
 	/**
@@ -710,6 +773,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Array | Integer} _ids
 	 */
 	getAddressPurchaseIds = async ({ address }) => {
+		return await this.params.solanaSwap.getAddressPurchaseIds(address); // ToDo formar string to anchor.web3.PublicKey
 	};
 
 	/**
@@ -719,6 +783,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} costAmount
 	 */
 	getCostFromTokens = async ({ tokenAmount }) => {
+		return await this.params.solanaSwap.getCostFromTokens(tokenAmount);
 	};
 
 	/**
@@ -730,6 +795,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Date} vestingStart
 	 */
 	getDistributionInformation = async () => {
+		return await this.params.solanaSwap.getDistributionInformation();
 	}
 
 
@@ -746,6 +812,7 @@ class SolanaFixedSwapContract {
 	 * @param {string=} signature Signature for the offchain whitelist
 	*/
 	swapWithSig = async ({ tokenAmount, callback, signature, accountMaxAmount }) => {
+		return await this.params.solanaSwap.swapWithSig(tokenAmount, callback, signature, new this.anchor.BN(accountMaxAmount))
 	}
 
 	/**
@@ -755,6 +822,7 @@ class SolanaFixedSwapContract {
 	 * @param {string=} signature Signature for the offchain whitelist
 	*/
 	swap = async ({ tokenAmount, callback, signature }) => {
+		return await this.params.solanaSwap.swap(tokenAmount, callback, signature);
 	};
 
 	/**
@@ -764,6 +832,7 @@ class SolanaFixedSwapContract {
 	 * @param {Integer} purchase_id
 	 */
 	redeemTokens = async ({ purchase_id }) => {
+		return await this.params.solanaSwap.swap(purchase_id); // ToDo formar string to anchor.web3.PublicKey
 	};
 
 	/**
@@ -772,6 +841,7 @@ class SolanaFixedSwapContract {
 	 */
 
 	withdrawUnsoldTokens = async () => {
+		return await this.params.solanaSwap.withdrawUnsoldTokens();
 	};
 
 	/**
@@ -780,6 +850,7 @@ class SolanaFixedSwapContract {
 	 * @description Approve the pool to use approved tokens for sale
 	 */
 	approveFundERC20 = async ({ tokenAmount, callback }) => {
+		throw new Error('Not implemented');
 	};
 
 	/**
@@ -797,6 +868,7 @@ class SolanaFixedSwapContract {
 		vestingCliff = 0,
 		vestingDuration = 0
 	}) => {
+		return await this.params.solanaSwap.setVesting(vestingSchedule, vestingStart, vestingCliff, vestingDuration);
 	}
 
 	/**
@@ -805,6 +877,7 @@ class SolanaFixedSwapContract {
 	 * @param {Integer} tokenAmount
 	 */
 	fund = async ({ tokenAmount, callback }) => {
+		return await this.params.solanaSwap.fund(tokenAmount);
 	};
 
 }

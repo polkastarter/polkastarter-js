@@ -187,6 +187,7 @@ context('ETH Contract', async () => {
         }
         contractAddress = swapContract.getAddress();
         expect(res).to.not.equal(false);
+
         if (process.env.CHAIN_NAME !== 'SOLANA') {
             expect(await swapContract.getTradingDecimals()).to.equal(18);
         } else {
