@@ -214,7 +214,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async minimumRaise() {
-		return await this.params.solanaSwap.minimumRaise();
+		return '' + await this.params.solanaSwap.minimumRaise();
 	}
 
 	/**
@@ -580,7 +580,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} trade value against ETH
 	 */
 	async tradeValue() {
-		return await this.params.solanaSwap.tradeValue();
+		return '' + await this.params.solanaSwap.tradeValue();
 	}
 
 	/**
@@ -607,7 +607,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer}
 	 */
 	async individualMinimumAmount() {
-		return await this.params.solanaSwap.individualMinimumAmount();
+		return '' + await this.params.solanaSwap.individualMinimumAmount();
 	}
 
 	/**
@@ -616,7 +616,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async tokensForSale() {
-		return await this.params.solanaSwap.tokensForSale();
+		return '' + await this.params.solanaSwap.tokensForSale();
 	}
 
 	/**
@@ -625,7 +625,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async tokensAvailable() {
-		return await this.params.solanaSwap.tokensAvailable();
+		return '' + await this.params.solanaSwap.tokensAvailable();
 	}
 
 	/**
@@ -634,7 +634,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async tokensLeft() {
-		return await this.params.solanaSwap.tokensLeft();
+		return '' + await this.params.solanaSwap.tokensLeft();
 	}
 
 	/**
@@ -643,7 +643,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer}
 	 */
 	 async individualMaximumAmount() {
-		return await this.params.solanaSwap.individualMaximumAmount();
+		return '' + await this.params.solanaSwap.individualMaximumAmount();
 	}
 
 	/**
@@ -661,7 +661,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Integer} Amount in Tokens
 	 */
 	async tokensAllocated() {
-		return await this.params.solanaSwap.tokensAllocated();
+		return '' + await this.params.solanaSwap.tokensAllocated();
 	}
 
 	/**
