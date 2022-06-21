@@ -172,13 +172,21 @@ context('ETH Contract', async () => {
             );
             swapContract = await app.getFixedSwapContract({tokenAddress: ERC20TokenAddress, contractAddress: contract.address});
         } else {
+            let startMoment = moment();
+            let endMoment = moment();
+            if (process.env.CHAIN_NAME === 'SOLANA') {
+                let blockHeight = await swapContract.connection.getBlockHeight();
+                let blockTime = await swapContract.connection.getBlockTime(blockHeight);
+                startMoment = moment(new Date(blockTime * 1000));
+                endMoment = moment(new Date(blockTime * 1000));
+            }
             res = await swapContract.deploy({
                 tradeValue : tradeValue, 
                 tokensForSale : tokenFundAmount, 
                 isTokenSwapAtomic : false,
                 individualMaximumAmount : tokenFundAmount,
-                startDate : moment().add(4, 'minutes'),
-                endDate : moment().add(8, 'minutes'),
+                startDate : startMoment.add(4, 'minutes'),
+                endDate : endMoment.add(8, 'minutes'),
                 hasWhitelisting : false,
                 isETHTrade : true
             });
@@ -265,12 +273,7 @@ context('ETH Contract', async () => {
         res = await swapContract.fund({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
         let tokens = await swapContract.tokensAvailable();
-        console.log('=====');
-        console.log(Number(tokens).noExponents());
-        console.log(Number(tokenFundAmount).noExponents());
-        console.log('=====');
         expect(Number(tokens).noExponents()).to.equal(Number(tokenFundAmount).noExponents());
-        console.log('7');
     }));
 
 
@@ -281,7 +284,7 @@ context('ETH Contract', async () => {
     }));
 
     it('GET - isSaleOpen - before Start', mochaAsync(async () => {     
-        await forwardTime(4*60);   
+        await forwardTime(4*60);
         let res = await swapContract.isOpen();
         isSaleOpen = res;
         expect(res).to.equal(true);

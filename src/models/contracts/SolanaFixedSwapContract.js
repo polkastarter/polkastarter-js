@@ -149,7 +149,10 @@ class SolanaFixedSwapContract {
 	 * @param { Address} address
 	 */
 	addWhitelistedAddress = async ({ address }) => {
-		return await this.params.solanaSwap.addWhitelistedAddress(new this.anchor.web3.PublicKey(address));
+		const res = await this.params.solanaSwap.addWhitelistedAddress(new this.anchor.web3.PublicKey(address));
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -159,7 +162,10 @@ class SolanaFixedSwapContract {
 	 * @description remove WhiteListed Address
 	 */
 	removeWhitelistedAddress = async ({ address, index }) => {
-		return await this.params.solanaSwap.removeWhitelistedAddress(new this.anchor.web3.PublicKey(address));
+		const res = await this.params.solanaSwap.removeWhitelistedAddress(new this.anchor.web3.PublicKey(address));
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -168,7 +174,10 @@ class SolanaFixedSwapContract {
 	 * @param {string} address
 	 */
 	setSignerPublicAddress = async ({ address }) => {
-		return await this.params.solanaSwap.setSignerPublicAddress(address);
+		const res = await this.params.solanaSwap.setSignerPublicAddress(address);
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -254,7 +263,10 @@ class SolanaFixedSwapContract {
 	 * @description Withdraw all funds from tokens sold
 	 */
 	withdrawFunds = async () => {
-		return await this.params.solanaSwap.withdrawFunds();
+		const res = await this.params.solanaSwap.withdrawFunds();
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -282,7 +294,10 @@ class SolanaFixedSwapContract {
 	 * @param {Integer} purchaseId
 	 */
 	redeemGivenMinimumGoalNotAchieved = async ({ purchaseId }) => {
-		return await this.params.solanaSwap.redeemGivenMinimumGoalNotAchieved(purchaseId);
+		const res = await this.params.solanaSwap.redeemGivenMinimumGoalNotAchieved(purchaseId);
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -292,7 +307,10 @@ class SolanaFixedSwapContract {
 	 * @description Modifies the max allocation
 	 */
 	setIndividualMaximumAmount = async ({ individualMaximumAmount }) => {
-		return await this.params.solanaSwap.setIndividualMaximumAmount(individualMaximumAmount);
+		const res = await this.params.solanaSwap.setIndividualMaximumAmount(individualMaximumAmount);
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -390,7 +408,10 @@ class SolanaFixedSwapContract {
 	 * @description Modifies the end date for the pool
 	 */
 	setEndDate = async ({ endDate }) => {
-		return await this.params.solanaSwap.setEndDate(endDate);
+		const res = await this.params.solanaSwap.setEndDate(endDate);
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -400,7 +421,10 @@ class SolanaFixedSwapContract {
 	 * @description Modifies the start date for the pool
 	 */
 	setStartDate = async ({ startDate }) => {
-		return await this.params.solanaSwap.setStartDate(startDate);
+		const res = await this.params.solanaSwap.setStartDate(startDate);
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	}
 
 	/**
@@ -458,7 +482,10 @@ class SolanaFixedSwapContract {
 	 * @param {string} address
 	 */
 	addToBlacklist = async ({ address }) => {
-		return await this.params.solanaSwap.addToBlacklist(new this.anchor.web3.PublicKey(address));
+		const res = await this.params.solanaSwap.addToBlacklist(new this.anchor.web3.PublicKey(address));
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -467,7 +494,10 @@ class SolanaFixedSwapContract {
 	 * @param {string} address
 	 */
 	removeFromBlacklist = async ({ address }) => {
-		return await this.params.solanaSwap.removeFromBlacklist(new this.anchor.web3.PublicKey(address));
+		const res = await this.params.solanaSwap.removeFromBlacklist(new this.anchor.web3.PublicKey(address));
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -500,7 +530,10 @@ class SolanaFixedSwapContract {
 	 * @description Pause Contract
 	 */
 	async pauseContract() {
-		return await this.params.solanaSwap.pauseContract();
+		const res = await this.params.solanaSwap.pauseContract();
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	}
 
 	/**
@@ -509,7 +542,10 @@ class SolanaFixedSwapContract {
 	 * @description Unpause Contract
 	 */
 	async unpauseContract() {
-		return await this.params.solanaSwap.unpauseContract();
+		const res = await this.params.solanaSwap.unpauseContract();
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	}
 
 	/**
@@ -800,7 +836,10 @@ class SolanaFixedSwapContract {
 	 * @param {string=} signature Signature for the offchain whitelist
 	*/
 	swapWithSig = async ({ tokenAmount, callback, signature, accountMaxAmount }) => {
-		return await this.params.solanaSwap.swapWithSig(tokenAmount, callback, signature, new this.anchor.BN(accountMaxAmount))
+		const res = await this.params.solanaSwap.swapWithSig(tokenAmount, callback, signature, new this.anchor.BN(accountMaxAmount));
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	}
 
 	/**
@@ -810,7 +849,10 @@ class SolanaFixedSwapContract {
 	 * @param {string=} signature Signature for the offchain whitelist
 	*/
 	swap = async ({ tokenAmount, callback, signature }) => {
-		return await this.params.solanaSwap.swap(tokenAmount, callback, signature);
+		const res = await this.params.solanaSwap.swap(tokenAmount, callback, signature);
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -820,7 +862,10 @@ class SolanaFixedSwapContract {
 	 * @param {string} purchase_id
 	 */
 	redeemTokens = async ({ purchase_id }) => {
-		return await this.params.solanaSwap.swap(new this.anchor.web3.PublicKey(purchase_id));
+		const res = await this.params.solanaSwap.swap(new this.anchor.web3.PublicKey(purchase_id));
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -829,7 +874,10 @@ class SolanaFixedSwapContract {
 	 */
 
 	withdrawUnsoldTokens = async () => {
-		return await this.params.solanaSwap.withdrawUnsoldTokens();
+		const res = await this.params.solanaSwap.withdrawUnsoldTokens();
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 	/**
@@ -856,7 +904,10 @@ class SolanaFixedSwapContract {
 		vestingCliff = 0,
 		vestingDuration = 0
 	}) => {
-		return await this.params.solanaSwap.setVesting(vestingSchedule, vestingStart, vestingCliff, vestingDuration);
+		const res = await this.params.solanaSwap.setVesting(vestingSchedule, vestingStart, vestingCliff, vestingDuration);
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	}
 
 	/**
