@@ -1,4 +1,3 @@
-import ERC20TokenContract from "../base/ERC20TokenContract";
 import Numbers from "../../utils/Numbers";
 import moment from 'moment';
 import { Decimal } from 'decimal.js';
@@ -12,12 +11,14 @@ import * as anchor from '@project-serum/anchor';
  * @constructor SolanaFixedSwapContract
  * @param {Address} tokenAddress
  * @param {Address} contractAddress ? (opt)
+ * @param {Address} id ? (opt)
  * @extends BaseSwapContract
  */
 class SolanaFixedSwapContract {
 	constructor({
 		tokenAddress,
 		contractAddress = null, /* If not deployed */
+		id = null, /* If not deployed */
 		acc
 	}) {
 		this.anchor = anchor;
@@ -33,8 +34,14 @@ class SolanaFixedSwapContract {
 		this.tokenAddress = tokenAddress;
 		this.contractAddress = contractAddress;
 		this.params = {};
+		this.params.id = id;
 		this.solanaWallet = new SolanaWallet(this.connection);
 		this.acc = acc;
+		this.version = "2.0";
+	}
+
+	__init__ = async () => {
+		this.params.solanaSwap = await FixedSwapContract.FixedSwapContract.fromAddress(this.connection, this.contractAddress, this.params.id, this.provider, this.acc.payer, 'finalized');
 	}
 
 	/**
@@ -89,9 +96,8 @@ class SolanaFixedSwapContract {
 			individualMaximumAmount, isTokenSwapAtomic, minimumRaise, feeAmount, hasWhitelisting, callback, this.tokenAddress,
 			this.anchor.web3.PublicKey.default,
 			isPOLSWhitelist, vestingSchedule, vestingStart, new this.anchor.BN(vestingCliff), new this.anchor.BN(vestingDuration), undefined, feeAddress
-		)
+		);
 
-		console.log(deployInstruction, expectedAddress, id);
         let tx = new this.anchor.web3.Transaction();
         tx.add(deployInstruction);
         let txsig = await this.solanaWallet.signAndSendTx(tx, this.acc.payer);
@@ -99,7 +105,7 @@ class SolanaFixedSwapContract {
 		this.params.contractAddress = expectedAddress;
 		this.contractAddress = this.params.contractAddress;
 		this.params.id = id;
-        this.params.solanaSwap = await FixedSwapContract.FixedSwapContract.fromAddress(this.connection, expectedAddress, id, this.provider, this.acc.payer, 'finalized');
+		await this.__init__();
 		return this.params.solanaSwap;
 	};
 
@@ -527,6 +533,10 @@ class SolanaFixedSwapContract {
 		return this.params.contractAddress;
 	}
 
+	getId() {
+		return this.params.id;
+	}
+
 	getTokenAddress() {
 		return this.params.solanaSwap.getTokenAddress();
 	}
@@ -535,32 +545,10 @@ class SolanaFixedSwapContract {
 		return this.params.solanaSwap.getTokenContract();
 	}
 
-
 	assertERC20Info = async () => {
-		// ToDo
+		this.params.erc20TokenContractAddress = await this.erc20();
 		if (!(await this.isETHTrade())) {
-			this.params.erc20TokenContract = new ERC20TokenContract({
-				web3: this.web3,
-				contractAddress: await this.getTradingERC20Address(),
-				acc: this.acc
-			});
-		};
-	}
-
-	assertERC20Info = async () => {
-		// ToDo
-		let tokenAddress = await this.erc20();
-		this.params.erc20TokenContract = new ERC20TokenContract({
-			web3: this.web3,
-			contractAddress: tokenAddress,
-			acc: this.acc
-		});
-		if (!(await this.isETHTrade())) {
-			this.params.tradingERC20Contract = new ERC20TokenContract({
-				web3: this.web3,
-				contractAddress: await this.getTradingERC20Address(),
-				acc: this.acc
-			});
+			this.params.tradingERC20ContractAddress = await this.getTradingERC20Address();
 		};
 	}
 
@@ -877,7 +865,10 @@ class SolanaFixedSwapContract {
 	 * @param {Integer} tokenAmount
 	 */
 	fund = async ({ tokenAmount, callback }) => {
-		return await this.params.solanaSwap.fund(tokenAmount);
+		const res =  await this.params.solanaSwap.fund(tokenAmount);
+		await this.connection.confirmTransaction(res, 'finalized');
+		await this.params.solanaSwap._updateIdo();
+		return res;
 	};
 
 }

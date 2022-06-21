@@ -141,9 +141,10 @@ class Application {
 	 * @function getFixedSwapContract
 	 * @param {string} tokenAddress The token address we want to trade
 	 * @param {string=} contractAddress The swap contract address, in case t hat has already been instanced. (Default = null)
+	 * @param {string=} programId The swap program address, in case t hat has already been instanced. Only for solana. (Default = null)
 	 * @description Returns Fixed Swap instance
 	*/
-	getFixedSwapContract = async ({tokenAddress, contractAddress=null}) => {
+	getFixedSwapContract = async ({tokenAddress, contractAddress=null, programId=null}) => {
 		let contract;
 		if (this.network == 'SOLANA') {
 			const deployerKeypair = anchor.web3.Keypair.fromSecretKey(buffer.Buffer.from(
@@ -162,9 +163,12 @@ class Application {
 				contract = new SolanaFixedSwapContract({
 					tokenAddress: tokenAddress,
 					contractAddress: contractAddress,
+					id: programId,
 					acc : new anchor.Wallet(deployerKeypair) //ToDo
 				});
+				await contract.__init__();
 				await contract.isETHTrade();
+				return contract;
 			}
 		}
 		if(!contractAddress){

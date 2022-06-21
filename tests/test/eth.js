@@ -18,6 +18,7 @@ import buffer from 'buffer';
 
 // const ERC20TokenAddress = '0x7a7748bd6f9bac76c2f3fcb29723227e3376cbb2';
 var contractAddress = '0x420751cdeb28679d8e336f2b4d1fc61df7439b5a';
+var programId = null;
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
 const expect = chai.expect;
@@ -182,10 +183,11 @@ context('ETH Contract', async () => {
                 isETHTrade : true
             });
 
-            console.log(res);
-
         }
         contractAddress = swapContract.getAddress();
+        if (swapContract.getId) {
+            programId = swapContract.getId();
+        }
         expect(res).to.not.equal(false);
 
         if (process.env.CHAIN_NAME !== 'SOLANA') {
@@ -205,8 +207,8 @@ context('ETH Contract', async () => {
 
     it('should get a Fixed Swap Contract From contractAddress - 2.0', mochaAsync(async () => {
         /* Get Contract */
-        swapContract = await app.getFixedSwapContract({contractAddress});
-        swapContract.__init__();
+        swapContract = await app.getFixedSwapContract({contractAddress, programId});
+        await swapContract.__init__();
         await swapContract.assertERC20Info();
         expect(swapContract.version).to.equal("2.0");
         expect(swapContract).to.not.equal(false);
@@ -249,18 +251,26 @@ context('ETH Contract', async () => {
     }));
 
     it('should fund a Swap Contract and confirm balances', mochaAsync(async () => {
-        /* Approve ERC20 Fund */
-        let res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
-        expect(res).to.not.equal(false);
-        res = await swapContract.isApproved({address : app.account.getAddress(), tokenAmount : tokenFundAmount});
-        expect(res).to.equal(true);
+        let res;
+        if (process.env.CHAIN_NAME !== 'SOLANA') {
+            /* Approve ERC20 Fund */
+            res = await swapContract.approveFundERC20({tokenAmount : tokenFundAmount});
+            expect(res).to.not.equal(false);
+            res = await swapContract.isApproved({address : app.account.getAddress(), tokenAmount : tokenFundAmount});
+            expect(res).to.equal(true);
+        }
         /* Fund */
         res = await swapContract.hasStarted();
         expect(res).to.not.equal(true);
         res = await swapContract.fund({tokenAmount : tokenFundAmount});
         expect(res).to.not.equal(false);
         let tokens = await swapContract.tokensAvailable();
-        expect(tokens).to.equal(Number(tokenFundAmount).noExponents());
+        console.log('=====');
+        console.log(Number(tokens).noExponents());
+        console.log(Number(tokenFundAmount).noExponents());
+        console.log('=====');
+        expect(Number(tokens).noExponents()).to.equal(Number(tokenFundAmount).noExponents());
+        console.log('7');
     }));
 
 
