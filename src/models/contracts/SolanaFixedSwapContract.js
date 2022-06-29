@@ -746,7 +746,7 @@ class SolanaFixedSwapContract {
 	/**
 	 * @function getPurchase
 	 * @description Get Purchase based on ID
-	 * @param {Integer} purchase_id
+	 * @param {String} purchase_id
 	 * @returns {Integer} _id
 	 * @returns {Integer} amount
 	 * @returns {Address} purchaser
@@ -758,7 +758,10 @@ class SolanaFixedSwapContract {
 	 */
 
 	getPurchase = async ({ purchase_id }) => {
-		// ToDo
+		const purchase = await this.params.solanaSwap.getPurchase(new this.anchor.web3.PublicKey(purchase_id));
+		purchase.purchaser = purchase.purchaser.toBase58();
+		purchase.amountToReedemNow = purchase.amountToRedeemNow;
+		return purchase;
 	};
 
 	/**
@@ -797,7 +800,7 @@ class SolanaFixedSwapContract {
 	 * @returns {Array | Integer} _ids
 	 */
 	getAddressPurchaseIds = async ({ address }) => {
-		return await this.params.solanaSwap.getAddressPurchaseIds(new this.anchor.web3.PublicKey(address));
+		return (await this.params.solanaSwap.getAddressPurchaseIds(new this.anchor.web3.PublicKey(address))).map(id => id.toBase58());
 	};
 
 	/**
@@ -836,6 +839,9 @@ class SolanaFixedSwapContract {
 	 * @param {string=} signature Signature for the offchain whitelist
 	*/
 	swapWithSig = async ({ tokenAmount, callback, signature, accountMaxAmount }) => {
+		if (!signature) {
+			signature = undefined;
+		}
 		const res = await this.params.solanaSwap.swapWithSig(tokenAmount, callback, signature, new this.anchor.BN(accountMaxAmount));
 		await this.connection.confirmTransaction(res, 'finalized');
 		await this.params.solanaSwap._updateIdo();
@@ -862,7 +868,21 @@ class SolanaFixedSwapContract {
 	 * @param {string} purchase_id
 	 */
 	redeemTokens = async ({ purchase_id }) => {
-		const res = await this.params.solanaSwap.swap(new this.anchor.web3.PublicKey(purchase_id));
+        const purchases = await this.getAddressPurchaseIds({address : this.acc.payer.publicKey}); 
+		let index = 0;
+		let found = false;
+		for (let purchase of purchases) {
+			if (purchase == purchase_id) {
+				found = true;
+				continue;
+			}
+			index++;
+		}
+		if (!found) {
+			throw new Error('Purchase not found');
+		}
+
+		const res = await this.params.solanaSwap.redeemTokens(index, this.acc.payer.publicKey)
 		await this.connection.confirmTransaction(res, 'finalized');
 		await this.params.solanaSwap._updateIdo();
 		return res;
