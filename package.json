@@ -48,7 +48,6 @@
     },
     "scripts": {
         "test": "nyc ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
-        "test-solana": "CHAIN_NAME=SOLANA nyc ./node_modules/.bin/mocha ./tests/test/eth.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
         "test-pools": "nyc ./node_modules/.bin/mocha ./tests/test/multi-pool.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
         "index": "babel-node ./index.js --presets es2015,stage-2",
         "docs:numbers": "jsdoc2md --configure tooling/docs/jsdoc.json --files src/utils/Numbers.js > docs/NUMBERS.md",
@@ -66,7 +65,8 @@
         "docs:build": "npm run docs:prepare && npm run docs && gitbook build",
         "docs:serve": "npm run docs:prepare && npm run docs && gitbook serve",
         "docs:clean": "rimraf _book",
-        "postinstall": "cd node_modules/polkastarter-solana/ts-lib && env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' tsc -p tsconfig.json --outDir ../../../src/solana-sdk || true && cp src/interfaces/polkastarter.json ../../../src/solana-sdk/src/interfaces"
+        "solana:test": "CHAIN_NAME=SOLANA nyc ./node_modules/.bin/mocha ./tests/test/eth.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
+        "solana:update": "cd node_modules/polkastarter-solana/ts-lib && env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' tsc -p tsconfig.json --outDir ../../../src/solana-sdk || true && cp src/interfaces/polkastarter.json ../../../src/solana-sdk/src/interfaces"
     },
     "devDependencies": {
         "@types/chai": "^4.3.1",
