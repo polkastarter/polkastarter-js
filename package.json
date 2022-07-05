@@ -44,7 +44,8 @@
         "web3": "1.0.0-beta.55",
         "web3modal": "^1.9.4",
         "polkastarter-solana": "git+ssh://git@gitlab.com:coinfabrik-private/polkastarter/polkastarter.git#sdk",
-        "@solana/spl-token": "^0.2.0"
+        "@solana/spl-token": "^0.2.0",
+        "@project-serum/anchor": "^0.24.2"
     },
     "scripts": {
         "test": "nyc ./node_modules/.bin/mocha ./tests/index.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
