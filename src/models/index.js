@@ -91,6 +91,24 @@ class Application {
 		}
 	};
 
+	/**
+	 * @function solanaLogin
+	 * @description Logins with phantom
+	*/
+	solanaLogin = async () => {
+		try{
+			console.log("Solana login being done")
+			if (typeof window === "undefined") { return false; }
+			if (window.solana) {
+				this.solanaAccount = await window.solana.connect();
+				return true;
+			}
+			return false;
+		}catch(err){
+			throw err;
+		}
+	};
+
 
 	__getUserAccount = ({privateKey}) => {
 		return new Account(this.web3, this.web3.eth.accounts.privateKeyToAccount(privateKey));
@@ -157,14 +175,14 @@ class Application {
 				return new SolanaFixedSwapContract({
 					tokenAddress: tokenAddress,
 					contractAddress: contractAddress,
-					acc : new anchor.Wallet(deployerKeypair) //ToDo
+					acc : this.test ? new anchor.Wallet(deployerKeypair) : this.solanaAccount
 				});
 			} else {
 				contract = new SolanaFixedSwapContract({
 					tokenAddress: tokenAddress,
 					contractAddress: contractAddress,
 					id: programId,
-					acc : new anchor.Wallet(deployerKeypair) //ToDo
+					acc : this.test ? new anchor.Wallet(deployerKeypair) : this.solanaAccount
 				});
 				await contract.__init__();
 				await contract.isETHTrade();
