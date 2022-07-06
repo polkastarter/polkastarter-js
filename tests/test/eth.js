@@ -118,6 +118,9 @@ context('ETH Contract', async () => {
                         236,103,81,106,243,224,125,54,140,219,24,193,30,31,44,138,230,183,101,86,81,116,236,157,246,189,69,175,169,233,200,240,192,211,109,31,48,140,9,114,171,129,144,40,99,54,112,14,241,165,25,45,61,184,134,89,63,83,253,125,144,146,128,30
                     ]
                 ));
+                
+                app.solanaAccount = new anchor.Wallet(deployerKeypair);
+
                 const creator = new anchor.Wallet(deployerKeypair);
                 const spltoken = require("@solana/spl-token");
                 ERC20TokenAddress = (await spltoken.createMint(
