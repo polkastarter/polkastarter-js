@@ -35,8 +35,8 @@ context('Multi pool tests', async () => {
         );
     }
 
-    it('should read data from BSC', mochaAsync(async () => {
-        const swapContract = await getPool({chain: 'BSC', contractAddress: '0xeE62650fA45aC0deb1B24Ec19f983A8f85B727aB'});
+    it('should read data from BNB', mochaAsync(async () => {
+        const swapContract = await getPool({chain: 'BNB', contractAddress: '0xeE62650fA45aC0deb1B24Ec19f983A8f85B727aB'});
         expect(await swapContract.minimumReached()).to.equal(true);
         expect(swapContract.version).to.equal("2.0");
         expect(swapContract).to.not.equal(false);

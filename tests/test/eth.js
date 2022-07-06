@@ -488,6 +488,8 @@ context('ETH Contract', async () => {
         if (!isRealChain) {
             await forwardTime(6 * 60);
 
+            expect((await staking.periodFinish()).getTime()).to.equal(new Date(0).getTime());
+
             res = await swapContract.redeemTokens({purchase_id : purchases[0], stake: true});
             expect(res).to.not.equal(false);
 
@@ -495,6 +497,11 @@ context('ETH Contract', async () => {
 
             await staking.notifyRewardAmountSamePeriod({reward: 20});
 
+            const minFinishDate = new Date(currentTime * 1000 + tenDays * 1000).getTime() - (30 * 1000);
+            const maxFinishDate = new Date(currentTime * 1000 + tenDays * 1000).getTime() + (30 * 1000);
+
+            expect((await staking.periodFinish()).getTime()).to.be.below(maxFinishDate);
+            expect((await staking.periodFinish()).getTime()).to.be.above(minFinishDate);
             await forwardTime(60 * 60);
 
             expect(await staking.getAPY()).to.equal(3);
@@ -512,7 +519,7 @@ context('ETH Contract', async () => {
             await staking.withdrawAll();
             expect(await staking.stakeAmount({address: app.account.getAddress()})).to.equal('0');
             expect(await staking.totalStaked()).to.equal('0');
-            expect(await staking.balanceRewardsToken()).to.equal('499.916620370370370904');
+            expect(await staking.balanceRewardsToken()).to.equal('499.916597222222222756');
         }
 
     }));

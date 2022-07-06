@@ -47,6 +47,9 @@
 <dt><a href="#withdrawableUnsoldTokens">withdrawableUnsoldTokens()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Get Total tokens available to be withdrawn by the admin</p>
 </dd>
+<dt><a href="#tokensAllocated">tokensAllocated()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Get Total tokens spent in the contract, therefore the tokens bought until now</p>
+</dd>
 <dt><a href="#isTokenSwapAtomic">isTokenSwapAtomic()</a> ⇒ <code>Boolean</code></dt>
 <dd><p>Verify if the Token Swap is atomic on this pool</p>
 </dd>
@@ -235,6 +238,13 @@ Get Individual Maximum Amount for each address
 
 ## withdrawableUnsoldTokens() ⇒ <code>Integer</code>
 Get Total tokens available to be withdrawn by the admin
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - Amount in Tokens  
+<a name="tokensAllocated"></a>
+
+## tokensAllocated() ⇒ <code>Integer</code>
+Get Total tokens spent in the contract, therefore the tokens bought until now
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - Amount in Tokens  
