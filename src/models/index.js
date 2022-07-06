@@ -175,14 +175,14 @@ class Application {
 				return new SolanaFixedSwapContract({
 					tokenAddress: tokenAddress,
 					contractAddress: contractAddress,
-					acc : this.test ? new anchor.Wallet(deployerKeypair) : this.solanaAccount
+					acc : this.test ? new anchor['Wallet'](deployerKeypair) : this.solanaAccount
 				});
 			} else {
 				contract = new SolanaFixedSwapContract({
 					tokenAddress: tokenAddress,
 					contractAddress: contractAddress,
 					id: programId,
-					acc : this.test ? new anchor.Wallet(deployerKeypair) : this.solanaAccount
+					acc : this.test ? new anchor['Wallet'](deployerKeypair) : this.solanaAccount
 				});
 				await contract.__init__();
 				await contract.isETHTrade();
