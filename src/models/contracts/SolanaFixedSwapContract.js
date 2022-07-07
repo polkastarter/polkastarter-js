@@ -41,7 +41,7 @@ class SolanaFixedSwapContract {
 	}
 
 	__init__ = async () => {
-		this.params.solanaSwap = await FixedSwapContract.FixedSwapContract.fromAddress(this.connection, this.contractAddress, this.params.id, this.provider, this.acc.payer, 'finalized');
+		this.params.solanaSwap = await FixedSwapContract.FixedSwapContract.fromAddress(this.connection, this.contractAddress, this.params.id, this.provider, this.acc.payer ? this.acc.payer : this.acc, 'finalized');
 	}
 
 	/**
