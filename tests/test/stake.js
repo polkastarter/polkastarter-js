@@ -168,17 +168,8 @@ context('Staking Contract', async () => {
         });
         it.skip('remainingLockPeriod()', async ()=>{
         });
-        it.skip('getLockTimePeriodOptions()', async ()=>{
-        });
-        it.skip('getLockTimePeriodRewardFactors()', async ()=>{
-        });
-        it.skip('setLockedRewardsEnabled()', async ()=>{
-        });
-        it.skip('setUnlockedRewardsFactor()', async ()=>{
-        });
-        it('setLockTimePeriodOptions()', async ()=> {
+        it('getLockTimePeriodOptions()', async ()=>{
             stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
-
             const lockTimePeriod = [
                 1000000000,
                 1500000000,
@@ -189,7 +180,30 @@ context('Staking Contract', async () => {
                 20,
                 30
             ];
-            await stakeContract.setLockTimePeriodOptions(lockTimePeriod, lockTimePeriodRewardFactor);
+            await stakeContract.setLockTimePeriodOptions({lockTimePeriod, lockTimePeriodRewardFactor});
+            const lockTimePeriodOptions = await stakeContract.getLockTimePeriodOptions();
+
+            expect(lockTimePeriodOptions).deep.equal(lockTimePeriod);
+        });
+        it.skip('getLockTimePeriodRewardFactors()', async ()=>{
+        });
+        it.skip('setLockedRewardsEnabled()', async ()=>{
+        });
+        it.skip('setUnlockedRewardsFactor()', async ()=>{
+        });
+        it('setLockTimePeriodOptions()', async ()=> {
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+            const lockTimePeriod = [
+                1000000000,
+                1500000000,
+                2000000000
+            ];
+            const lockTimePeriodRewardFactor = [
+                10,
+                20,
+                30
+            ];
+            await stakeContract.setLockTimePeriodOptions({lockTimePeriod, lockTimePeriodRewardFactor});
         });
         it.skip('setPrevPolsStaking()', async ()=>{
         });

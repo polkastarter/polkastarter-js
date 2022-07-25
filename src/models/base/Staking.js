@@ -264,7 +264,9 @@ import Chains from "../../utils/Chains";
 	// getLockTimePeriod()
 	// setLockTimePeriodDefault() onlyRole(DEFAULT_ADMIN_ROLE)
 	// remainingLockPeriod()
-	// getLockTimePeriodOptions()
+	getLockTimePeriodOptions = async () => {
+		return await this.params.contract.getContract().methods.getLockTimePeriodOptions().call();
+	}
 	// getLockTimePeriodRewardFactors()
 	// setLockedRewardsEnabled()  onlyRole(DEFAULT_ADMIN_ROLE)
 	// setUnlockedRewardsFactor() onlyRole(DEFAULT_ADMIN_ROLE)
@@ -280,6 +282,7 @@ import Chains from "../../utils/Chains";
 					.methods.setLockTimePeriodOptions(
 						lockTimePeriod,
 						lockTimePeriodRewardFactor
+
 					)
 			);
 		} catch (err) {
