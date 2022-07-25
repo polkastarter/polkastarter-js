@@ -23,8 +23,10 @@ import Chains from "../../utils/Chains";
         'ETH': '0xc24A365A870821EB83Fd216c9596eDD89479d8d7'
 	};
     stakingTestAddresses = {
-        'BSC': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',
-        'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
+        // 'BSC': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',
+        // 'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
+		'BSC': '0x48F5EDDA2c6b503C79FF590ed8AAFF54f7463EB9',
+		'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
     };
 
 	constructor({
@@ -219,13 +221,13 @@ import Chains from "../../utils/Chains";
 
     /**
 	 * @function lockTimePeriod
-	 * @description Returns the lock time perdio
+	 * @description Returns the lock time period
 	 * @returns {Integer} lockTimePeriod
 	*/
     getLockTimePeriod = async () => {
 		return await this.params.contract.getContract().methods.lockTimePeriod().call();
 	}
-    
+
     /**
 	 * @function getUnlockTime
 	 * @description Returns the stake time for a wallet
@@ -256,6 +258,45 @@ import Chains from "../../utils/Chains";
     getTokenContract() {
 		return this.params.erc20TokenContract;
 	}
+
+	//New Features
+	// stake()
+	// getLockTimePeriod()
+	// setLockTimePeriodDefault() onlyRole(DEFAULT_ADMIN_ROLE)
+	// remainingLockPeriod()
+	// getLockTimePeriodOptions()
+	// getLockTimePeriodRewardFactors()
+	// setLockedRewardsEnabled()  onlyRole(DEFAULT_ADMIN_ROLE)
+	// setUnlockedRewardsFactor() onlyRole(DEFAULT_ADMIN_ROLE)
+	// setLockTimePeriodOptions() onlyRole(DEFAULT_ADMIN_ROLE)
+	setLockTimePeriodOptions = async ({lockTimePeriod, lockTimePeriodRewardFactor}) => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.setLockTimePeriodOptions(
+						lockTimePeriod,
+						lockTimePeriodRewardFactor
+					)
+			);
+		} catch (err) {
+			throw err;
+		}
+	}
+	// setPrevPolsStaking() onlyRole(DEFAULT_ADMIN_ROLE)
+	// userClaimableRewards()
+	// remainingLockPeriod_msgSender()
+	// userClaimableRewardsCalculation()
+	// userClaimableRewardsCurrent()
+	// userClaimableRewards()
+	// extendLockTime()
+	// topUp()
+	// migrateRewards()
+	// migrateRewards_msgSender()
+	// stakelockTimeChoice()
 }
 
 export default Staking;

@@ -10,9 +10,9 @@ import Staking from "./base/Staking";
 import FixedSwapContractLegacy from "./contracts/legacy/FixedSwapContractLegacy";
 import Chains from "../utils/Chains";
 
-const TEST_PRIVATE_KEY = 
+const TEST_PRIVATE_KEY =
   "0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132";
-  
+
 /**
  * Polkastarter Application Object
  * @constructor Application
@@ -50,7 +50,7 @@ class Application {
 			this.web3 = new Web3(rpc);
 		}
 	}
-	
+
 	/**
 	 * @function start
 	 * @description Starts an instance of web3
@@ -95,7 +95,7 @@ class Application {
 
 	/**
 	 * @function getSigner
-	 * @description Returns the Signer instance. 
+	 * @description Returns the Signer instance.
 	*/
 	getSigner = () => {
 		return new Signer();
@@ -103,7 +103,7 @@ class Application {
 
 	/**
 	 * @function getNetworkUtils
-	 * @description Returns the Network Utils instance. 
+	 * @description Returns the Network Utils instance.
 	*/
 	getNetworkUtils = () => {
 		return new Network(this.network, !this.mainnet, this.getETHNetwork);
@@ -111,7 +111,7 @@ class Application {
 
 	/**
 	 * @function getWalletUtils
-	 * @description Returns the Wallet Utils instance. 
+	 * @description Returns the Wallet Utils instance.
 	*/
 	getWalletUtils = () => {
 		return new Wallet(this.network, !this.mainnet);
@@ -121,7 +121,7 @@ class Application {
 	 * @function getStaking
 	 * @param {string=} contractAddress The staking contract address. (Default: Predefined addresses depending on the network)
 	 * @param {string=} tokenAddress The staking token address. (Default: Predefined addresses depending on the network)
-	 * @description Returns the Staking Model instance. 
+	 * @description Returns the Staking Model instance.
 	*/
 	getStaking = ({contractAddress=null, tokenAddress=null}) => {
 		return new Staking({
@@ -170,14 +170,14 @@ class Application {
 					});
 				}catch(err){
 					throw err;
-	
+
 				}
 			}
-	
+
 			return contract;
 		}
 	};
-	
+
 	/**
 	 * @function getFixedNFTSwapContract
 	 * @param {string=} contractAddress The swap contract address, in case t hat has already been instanced. (Default = null)
@@ -204,11 +204,11 @@ class Application {
 			}catch(err){
 					throw err;
 			}
-	
+
 			return contract;
 		}
 	};
-	
+
 	/**
 	 * @function getERC20TokenContract
 	 * @param {string} tokenAddress The token address
