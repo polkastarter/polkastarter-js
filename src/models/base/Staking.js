@@ -260,7 +260,6 @@ import Chains from "../../utils/Chains";
     getLockTimePeriod = async () => {
 		return await this.params.contract.getContract().methods.getLockTimePeriod().call();
 	}
-	// setLockTimePeriodDefault() onlyRole(DEFAULT_ADMIN_ROLE)
 	setLockTimePeriodDefault = async ({defaultLockTime}) => {
 		try {
 			return await this.client.sendTx(
@@ -286,8 +285,38 @@ import Chains from "../../utils/Chains";
 	getLockTimePeriodRewardFactors = async () => {
 		return await this.params.contract.getContract().methods.getLockTimePeriodRewardFactors().call();
 	}
-	// setLockedRewardsEnabled() onlyRole(DEFAULT_ADMIN_ROLE)
-	// setUnlockedRewardsFactor() onlyRole(DEFAULT_ADMIN_ROLE)
+	setLockedRewardsEnabled = async ({lockedRewardsEnabled}) => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.setLockedRewardsEnabled(
+						lockedRewardsEnabled
+					)
+			);
+		} catch (err) {
+			throw err;
+		}
+	}
+	setUnlockedRewardsFactor = async ({unlockedRewardsFactor}) => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.setUnlockedRewardsFactor(
+						unlockedRewardsFactor
+					)
+			);
+		} catch (err) {
+			throw err;
+		}
+	}
 	setLockTimePeriodOptions = async ({lockTimePeriod, lockTimePeriodRewardFactor}) => {
 		try {
 			return await this.client.sendTx(
@@ -324,12 +353,31 @@ import Chains from "../../utils/Chains";
 	}
 	// userClaimableRewards()
 	remainingLockPeriod_msgSender = async () => {
-
+		return await this.params.contract.getContract().methods.remainingLockPeriod_msgSender().call();
+	}
+	userClaimableRewards = async ({staker}) => {
+		return await this.params.contract.getContract().methods.userClaimableRewards(staker).call();
+	}
+	userClaimableRewardsCurrent = async ({staker, lockedRewardsCurrent}) => {
+		return await this.params.contract.getContract().methods.userClaimableRewardsCurrent(staker, lockedRewardsCurrent).call();
 	}
 	// userClaimableRewardsCalculation()
-	// userClaimableRewardsCurrent()
-	// userClaimableRewards()
-	// extendLockTime()
+	extendLockTime = async ({lockTimeIndex}) => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.extendLockTime(
+						lockTimeIndex
+					)
+			);
+		} catch (err) {
+			throw err;
+		}
+	}
 	// topUp()
 	// migrateRewards()
 	// migrateRewards_msgSender()

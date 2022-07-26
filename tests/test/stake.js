@@ -35,6 +35,7 @@ context('Staking Contract', async () => {
         30
     ];
     const oneWeekInSeconds = 604800;
+    const defaultLockTime = 3500000000;
 
     const forwardTime = async (time) => {
         // "Roads? Where we’re going, we don’t need roads."
@@ -142,34 +143,14 @@ context('Staking Contract', async () => {
     //     res = await stakeContract.stakeAmount({address: app.account.getAddress()});
     //     expect(Number(res).noExponents()).to.equal(Number(0).noExponents());
     // }));
-    describe('New features', ()=> {
-        // stake()
-        // getLockTimePeriod()
-        // setLockTimePeriodDefault() onlyRole(DEFAULT_ADMIN_ROLE)
-        // remainingLockPeriod()
-        // getLockTimePeriodOptions()
-        // getLockTimePeriodRewardFactors()
-        // setLockedRewardsEnabled() onlyRole(DEFAULT_ADMIN_ROLE)
-        // setUnlockedRewardsFactor() onlyRole(DEFAULT_ADMIN_ROLE)
-        // setLockTimePeriodOptions() onlyRole(DEFAULT_ADMIN_ROLE)
-        // setPrevPolsStaking() onlyRole(DEFAULT_ADMIN_ROLE)
-        // userClaimableRewards()
-        // remainingLockPeriod_msgSender()
-        // userClaimableRewardsCalculation()
-        // userClaimableRewardsCurrent()
-        // userClaimableRewards()
-        // extendLockTime()
-        // topUp()
-        // migrateRewards()
-        // migrateRewards_msgSender()
-        // stakelockTimeChoice()
-        it('getLockTimePeriod()', async ()=> {
-            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
-            const lockTimePeriod = await stakeContract.getLockTimePeriod();
-            expect(lockTimePeriod).to.equal(oneWeekInSeconds);
-        });
+    describe('New features', () => {
+        // it('getLockTimePeriod()', async () => {
+        //     stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+        //     const lockTimePeriod = await stakeContract.getLockTimePeriod();
+        //     expect(lockTimePeriod).to.equal(oneWeekInSeconds);
+        // });
 
-        it('should stake() after approve', async ()=> {
+        it('should stake() after approve', async () => {
             const mockAmount = 1000;
             stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
             expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
@@ -203,14 +184,13 @@ context('Staking Contract', async () => {
 
         it('setLockTimePeriodDefault()', async () => {
             stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
-            const defaultLockTime = 3500000000;
             await stakeContract.setLockTimePeriodDefault({defaultLockTime});
         });
 
         it('remainingLockPeriod()', async () => {
             stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
             const remainingTime = await stakeContract.remainingLockPeriod({address: deployerAddress});
-            expect(remainingTime).to.be.gte(oneWeekInSeconds-10).lte(oneWeekInSeconds);
+            expect(remainingTime).to.be.gte(oneWeekInSeconds-100).lte(oneWeekInSeconds);
         });
 
         it('getLockTimePeriodOptions()', async () => {
@@ -226,13 +206,25 @@ context('Staking Contract', async () => {
             expect(factors).deep.equal(lockTimePeriodRewardFactor);
         });
 
-        it.skip('setLockedRewardsEnabled()', async () => {
+        it('setLockedRewardsEnabled()', async () => {
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+            const lockedRewardsEnabled = true;
+            const tx = await stakeContract.setLockedRewardsEnabled({lockedRewardsEnabled});
+
+            //don't have getter for see what is the value after execute setLockedRewardsEnabled()
+            expect(tx.status).to.equal(true);
         });
 
-        it.skip('setUnlockedRewardsFactor()', async () => {
+        it('setUnlockedRewardsFactor()', async () => {
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+            const unlockedRewardsFactor = 10;
+            const tx = await stakeContract.setUnlockedRewardsFactor({unlockedRewardsFactor});
+
+            //don't have getter for see what is the value after execute setUnlockedRewardsFactor()
+            expect(tx.status).to.equal(true);
         });
 
-        it('setLockTimePeriodOptions()', async ()=> {
+        it('setLockTimePeriodOptions()', async () => {
             stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
             lockTimePeriod = [
                 2500000000,
@@ -254,17 +246,49 @@ context('Staking Contract', async () => {
             //don't have getter for see what is the address after execute setPrevPolsStaking()
             expect(tx.status).to.equal(true);
         });
-        it.skip('userClaimableRewards()', async () => {
+        it('remainingLockPeriod_msgSender()', async () => {
+            const mockAmount = 1000;
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+            const stakeAmounted = await stakeContract.stakeAmount({address: app.account.getAddress()});
+            expect(stakeAmounted).to.equal(mockAmount.toString());
+            const remainingTime = await stakeContract.remainingLockPeriod_msgSender();
+            expect(remainingTime).to.be.gte(oneWeekInSeconds-100).lte(oneWeekInSeconds);
         });
-        it.skip('remainingLockPeriod_msgSender()', async () => {
+
+        it('userClaimableRewards()', async () => {
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+            const rewards = ethers.utils.formatUnits(await stakeContract.userClaimableRewards({staker: deployerAddress}));
+            const oneWeekMilisecondsStr = '604800000.0';
+            expect(rewards).to.equal(oneWeekMilisecondsStr);
         });
+
+        it('userClaimableRewardsCurrent()', async () => {
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+
+            const mockRewardsTrue = 10000;
+            const mockRewardsFalse = '604800000.0';
+
+            let rewardsTrue = ethers.utils.formatUnits(await stakeContract.userClaimableRewardsCurrent({staker: deployerAddress, lockedRewardsCurrent: true}));
+            let rewardsFalse = ethers.utils.formatUnits(await stakeContract.userClaimableRewardsCurrent({staker: deployerAddress, lockedRewardsCurrent: false}));
+
+            expect(Math.round(rewardsTrue)).to.be.gte(0).lte(mockRewardsTrue);
+            expect(rewardsFalse).to.equal(mockRewardsFalse);
+        });
+
         it.skip('userClaimableRewardsCalculation()', async () => {
         });
-        it.skip('userClaimableRewardsCurrent()', async () => {
-        });
-        it.skip('userClaimableRewards()', async () => {
-        });
-        it.skip('extendLockTime()', async () => {
+
+        it('extendLockTime()', async () => {
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+            const remainingTimeBefore = await stakeContract.remainingLockPeriod_msgSender();
+
+            const lockTimeIndex = 1;
+            await stakeContract.extendLockTime({lockTimeIndex});
+
+            const remainingTimeAfter = await stakeContract.remainingLockPeriod_msgSender();
+
+            expect(remainingTimeBefore).to.be.gte(oneWeekInSeconds-100).lte(oneWeekInSeconds);
+            expect(remainingTimeAfter).to.equal(defaultLockTime);
         });
         it.skip('topUp()', async () => {
         });
@@ -274,31 +298,6 @@ context('Staking Contract', async () => {
         });
         it.skip('stakelockTimeChoice()', async () => {
         });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-        // it.skip('()', async () => {
-        // });
-
     });
 
 });
