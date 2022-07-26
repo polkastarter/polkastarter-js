@@ -144,12 +144,6 @@ context('Staking Contract', async () => {
     //     expect(Number(res).noExponents()).to.equal(Number(0).noExponents());
     // }));
     describe('New features', () => {
-        // it('getLockTimePeriod()', async () => {
-        //     stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
-        //     const lockTimePeriod = await stakeContract.getLockTimePeriod();
-        //     expect(lockTimePeriod).to.equal(oneWeekInSeconds);
-        // });
-
         it('should stake() after approve', async () => {
             const mockAmount = 1000;
             stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
@@ -238,6 +232,7 @@ context('Staking Contract', async () => {
             ];
             await stakeContract.setLockTimePeriodOptions({lockTimePeriod, lockTimePeriodRewardFactor});
         });
+
         it('setPrevPolsStaking()', async () => {
             stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
             const prevPolsStakingAddress = '0x1234567890123456789012345678901234567890';
@@ -246,6 +241,7 @@ context('Staking Contract', async () => {
             //don't have getter for see what is the address after execute setPrevPolsStaking()
             expect(tx.status).to.equal(true);
         });
+
         it('remainingLockPeriod_msgSender()', async () => {
             const mockAmount = 1000;
             stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
@@ -289,13 +285,34 @@ context('Staking Contract', async () => {
 
             expect(remainingTimeBefore).to.be.gte(oneWeekInSeconds-100).lte(oneWeekInSeconds);
             expect(remainingTimeAfter).to.equal(defaultLockTime);
+        })
+
+        it('topUp()', async () => {
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+            const amountBefore = await stakeContract.stakeAmount({address: deployerAddress});
+            const amountExtra = 10;
+
+            expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: amountExtra}))
+                .to.equal(false);
+
+            await stakeContract.approveStakeERC20({tokenAmount: amountExtra});
+            expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: amountExtra.toString()}))
+                .to.equal(true);
+
+            await stakeContract.topUp({amount: amountExtra});
+            const amountAfter = await stakeContract.stakeAmount({address: deployerAddress});
+
+            expect(amountBefore).to.equal('1000');
+            expect(amountAfter).to.equal('1010');
+            expect(amountExtra).to.equal(10);
         });
-        it.skip('topUp()', async () => {
-        });
+
         it.skip('migrateRewards()', async () => {
         });
+
         it.skip('migrateRewards_msgSender()', async () => {
         });
+
         it.skip('stakelockTimeChoice()', async () => {
         });
     });

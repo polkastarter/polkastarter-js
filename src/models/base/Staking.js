@@ -351,7 +351,6 @@ import Chains from "../../utils/Chains";
 			throw err;
 		}
 	}
-	// userClaimableRewards()
 	remainingLockPeriod_msgSender = async () => {
 		return await this.params.contract.getContract().methods.remainingLockPeriod_msgSender().call();
 	}
@@ -378,7 +377,24 @@ import Chains from "../../utils/Chains";
 			throw err;
 		}
 	}
-	// topUp()
+	topUp = async ({amount}) => {
+		amount = Numbers.toSmartContractDecimals(
+			amount,
+			await this.getDecimals()
+		)
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.topUp(amount)
+			);
+		} catch (err) {
+			throw err;
+		}
+	}
 	// migrateRewards()
 	// migrateRewards_msgSender()
 	// stakelockTimeChoice()
