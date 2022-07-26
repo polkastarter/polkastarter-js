@@ -43,7 +43,7 @@ import Chains from "../../utils/Chains";
 
 		Chains.checkIfNetworkIsSupported(network);
         this.web3 = web3;
-        this.version = "2.0";
+        this.version = "3.0";
         if (acc) {
             this.acc = acc;
         }
@@ -220,15 +220,6 @@ import Chains from "../../utils/Chains";
 	}
 
     /**
-	 * @function lockTimePeriod
-	 * @description Returns the lock time period
-	 * @returns {Integer} lockTimePeriod
-	*/
-    getLockTimePeriod = async () => {
-		return await this.params.contract.getContract().methods.lockTimePeriod().call();
-	}
-
-    /**
 	 * @function getUnlockTime
 	 * @description Returns the stake time for a wallet
 	 * @param {string} address
@@ -261,16 +252,42 @@ import Chains from "../../utils/Chains";
 
 	//New Features
 	// stake()
-	// getLockTimePeriod()
+    /**
+	 * @function getLockTimePeriod
+	 * @description Returns the default lock time period
+	 * @returns {Integer} defaultLockTimePeriod
+	*/
+    getLockTimePeriod = async () => {
+		return await this.params.contract.getContract().methods.getLockTimePeriod().call();
+	}
 	// setLockTimePeriodDefault() onlyRole(DEFAULT_ADMIN_ROLE)
-	// remainingLockPeriod()
+	setLockTimePeriodDefault = async ({defaultLockTime}) => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.setLockTimePeriodDefault(
+						defaultLockTime
+					)
+			);
+		} catch (err) {
+			throw err;
+		}
+	}
+	remainingLockPeriod = async ({address}) => {
+		return await this.params.contract.getContract().methods.remainingLockPeriod(address).call();
+	}
 	getLockTimePeriodOptions = async () => {
 		return await this.params.contract.getContract().methods.getLockTimePeriodOptions().call();
 	}
-	// getLockTimePeriodRewardFactors()
-	// setLockedRewardsEnabled()  onlyRole(DEFAULT_ADMIN_ROLE)
+	getLockTimePeriodRewardFactors = async () => {
+		return await this.params.contract.getContract().methods.getLockTimePeriodRewardFactors().call();
+	}
+	// setLockedRewardsEnabled() onlyRole(DEFAULT_ADMIN_ROLE)
 	// setUnlockedRewardsFactor() onlyRole(DEFAULT_ADMIN_ROLE)
-	// setLockTimePeriodOptions() onlyRole(DEFAULT_ADMIN_ROLE)
 	setLockTimePeriodOptions = async ({lockTimePeriod, lockTimePeriodRewardFactor}) => {
 		try {
 			return await this.client.sendTx(
@@ -289,9 +306,26 @@ import Chains from "../../utils/Chains";
 			throw err;
 		}
 	}
-	// setPrevPolsStaking() onlyRole(DEFAULT_ADMIN_ROLE)
+	setPrevPolsStaking = async ({prevPolsStakingAddress}) => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.setPrevPolsStaking(
+						prevPolsStakingAddress
+					)
+			);
+		} catch (err) {
+			throw err;
+		}
+	}
 	// userClaimableRewards()
-	// remainingLockPeriod_msgSender()
+	remainingLockPeriod_msgSender = async () => {
+
+	}
 	// userClaimableRewardsCalculation()
 	// userClaimableRewardsCurrent()
 	// userClaimableRewards()
