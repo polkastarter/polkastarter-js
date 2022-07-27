@@ -19,8 +19,8 @@ import Chains from "../../utils/Chains";
  class StakingV3 {
 
     stakingAddresses = {
-        'BSC': '0xD558675a8c8E1fd45002010BaC970B115163dE3a',
-        'ETH': '0xc24A365A870821EB83Fd216c9596eDD89479d8d7'
+        // 'BSC': '0xD558675a8c8E1fd45002010BaC970B115163dE3a',
+        // 'ETH': '0xc24A365A870821EB83Fd216c9596eDD89479d8d7'
     };
     stakingTestAddresses = {
         // 'BSC': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',

@@ -19,8 +19,7 @@ context('Staking Contract V3', async () => {
     var app;
     var ethersProvider;
     var currentTime;
-    var tenMinutes = 10 * 60;
-    var lockTime = tenMinutes;
+    var snapshot;
     var lockTimePeriod = [
         1000000000,
         1500000000,
@@ -41,7 +40,6 @@ context('Staking Contract V3', async () => {
         currentTime = date + await ethersProvider.send('evm_increaseTime', [ time ]);
         return await ethersProvider.send('evm_mine');
     }
-
     before(mochaAsync(async () => {
         return new Promise(async (resolve) => {
             // Instance Application using ganache
@@ -90,68 +88,85 @@ context('Staking Contract V3', async () => {
         });
     }));
 
-    // it('should automatically get addresses', mochaAsync(async () => {
-    //     let stakeV3Contract = await app.getStakingV3({});
-    //     expect(stakeV3Contract).to.not.equal(false);
-    //     expect(stakeV3Contract.params.contractAddress).to.equal('0x48F5EDDA2c6b503C79FF590ed8AAFF54f7463EB9');
-    //     expect(stakeV3Contract.params.erc20TokenContract.params.contractAddress).to.equal('0xcfd314B14cAB8c3e36852A249EdcAa1D3Dd05055');
-    // }));
+    beforeEach(mochaAsync(async() => {
+        //For each test we restore to this evm snapshot for restart the contract states
+        snapshot = await ethersProvider.send('evm_snapshot');
+    }));
+    afterEach(mochaAsync(async() => {
+        await ethersProvider.send('evm_revert', [snapshot]);
+    }));
 
-    // it('should get deployed contract', mochaAsync(async () => {
-    //     stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
-    //     expect(stakeV3Contract).to.not.equal(false);
-    // }));
+    it('should automatically get addresses', mochaAsync(async () => {
+        let stakeV3Contract = await app.getStakingV3({});
+        expect(stakeV3Contract).to.not.equal(false);
+        expect(stakeV3Contract.params.contractAddress).to.equal('0x48F5EDDA2c6b503C79FF590ed8AAFF54f7463EB9');
+        expect(stakeV3Contract.params.erc20TokenContract.params.contractAddress).to.equal('0xcfd314B14cAB8c3e36852A249EdcAa1D3Dd05055');
+    }));
 
-    // it('should return empty stake amount at start', mochaAsync(async () => {
-    //     const res = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
-    //     expect(Number(res).noExponents()).to.equal(Number(0).noExponents());
-    // }));
+    it('should get deployed contract', mochaAsync(async () => {
+        stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
+        expect(stakeV3Contract).to.not.equal(false);
+    }));
 
-    // it('should stake after approve', mochaAsync(async () => {
-    //     expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: 1000})).to.equal(false);
-    //     await stakeV3Contract.approveStakeERC20({tokenAmount: 1000});
-    //     expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: '1000'})).to.equal(true);
-    //     expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: 1000})).to.equal(true);
-    //     await stakeV3Contract.stake({amount: 1000});
-    //     const res = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
-    //     expect(Number(res).noExponents()).to.equal(Number(1000).noExponents());
+    it('should return empty stake amount at start', mochaAsync(async () => {
+        const res = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
+        expect(Number(res).noExponents()).to.equal(Number(0).noExponents());
+    }));
 
-    //     let unlockTime = parseInt(await stakeV3Contract.stakeTime({address: app.account.getAddress()})) + parseInt(await stakeV3Contract.getLockTimePeriod())
+    it('should stake after approve', mochaAsync(async () => {
+        expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: 1000})).to.equal(false);
+        await stakeV3Contract.approveStakeERC20({tokenAmount: 1000});
+        expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: '1000'})).to.equal(true);
+        expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: 1000})).to.equal(true);
+        await stakeV3Contract.stake({amount: 1000});
+        const res = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
+        expect(Number(res).noExponents()).to.equal(Number(1000).noExponents());
 
-    //     expect(Number(await stakeV3Contract.getUnlockTime({address: app.account.getAddress()})).noExponents()).to.equal(Number(unlockTime).noExponents())
-    // }));
+        let unlockTime = parseInt(await stakeV3Contract.stakeTime({address: app.account.getAddress()})) + parseInt(await stakeV3Contract.getLockTimePeriod())
 
-    // it('should fail withdraw if we didnt reach time', mochaAsync(async () => {
-    //     let failed = false;
-    //     try {
-    //         res = await stakeV3Contract.withdrawAll()
-    //         expect(res).to.not.equal(false);
-    //     } catch (e) {
-    //         failed = true;
-    //     }
-    //     expect(failed).to.equal(true);
-    // }));
+        expect(Number(await stakeV3Contract.getUnlockTime({address: app.account.getAddress()})).noExponents()).to.equal(Number(unlockTime).noExponents())
+    }));
 
-    // it.skip('should withdraw after stake', mochaAsync(async () => {
-    //     await forwardTime(lockTime + 30);
-    //     await stakeV3Contract.withdraw({amount: 400});
-    //     let res = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
-    //     expect(Number(res).noExponents()).to.equal(Number(600).noExponents());
-    //     await stakeV3Contract.withdrawAll();
-    //     res = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
-    //     expect(Number(res).noExponents()).to.equal(Number(0).noExponents());
-    // }));
+    it('should fail withdraw if we didnt reach time', mochaAsync(async () => {
+        let failed = false;
+        try {
+            res = await stakeV3Contract.withdrawAll()
+            expect(res).to.not.equal(false);
+        } catch (e) {
+            failed = true;
+        }
+        expect(failed).to.equal(true);
+    }));
+
+    it('should withdraw after stake', mochaAsync(async () => {
+        //stake 1000 tokens
+        const mockAmount = 1000;
+        expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount})).to.equal(false);
+        await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
+
+        expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount})).to.equal(true);
+        await stakeV3Contract.stake({amount: mockAmount});
+        //
+
+        //go to the future
+        await forwardTime(lockTimePeriod[0] + 30);
+
+        await stakeV3Contract.withdraw({amount: 400});
+        let res = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
+        expect(Number(res).noExponents()).to.equal(Number(600).noExponents());
+
+        await stakeV3Contract.withdrawAll();
+        res = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
+        expect(Number(res).noExponents()).to.equal(Number(0).noExponents());
+
+    }));
     describe('New features', () => {
         it('should stake() after approve', async () => {
             const mockAmount = 1000;
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
                 .to.equal(false);
 
             await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
-            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount.toString()}))
-                .to.equal(true);
-
             expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
                 .to.equal(true);
 
@@ -169,37 +184,45 @@ context('Staking Contract V3', async () => {
         });
 
         it('getLockTimePeriod()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             const lockTimePeriodDefault = await stakeV3Contract.getLockTimePeriod();
             expect(lockTimePeriodDefault).to.equal(oneWeekInSeconds);
         });
 
         it('setLockTimePeriodDefault()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             await stakeV3Contract.setLockTimePeriodDefault({defaultLockTime});
         });
 
         it('remainingLockPeriod()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
+            await stakeV3Contract.setLockTimePeriodDefault({defaultLockTime});
+            //stake 1000 tokens
+            const mockAmount = 1000;
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount})).to.equal(false);
+            await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
+
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount})).to.equal(true);
+            await stakeV3Contract.stake({amount: mockAmount});
+            //
+
+            //go to the future
+            await forwardTime(30);
+
             const remainingTime = await stakeV3Contract.remainingLockPeriod({address: deployerAddress});
-            expect(remainingTime).to.be.gte(oneWeekInSeconds-100).lte(oneWeekInSeconds);
+            expect(remainingTime).to.be.gte(defaultLockTime-100).lte(defaultLockTime);
         });
 
         it('getLockTimePeriodOptions()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             await stakeV3Contract.setLockTimePeriodOptions({lockTimePeriod, lockTimePeriodRewardFactor});
             const lockTimePeriodOptions = await stakeV3Contract.getLockTimePeriodOptions();
             expect(lockTimePeriodOptions).deep.equal(lockTimePeriod);
         });
 
         it('getLockTimePeriodRewardFactors()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
+            await stakeV3Contract.setLockTimePeriodOptions({lockTimePeriod, lockTimePeriodRewardFactor});
             const factors = await stakeV3Contract.getLockTimePeriodRewardFactors();
             expect(factors).deep.equal(lockTimePeriodRewardFactor);
         });
 
         it('setLockedRewardsEnabled()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             const lockedRewardsEnabled = true;
             const tx = await stakeV3Contract.setLockedRewardsEnabled({lockedRewardsEnabled});
 
@@ -208,7 +231,6 @@ context('Staking Contract V3', async () => {
         });
 
         it('setUnlockedRewardsFactor()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             const unlockedRewardsFactor = 10;
             const tx = await stakeV3Contract.setUnlockedRewardsFactor({unlockedRewardsFactor});
 
@@ -217,7 +239,6 @@ context('Staking Contract V3', async () => {
         });
 
         it('setLockTimePeriodOptions()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             lockTimePeriod = [
                 2500000000,
                 3500000000,
@@ -232,7 +253,6 @@ context('Staking Contract V3', async () => {
         });
 
         it('setPrevPolsStaking()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             const prevPolsStakingAddress = '0x1234567890123456789012345678901234567890';
             const tx = await stakeV3Contract.setPrevPolsStaking({prevPolsStakingAddress});
 
@@ -241,26 +261,52 @@ context('Staking Contract V3', async () => {
         });
 
         it('remainingLockPeriod_msgSender()', async () => {
+            await stakeV3Contract.setLockTimePeriodDefault({defaultLockTime});
+
+            //stake 1000 tokens
             const mockAmount = 1000;
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount})).to.equal(false);
+            await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
+
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount})).to.equal(true);
+            await stakeV3Contract.stake({amount: mockAmount});
+            //
+
+            //go to the future
+            await forwardTime(30);
+
             const stakeAmounted = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
             expect(stakeAmounted).to.equal(mockAmount.toString());
+
             const remainingTime = await stakeV3Contract.remainingLockPeriod_msgSender();
-            expect(remainingTime).to.be.gte(oneWeekInSeconds-100).lte(oneWeekInSeconds);
+            expect(remainingTime).to.be.gte(defaultLockTime-100).lte(defaultLockTime);
         });
 
         it('userClaimableRewards()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
+            const mockAmount = 1000;
+            await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
+                .to.equal(true);
+
+            await stakeV3Contract.stake({amount: mockAmount});
+            await forwardTime(30);
+
             const rewards = ethers.utils.formatUnits(await stakeV3Contract.userClaimableRewards({staker: deployerAddress}));
-            const oneWeekMilisecondsStr = '604800000.0';
-            expect(rewards).to.equal(oneWeekMilisecondsStr);
+            const mockReward = '31000.0';
+            expect(rewards).to.equal(mockReward);
         });
 
         it('userClaimableRewardsCurrent()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
+            const mockAmount = 1000;
+            await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
+                .to.equal(true);
 
-            const mockRewardsTrue = 10000;
-            const mockRewardsFalse = '604800000.0';
+            await stakeV3Contract.stake({amount: mockAmount});
+            await forwardTime(30);
+
+            const mockRewardsTrue = 31000;
+            const mockRewardsFalse = '31000.0';
 
             let rewardsTrue = ethers.utils.formatUnits(await stakeV3Contract.userClaimableRewardsCurrent({staker: deployerAddress, lockedRewardsCurrent: true}));
             let rewardsFalse = ethers.utils.formatUnits(await stakeV3Contract.userClaimableRewardsCurrent({staker: deployerAddress, lockedRewardsCurrent: false}));
@@ -269,36 +315,7 @@ context('Staking Contract V3', async () => {
             expect(rewardsFalse).to.equal(mockRewardsFalse);
         });
 
-    //     * @param user_stakeAmount  amount of staked tokens
-    //     * @param user_stakeTime    time the user has staked
-    //     * @param user_unlockTime   time when user's staked tokens will be unlocked
-    //     * @param t0   current block time
-    //     * @param endTime           time when the rewards scheme will end
-    //     * @param lockedRewards     true => user will get full rewards for lock time upfront (v3 default mode)
-    //     * @param lockedRewardsCurrent true => only calculate locked rewards up to t0
-    //     * @param user_stakePeriodRewardFactor is a reward factor for a given lock period option
-    //     * @return claimableRewards rewards user has received / can claim at this block time
-    //     */
-    //    function _userClaimableRewardsCalculation(
-    //        uint256 user_stakeAmount,
-    //        uint256 user_stakeTime,
-    //        uint256 user_unlockTime,
-    //        uint256 t0,
-    //        uint256 endTime,
-    //        bool lockedRewards,
-    //        bool lockedRewardsCurrent,
-    //        uint256 user_stakePeriodRewardFactor
-    //    )
-    // * 1) block time < stake time < end time   : should never happen => error
-    // * 2) block time < end time   < stake time : should never happen => error
-    // * 3) end time   < block time < stake time : should never happen => error
-    // * 4) end time   < stake time < block time : staked after reward period is over => no rewards
-    // * 5) stake time < block time < end time   : end time in the future
-    // * 6) stake time < end time   < block time : end time in the past & staked before
-
         it('userClaimableRewardsCalculation()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
-
             const userStakeAmount =             1000;
             const userStakeTime =               100000000; //2000-01-01
             const userUnlockTime =              110000000;
@@ -319,12 +336,33 @@ context('Staking Contract V3', async () => {
                 userStakePeriodRewardFactor
             });
 
-            expect(rewards.toString()).to.equal('50000');
+            expect(rewards.toString()).to.equal('5000000000');
         });
 
-        it('extendLockTime()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
+        it('extendLockTime(): should fail because lockedRewards=false ', async () => {
+            let failed = false;
+            try {
+                const lockTimeIndex = 1;
+                await stakeV3Contract.extendLockTime({lockTimeIndex});
+            } catch (e) {
+                failed = true;
+            }
+            expect(failed).to.equal(true);
+        });
+
+        it('extendLockTime(): should execute it successfully because lockedRewards=true ', async () => {
+            const mockAmount = 1000;
+            await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
+                .to.equal(true);
+
+            await stakeV3Contract.stake({amount: mockAmount});
+            await forwardTime(30);
+
             const remainingTimeBefore = await stakeV3Contract.remainingLockPeriod_msgSender();
+
+            const lockedRewardsEnabled = true;
+            await stakeV3Contract.setLockedRewardsEnabled({lockedRewardsEnabled});
 
             const lockTimeIndex = 1;
             await stakeV3Contract.extendLockTime({lockTimeIndex});
@@ -332,11 +370,19 @@ context('Staking Contract V3', async () => {
             const remainingTimeAfter = await stakeV3Contract.remainingLockPeriod_msgSender();
 
             expect(remainingTimeBefore).to.be.gte(oneWeekInSeconds-100).lte(oneWeekInSeconds);
-            expect(remainingTimeAfter).to.equal(defaultLockTime);
-        })
+            expect(remainingTimeAfter).to.equal(oneWeekInSeconds);
+        });
 
         it('topUp()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
+            //stake 1000 tokens
+            const mockAmount = 1000;
+            await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
+                .to.equal(true);
+
+            await stakeV3Contract.stake({amount: mockAmount});
+            //
+
             const amountBefore = await stakeV3Contract.stakeAmount({address: deployerAddress});
             const amountExtra = 10;
 
@@ -356,8 +402,6 @@ context('Staking Contract V3', async () => {
         });
 
         it.skip('migrateRewards()', async () => {
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
-
             // Deploy the stake V2 contract
             const contractStake = new app.web3.eth.Contract(staking.abi, null, {data: staking.bytecode});
             let StakingAddress, stakeContract
@@ -381,9 +425,6 @@ context('Staking Contract V3', async () => {
             .to.equal(false);
 
             await stakeContract.approveStakeERC20({tokenAmount: mockAmount});
-            expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount.toString()}))
-            .to.equal(true);
-
             expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
             .to.equal(true);
 
@@ -431,8 +472,16 @@ context('Staking Contract V3', async () => {
         });
 
         it('stakelockTimeChoice()', async () => {
+            //stake 1000 tokens
+            const mockAmount = 1000;
+            await stakeV3Contract.approveStakeERC20({tokenAmount: mockAmount});
+            expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
+                .to.equal(true);
+
+            await stakeV3Contract.stake({amount: mockAmount});
+            //
+
             const mockAmountExtra = 20;
-            stakeV3Contract = await app.getStakingV3({contractAddress: StakingV3Address, tokenAddress: ERC20TokenAddress});
             expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmountExtra}))
                 .to.equal(false);
 
@@ -447,8 +496,8 @@ context('Staking Contract V3', async () => {
             await stakeV3Contract.stakeLockTimeChoice({amount: mockAmountExtra, lockTimeIndex: 1});
             const stakeAmountAfter = await stakeV3Contract.stakeAmount({address: app.account.getAddress()});
 
-            expect(stakeAmountBefore).to.equal('1010');
-            expect(stakeAmountAfter).to.equal('1030');
+            expect(stakeAmountBefore).to.equal('1000');
+            expect(stakeAmountAfter).to.equal('1020');
         });
     });
 
