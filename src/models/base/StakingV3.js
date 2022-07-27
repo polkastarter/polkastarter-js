@@ -360,7 +360,54 @@ import Chains from "../../utils/Chains";
     userClaimableRewardsCurrent = async ({staker, lockedRewardsCurrent}) => {
         return await this.params.contract.getContract().methods.userClaimableRewardsCurrent(staker, lockedRewardsCurrent).call();
     }
-    // userClaimableRewardsCalculation()
+
+    //     * @param user_stakeAmount  amount of staked tokens
+    //     * @param user_stakeTime    time the user has staked
+    //     * @param user_unlockTime   time when user's staked tokens will be unlocked
+    //     * @param t0   current block time
+    //     * @param endTime           time when the rewards scheme will end
+    //     * @param lockedRewards     true => user will get full rewards for lock time upfront (v3 default mode)
+    //     * @param lockedRewardsCurrent true => only calculate locked rewards up to t0
+    //     * @param user_stakePeriodRewardFactor is a reward factor for a given lock period option
+    //     * @return claimableRewards rewards user has received / can claim at this block time
+    //     */
+    //    function _userClaimableRewardsCalculation(
+    //        uint256 user_stakeAmount,
+    //        uint256 user_stakeTime,
+    //        uint256 user_unlockTime,
+    //        uint256 t0,
+    //        uint256 endTime,
+    //        bool lockedRewards,
+    //        bool lockedRewardsCurrent,
+    //        uint256 user_stakePeriodRewardFactor
+    //    )
+    // * 1) block time < stake time < end time   : should never happen => error
+    // * 2) block time < end time   < stake time : should never happen => error
+    // * 3) end time   < block time < stake time : should never happen => error
+    // * 4) end time   < stake time < block time : staked after reward period is over => no rewards
+    // * 5) stake time < block time < end time   : end time in the future
+    // * 6) stake time < end time   < block time : end time in the past & staked before
+    userClaimableRewardsCalculation = async ({
+        userStakeAmount,
+        userStakeTime,
+        userUnlockTime,
+        t0,
+        endTime,
+        lockedRewards,
+        lockedRewardsCurrent,
+        userStakePeriodRewardFactor
+    }) => {
+        return await this.params.contract.getContract().methods._userClaimableRewardsCalculation(
+            userStakeAmount,
+            userStakeTime,
+            userUnlockTime,
+            t0,
+            endTime,
+            lockedRewards,
+            lockedRewardsCurrent,
+            userStakePeriodRewardFactor
+        ).call();
+    }
     extendLockTime = async ({lockTimeIndex}) => {
         try {
             return await this.client.sendTx(
@@ -396,9 +443,39 @@ import Chains from "../../utils/Chains";
         }
     }
 
-    // migrateRewards()
-    // migrateRewards_msgSender()
-    // stakelockTimeChoice()
+    migrateRewards = async ({staker}) => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.migrateRewards(staker)
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    stakeLockTimeChoice = async ({amount, lockTimeIndex}) => {
+        amount = Numbers.toSmartContractDecimals(
+            amount,
+            await this.getDecimals()
+        )
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.stakelockTimeChoice(amount, lockTimeIndex)
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 export default StakingV3;
