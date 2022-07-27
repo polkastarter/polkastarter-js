@@ -23,10 +23,8 @@ import Chains from "../../utils/Chains";
         'ETH': '0xc24A365A870821EB83Fd216c9596eDD89479d8d7'
 	};
     stakingTestAddresses = {
-        // 'BSC': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',
-        // 'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
-		'BSC': '0x48F5EDDA2c6b503C79FF590ed8AAFF54f7463EB9',
-		'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
+        'BSC': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',
+        'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
     };
 
 	constructor({
@@ -43,7 +41,7 @@ import Chains from "../../utils/Chains";
 
 		Chains.checkIfNetworkIsSupported(network);
         this.web3 = web3;
-        this.version = "3.0";
+        this.version = "2.0";
         if (acc) {
             this.acc = acc;
         }
@@ -220,6 +218,15 @@ import Chains from "../../utils/Chains";
 	}
 
     /**
+	 * @function lockTimePeriod
+	 * @description Returns the lock time perdio
+	 * @returns {Integer} lockTimePeriod
+	*/
+    getLockTimePeriod = async () => {
+		return await this.params.contract.getContract().methods.lockTimePeriod().call();
+	}
+
+    /**
 	 * @function getUnlockTime
 	 * @description Returns the stake time for a wallet
 	 * @param {string} address
@@ -249,155 +256,6 @@ import Chains from "../../utils/Chains";
     getTokenContract() {
 		return this.params.erc20TokenContract;
 	}
-
-	//New Features
-	// stake()
-    /**
-	 * @function getLockTimePeriod
-	 * @description Returns the default lock time period
-	 * @returns {Integer} defaultLockTimePeriod
-	*/
-    getLockTimePeriod = async () => {
-		return await this.params.contract.getContract().methods.getLockTimePeriod().call();
-	}
-	setLockTimePeriodDefault = async ({defaultLockTime}) => {
-		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
-				this.params.contract
-					.getContract()
-					.methods.setLockTimePeriodDefault(
-						defaultLockTime
-					)
-			);
-		} catch (err) {
-			throw err;
-		}
-	}
-	remainingLockPeriod = async ({address}) => {
-		return await this.params.contract.getContract().methods.remainingLockPeriod(address).call();
-	}
-	getLockTimePeriodOptions = async () => {
-		return await this.params.contract.getContract().methods.getLockTimePeriodOptions().call();
-	}
-	getLockTimePeriodRewardFactors = async () => {
-		return await this.params.contract.getContract().methods.getLockTimePeriodRewardFactors().call();
-	}
-	setLockedRewardsEnabled = async ({lockedRewardsEnabled}) => {
-		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
-				this.params.contract
-					.getContract()
-					.methods.setLockedRewardsEnabled(
-						lockedRewardsEnabled
-					)
-			);
-		} catch (err) {
-			throw err;
-		}
-	}
-	setUnlockedRewardsFactor = async ({unlockedRewardsFactor}) => {
-		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
-				this.params.contract
-					.getContract()
-					.methods.setUnlockedRewardsFactor(
-						unlockedRewardsFactor
-					)
-			);
-		} catch (err) {
-			throw err;
-		}
-	}
-	setLockTimePeriodOptions = async ({lockTimePeriod, lockTimePeriodRewardFactor}) => {
-		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
-				this.params.contract
-					.getContract()
-					.methods.setLockTimePeriodOptions(
-						lockTimePeriod,
-						lockTimePeriodRewardFactor
-
-					)
-			);
-		} catch (err) {
-			throw err;
-		}
-	}
-	setPrevPolsStaking = async ({prevPolsStakingAddress}) => {
-		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
-				this.params.contract
-					.getContract()
-					.methods.setPrevPolsStaking(
-						prevPolsStakingAddress
-					)
-			);
-		} catch (err) {
-			throw err;
-		}
-	}
-	remainingLockPeriod_msgSender = async () => {
-		return await this.params.contract.getContract().methods.remainingLockPeriod_msgSender().call();
-	}
-	userClaimableRewards = async ({staker}) => {
-		return await this.params.contract.getContract().methods.userClaimableRewards(staker).call();
-	}
-	userClaimableRewardsCurrent = async ({staker, lockedRewardsCurrent}) => {
-		return await this.params.contract.getContract().methods.userClaimableRewardsCurrent(staker, lockedRewardsCurrent).call();
-	}
-	// userClaimableRewardsCalculation()
-	extendLockTime = async ({lockTimeIndex}) => {
-		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
-				this.params.contract
-					.getContract()
-					.methods.extendLockTime(
-						lockTimeIndex
-					)
-			);
-		} catch (err) {
-			throw err;
-		}
-	}
-	topUp = async ({amount}) => {
-		amount = Numbers.toSmartContractDecimals(
-			amount,
-			await this.getDecimals()
-		)
-		try {
-			return await this.client.sendTx(
-				this.params.web3,
-				this.acc,
-				this.params.contract,
-				this.params.contract
-					.getContract()
-					.methods.topUp(amount)
-			);
-		} catch (err) {
-			throw err;
-		}
-	}
-	// migrateRewards()
-	// migrateRewards_msgSender()
-	// stakelockTimeChoice()
 }
 
 export default Staking;

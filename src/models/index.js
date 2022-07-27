@@ -7,6 +7,7 @@ import Account from './base/Account';
 import ERC20TokenContract from "./base/ERC20TokenContract";
 import FixedNFTSwapContract from "./contracts/FixedNFTSwapContract";
 import Staking from "./base/Staking";
+import StakingV3 from "./base/StakingV3";
 import FixedSwapContractLegacy from "./contracts/legacy/FixedSwapContractLegacy";
 import Chains from "../utils/Chains";
 
@@ -125,6 +126,23 @@ class Application {
 	*/
 	getStaking = ({contractAddress=null, tokenAddress=null}) => {
 		return new Staking({
+			web3: this.web3,
+			acc : this.test ? this.account : null,
+			contractAddress: contractAddress,
+			tokenAddress: tokenAddress,
+			network: this.network,
+			test: !this.mainnet
+		});
+	}
+
+		/**
+	 * @function getStakingV3
+	 * @param {string=} contractAddress The staking V3 contract address. (Default: Predefined addresses depending on the network)
+	 * @param {string=} tokenAddress The staking token address. (Default: Predefined addresses depending on the network)
+	 * @description Returns the Staking Model instance.
+	*/
+	getStakingV3 = ({contractAddress=null, tokenAddress=null}) => {
+		return new StakingV3({
 			web3: this.web3,
 			acc : this.test ? this.account : null,
 			contractAddress: contractAddress,
