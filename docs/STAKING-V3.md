@@ -18,7 +18,7 @@
 <dd><p>Extend lock period to get more upfront rewards. Actually just a special case of _stakelockTimeChoice(0, lockTimeIndex)</p>
 </dd>
 <dt><a href="#getDecimals">getDecimals()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Return number of decimals of the token</p>
+<dd><p>Returns number of decimals of the token</p>
 </dd>
 <dt><a href="#getLockTimePeriod">getLockTimePeriod()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the default lock time period</p>
@@ -45,7 +45,7 @@
 <dd><p>Migrate msgSender&#39;s rewards from previous (v1/v2) staking contract</p>
 </dd>
 <dt><a href="#remainingLockPeriod">remainingLockPeriod(address)</a> ⇒ <code>Integer</code></dt>
-<dd><p>Return remaining lock time period</p>
+<dd><p>Returns remaining lock time period</p>
 </dd>
 <dt><a href="#remainingLockPeriod_msgSender">remainingLockPeriod_msgSender()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns remaining lock time period</p>
@@ -151,7 +151,7 @@ Extend lock period to get more upfront rewards. Actually just a special case of 
 <a name="getDecimals"></a>
 
 ## getDecimals() ⇒ <code>Integer</code>
-Return number of decimals of the token
+Returns number of decimals of the token
 
 **Kind**: global function  
 <a name="getLockTimePeriod"></a>
@@ -225,7 +225,7 @@ Migrate msgSender's rewards from previous (v1/v2) staking contract
 <a name="remainingLockPeriod"></a>
 
 ## remainingLockPeriod(address) ⇒ <code>Integer</code>
-Return remaining lock time period
+Returns remaining lock time period
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - unlockTime remaining time in seconds  
