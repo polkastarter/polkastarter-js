@@ -7,8 +7,8 @@ import Addresses from "./Addresses";
 import Chains from "../../utils/Chains";
 
 /**
- * Staking Object
- * @constructor Staking
+ * StakingV3 Object
+ * @constructor StakingV3
  * @param {Web3} web3
  * @param {string=} contractAddress The staking V3 contract address. (Default: Predefined addresses depending on the network)
  * @param {Account} acc
@@ -537,7 +537,6 @@ import Chains from "../../utils/Chains";
     /**
      * @function migrateRewards_msgSender
      * @description Migrate msgSender's rewards from previous (v1/v2) staking contract
-     * @param {Address} staker
      */
     migrateRewards_msgSender = async () => {
         try {

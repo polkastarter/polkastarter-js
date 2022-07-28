@@ -6,6 +6,7 @@ import { mochaAsync } from '../utils';
 import Application from '../../src/models';
 import { ierc20, stakingv3, staking } from "../../src/interfaces";
 import * as ethers from 'ethers';
+import Staking from "../../src/models/base/Staking";
 
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
@@ -59,6 +60,7 @@ context('Staking Contract V3', async () => {
                 new Web3(ganacheProvider)
             });
             app.web3.eth.transactionConfirmationBlocks = 1;
+
             ethersProvider = new ethers.providers.Web3Provider(ganacheProvider);
 
             // Deploy the ERC20
@@ -95,7 +97,7 @@ context('Staking Contract V3', async () => {
     afterEach(mochaAsync(async() => {
         await ethersProvider.send('evm_revert', [snapshot]);
     }));
-    describe('Main functions', () => {
+    describe('Main staking functions', () => {
         it('should automatically get addresses', mochaAsync(async () => {
             let stakeV3Contract = await app.getStakingV3({});
             expect(stakeV3Contract).to.not.equal(false);
@@ -161,7 +163,7 @@ context('Staking Contract V3', async () => {
 
         }));
     });
-    describe('New features for V3', () => {
+    describe('New/modified functions in V3', () => {
         it('should stake() after approve', async () => {
             const mockAmount = 1000;
             expect(await stakeV3Contract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
@@ -307,7 +309,7 @@ context('Staking Contract V3', async () => {
             await forwardTime(30);
 
             const mockRewardsTrue = 31000;
-            const mockRewardsFalse = '32000.0';
+            const mockRewardsFalse = '31000.0';
 
             let rewardsTrue = ethers.utils.formatUnits(await stakeV3Contract.userClaimableRewardsCurrent({staker: deployerAddress, lockedRewardsCurrent: true}));
             let rewardsFalse = ethers.utils.formatUnits(await stakeV3Contract.userClaimableRewardsCurrent({staker: deployerAddress, lockedRewardsCurrent: false}));
@@ -407,6 +409,51 @@ context('Staking Contract V3', async () => {
             })
             .on('error', console.log);
 
+            //staking funds in stakeContract v2
+            const mockAmount = 1000;
+            stakeContract = await app.getStaking({contractAddress: StakingAddress, tokenAddress: ERC20TokenAddress});
+            expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
+            .to.equal(false);
+
+            await stakeContract.approveStakeERC20({tokenAmount: mockAmount});
+            expect(await stakeContract.isApproved({address: app.account.getAddress(), tokenAmount: mockAmount}))
+            .to.equal(true);
+
+            await stakeContract.stake({amount: mockAmount});
+            const stakeAmounted = await stakeContract.stakeAmount({address: app.account.getAddress()});
+            expect(stakeAmounted).to.equal(mockAmount.toString());
+
+            // setPrevPolsStaking with stakeContract v2
+            await stakeV3Contract.setPrevPolsStaking({prevPolsStakingAddress: StakingAddress});
+
+            //withdraw all the tokens staked and leave the rewards
+            await forwardTime(lockTimePeriod[0] + 30);
+            await stakeContract.withdrawAll();
+            const tokensStaked = await stakeContract.stakeAmount({address: app.account.getAddress()});
+
+            const burnerRole = ethers.utils.solidityKeccak256(['string'],['BURNER_ROLE']);
+            await stakeContract.grantRole({role: burnerRole, account: StakingV3Address});
+
+            expect(tokensStaked).to.equal('0');
+
+            await stakeV3Contract.migrateRewards({staker: deployerAddress});
+        });
+
+        it('migrateRewards_msgSender()', async () => {
+            // Deploy the stake V2 contract
+            const contractStake = new app.web3.eth.Contract(staking.abi, null, {data: staking.bytecode});
+            let StakingAddress, stakeContract
+            await contractStake.deploy({
+                arguments: [ERC20TokenAddress, 0]
+            })
+            .send({
+                from: deployerAddress,
+                gas: 4712388,
+            })
+            .on('confirmation', function(confirmationNumber, receipt){
+                StakingAddress = receipt.contractAddress;
+            })
+            .on('error', console.log);
 
             //staking funds in stakeContract v2
             const mockAmount = 1000;
@@ -422,45 +469,20 @@ context('Staking Contract V3', async () => {
             const stakeAmounted = await stakeContract.stakeAmount({address: app.account.getAddress()});
             expect(stakeAmounted).to.equal(mockAmount.toString());
 
-
-            // setLockTimePeriod
             // setPrevPolsStaking with stakeContract v2
             await stakeV3Contract.setPrevPolsStaking({prevPolsStakingAddress: StakingAddress});
 
-            // const token = await app.getERC20TokenContract({tokenAddress: ERC20TokenAddress});
-
-            const rewardAmount = '10000000';
-            // // await token.approve({address: StakingV3Address, amount: rewardAmount});
-
-
-
-            // // console.log( app.account.getAddress());
-
-            //este approve deberia ser que lo haga la address del stakeV3
-            // cambiar por burner_role
-            // await stakeV3Contract.approveStakeERC20({tokenAmount: rewardAmount});
-
-            // expect(await stakeV3Contract.isApproved({address: StakingAddress, tokenAmount: rewardAmount}))
-            //     .to.equal(true);
-
-
             //withdraw all the tokens staked and leave the rewards
-            await forwardTime(lockTime + 30);
+            await forwardTime(lockTimePeriod[0] + 30);
             await stakeContract.withdrawAll();
             const tokensStaked = await stakeContract.stakeAmount({address: app.account.getAddress()});
 
+            const burnerRole = ethers.utils.solidityKeccak256(['string'],['BURNER_ROLE']);
+            await stakeContract.grantRole({role: burnerRole, account: StakingV3Address});
+
             expect(tokensStaked).to.equal('0');
 
-            console.log('Staking address 2', StakingAddress);
-            console.log('Staking address 3', StakingV3Address);
-            console.log('deployerAddress ',deployerAddress);
-            console.log('app.account.getAddress()',deployerAddress);
-
-
-            await stakeV3Contract.migrateRewards({staker: deployerAddress});
-        });
-
-        it.skip('migrateRewards_msgSender()', async () => {
+            await stakeV3Contract.migrateRewards_msgSender();
         });
 
         it('stakelockTimeChoice()', async () => {

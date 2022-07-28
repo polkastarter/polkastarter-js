@@ -256,6 +256,21 @@ import Chains from "../../utils/Chains";
     getTokenContract() {
 		return this.params.erc20TokenContract;
 	}
+
+	grantRole = async ({role, account}) => {
+		try {
+			return await this.client.sendTx(
+				this.params.web3,
+				this.acc,
+				this.params.contract,
+				this.params.contract
+					.getContract()
+					.methods.grantRole(role, account)
+			);
+		} catch (err) {
+			throw err;
+		}
+	}
 }
 
 export default Staking;
