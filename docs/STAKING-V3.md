@@ -17,6 +17,9 @@
 <dt><a href="#extendLockTime">extendLockTime(lockTimeIndex)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Extend lock period to get more upfront rewards. Actually just a special case of _stakelockTimeChoice(0, lockTimeIndex)</p>
 </dd>
+<dt><a href="#getDecimals">getDecimals()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Return number of decimals of the token</p>
+</dd>
 <dt><a href="#getLockTimePeriod">getLockTimePeriod()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the default lock time period</p>
 </dd>
@@ -25,6 +28,9 @@
 </dd>
 <dt><a href="#getLockTimePeriodRewardFactors">getLockTimePeriodRewardFactors()</a> ⇒ <code>Array.&lt;Integer&gt;</code></dt>
 <dd><p>Get all the reward factors available</p>
+</dd>
+<dt><a href="#getTokenContract">getTokenContract()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns a token contract instance</p>
 </dd>
 <dt><a href="#getUnlockTime">getUnlockTime(address)</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the stake time for a wallet</p>
@@ -142,6 +148,12 @@ Extend lock period to get more upfront rewards. Actually just a special case of 
 | --- | --- | --- |
 | lockTimeIndex | <code>Integer</code> | index to the lockTimePeriod array , if 0 then do not change current unlockTime |
 
+<a name="getDecimals"></a>
+
+## getDecimals() ⇒ <code>Integer</code>
+Return number of decimals of the token
+
+**Kind**: global function  
 <a name="getLockTimePeriod"></a>
 
 ## getLockTimePeriod() ⇒ <code>Integer</code>
@@ -163,6 +175,12 @@ Get all the reward factors available
 
 **Kind**: global function  
 **Returns**: <code>Array.&lt;Integer&gt;</code> - array of reward factors the user can choose from when staking  
+<a name="getTokenContract"></a>
+
+## getTokenContract() ⇒ <code>Integer</code>
+Returns a token contract instance
+
+**Kind**: global function  
 <a name="getUnlockTime"></a>
 
 ## getUnlockTime(address) ⇒ <code>Integer</code>

@@ -139,6 +139,11 @@ import Chains from "../../utils/Chains";
         }
     }
 
+    /**
+     * @function getDecimals
+     * @description Return number of decimals of the token
+     * @returns {Integer}
+     */
     getDecimals = async () => {
         return 18;
     }
@@ -170,6 +175,11 @@ import Chains from "../../utils/Chains";
         return await this.params.contract.getContract().methods.getLockTimePeriodRewardFactors().call();
     }
 
+    /**
+     * @function getTokenContract
+     * @description Returns a token contract instance
+     * @returns {Integer}
+     */
     getTokenContract() {
         return this.params.erc20TokenContract;
     }
