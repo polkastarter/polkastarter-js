@@ -85,6 +85,292 @@ import Chains from "../../utils/Chains";
     }
 
     /**
+     * @function approveStakeERC20
+     * @param {Integer} tokenAmount
+     * @description Approve the stake to use approved tokens
+     */
+    approveStakeERC20 = async ({ tokenAmount, callback }) => {
+        return await this.getTokenContract().approve({
+            address: this.params.contractAddress,
+            amount: tokenAmount,
+            callback
+        });
+    };
+
+    /**
+     * @function claim
+     * @description Claim rewards from the staking V3 contract
+     */
+    claim = async () => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.claim()
+            );
+        } catch (err) {
+            throw err;
+        }
+    };
+
+    /**
+     * @function extendLockTime
+     * @description  Extend lock period to get more upfront rewards. Actually just a special case of _stakelockTimeChoice(0, lockTimeIndex)
+     * @param {Integer} lockTimeIndex index to the lockTimePeriod array , if 0 then do not change current unlockTime
+     * @returns {Integer} lockTimeIndex index to the lockTimePeriod array
+     */
+    extendLockTime = async ({lockTimeIndex}) => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.extendLockTime(
+                        lockTimeIndex
+                    )
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    getDecimals = async () => {
+        return 18;
+    }
+
+    /**
+     * @function getLockTimePeriod
+     * @description Returns the default lock time period
+     * @returns {Integer} defaultLockTimePeriod
+     */
+    getLockTimePeriod = async () => {
+        return await this.params.contract.getContract().methods.getLockTimePeriod().call();
+    }
+
+    getTokenContract() {
+        return this.params.erc20TokenContract;
+    }
+
+    /**
+     * @function getUnlockTime
+     * @description Returns the stake time for a wallet
+     * @param {Address} address
+     * @returns {Integer} unlockTime
+    */
+    getUnlockTime = async ({address}) => {
+        return await this.params.contract.getContract().methods.getUnlockTime(address).call();
+    }
+
+    /**
+     * @function isApproved
+     * @description Verify if the address has approved the staking to deposit
+     * @param {Integer} tokenAmount
+     * @param {Address} address
+     * @returns {Boolean}
+     */
+     isApproved = async ({ tokenAmount, address }) => {
+        return await this.getTokenContract().isApproved({
+            address: address,
+            amount: tokenAmount,
+            spenderAddress: this.params.contractAddress
+        });
+    };
+
+    /**
+     * @function remainingLockPeriod
+     * @description Return remaining lock time period
+     * @param {Address} address
+     * @returns {Integer} unlockTime remaining time in seconds
+     */
+    remainingLockPeriod = async ({address}) => {
+        return await this.params.contract.getContract().methods.remainingLockPeriod(address).call();
+    }
+
+    /**
+     * @function getLockTimePeriodOptions
+     * @description Get all the lock time periods available
+     * @returns {Integer[]} array of lock times the user can choose from when staking
+     */
+    getLockTimePeriodOptions = async () => {
+        return await this.params.contract.getContract().methods.getLockTimePeriodOptions().call();
+    }
+
+    /**
+     * @function getLockTimePeriodRewardFactors
+     * @description Get all the reward factors available
+     * @returns {Integer[]} array of reward factors the user can choose from when staking
+     */
+    getLockTimePeriodRewardFactors = async () => {
+        return await this.params.contract.getContract().methods.getLockTimePeriodRewardFactors().call();
+    }
+
+    /**
+     * @function remainingLockPeriod_msgSender
+     * @description Returns remaining lock time period
+     * @returns {Integer} unlockTime remaining time in seconds
+     */
+    remainingLockPeriod_msgSender = async () => {
+        return await this.params.contract.getContract().methods.remainingLockPeriod_msgSender().call();
+    }
+
+    /**
+     * @function migrateRewards
+     * @description Migrate rewards from previous (v1/v2) staking contract
+     * @param {Address} staker
+     */
+    migrateRewards = async ({staker}) => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.migrateRewards(staker)
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @function migrateRewards_msgSender
+     * @description Migrate msgSender's rewards from previous (v1/v2) staking contract
+     */
+    migrateRewards_msgSender = async () => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.migrateRewards_msgSender()
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @function setLockTimePeriodDefault
+     * @description Setup time in seconds for default lock time period
+     * @param {Integer} defaultLockTime
+     */
+     setLockTimePeriodDefault = async ({defaultLockTime}) => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.setLockTimePeriodDefault(
+                        defaultLockTime
+                    )
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @function setLockTimePeriodOptions
+     * @description Set lock time options the user can choose from when staking
+     * @param {Integer[]} lockTimePeriod array of lock times the user can choose from when staking
+     * @param {Integer[]} lockTimePeriodRewardFactor array of reward factors for each option
+     */
+    setLockTimePeriodOptions = async ({lockTimePeriod, lockTimePeriodRewardFactor}) => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.setLockTimePeriodOptions(
+                        lockTimePeriod,
+                        lockTimePeriodRewardFactor
+
+                    )
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @function setLockedRewardsEnabled
+     * @description Set lock rewards to true/false
+     * @param {Boolean} lockedRewardsEnabled
+     */
+    setLockedRewardsEnabled = async ({lockedRewardsEnabled}) => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.setLockedRewardsEnabled(
+                        lockedRewardsEnabled
+                    )
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @function setPrevPolsStaking
+     * @description Set previous staking contract address to migrate to this version
+     * @param {Address} prevPolsStakingAddress
+     */
+    setPrevPolsStaking = async ({prevPolsStakingAddress}) => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.setPrevPolsStaking(
+                        prevPolsStakingAddress
+                    )
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @function setUnlockedRewardsFactor
+     * @description Set unlocked rewards factor
+     * @param {Integer} unlockedRewardsFactor
+     */
+    setUnlockedRewardsFactor = async ({unlockedRewardsFactor}) => {
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.setUnlockedRewardsFactor(
+                        unlockedRewardsFactor
+                    )
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
      * @function stake
      * @description Stakes tokens inside the stake contract
      * @param {Integer} amount Amount
@@ -109,32 +395,143 @@ import Chains from "../../utils/Chains";
     };
 
     /**
-     * @function approveStakeERC20
-     * @param {Integer} tokenAmount
-     * @description Approve the stake to use approved tokens
+     * @function stakeAmount
+     * @description Returns the stake amount for a wallet
+     * @param {Address} address
+     * @returns {Integer} stakeAmount
      */
-    approveStakeERC20 = async ({ tokenAmount, callback }) => {
-        return await this.getTokenContract().approve({
-            address: this.params.contractAddress,
-            amount: tokenAmount,
-            callback
-        });
-    };
+    stakeAmount = async ({address}) => {
+        return Numbers.fromDecimals(
+            await this.params.contract.getContract().methods.stakeAmount(address).call(),
+            await this.getDecimals()
+        );
+    }
 
     /**
-     * @function isApproved
-     * @description Verify if the address has approved the staking to deposit
-     * @param {Integer} tokenAmount
-     * @param {Address} address
-     * @returns {Boolean}
+     * @function stakeLockTimeChoice
+     * @description Stake tokens for a lock time choice
+     * @param {Integer} amount Amount of tokens to stake
+     * @param {Integer} lockTimeIndex to choose lock time
      */
-    isApproved = async ({ tokenAmount, address }) => {
-        return await this.getTokenContract().isApproved({
-            address: address,
-            amount: tokenAmount,
-            spenderAddress: this.params.contractAddress
-        });
-    };
+    stakeLockTimeChoice = async ({amount, lockTimeIndex}) => {
+        amount = Numbers.toSmartContractDecimals(
+            amount,
+            await this.getDecimals()
+        )
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.stakelockTimeChoice(amount, lockTimeIndex)
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @function stakeTime
+     * @description Returns the stake time for a wallet
+     * @param {Address} address
+     * @returns {Integer} stakeTime
+     */
+    stakeTime = async ({address}) => {
+        return await this.params.contract.getContract().methods.stakeTime(address).call();
+    }
+
+    /**
+     * @function topUp
+     * @description Increase staked amount, but keep unlock time unchanged. Actually just a special case of _stakelockTimeChoice(amount, 0)
+     * @param {Integer} amount of token to be staked
+     * @returns {Integer} Amount of token to be staked
+     */
+    topUp = async ({amount}) => {
+        amount = Numbers.toSmartContractDecimals(
+            amount,
+            await this.getDecimals()
+        )
+        try {
+            return await this.client.sendTx(
+                this.params.web3,
+                this.acc,
+                this.params.contract,
+                this.params.contract
+                    .getContract()
+                    .methods.topUp(amount)
+            );
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * @function userAccumulatedRewards
+     * @description Returns the accumulated rewards
+     * @param {Address} address
+     * @returns {Integer} userAccumulatedRewards
+     */
+    userAccumulatedRewards = async ({address}) => {
+        return await this.params.contract.getContract().methods.userAccumulatedRewards(address).call();
+    }
+
+    /**
+     * @function userClaimableRewards
+     * @description Calculate current reward for an account
+     * @param {Address} staker account to do the reward calculation for
+     * @returns {Integer} claimableReward for this stacker account
+     */
+    userClaimableRewards = async ({staker}) => {
+        return await this.params.contract.getContract().methods.userClaimableRewards(staker).call();
+    }
+
+    /**
+     * @function userClaimableRewardsCalculation
+     * @description Calculate current rewards at time t0. This function is for better testing and "what-if" UX scenarios
+     * @param {Integer} user_stakeAmount  amount of staked tokens
+     * @param {Integer} user_stakeTime    time the user has staked
+     * @param {Integer} user_unlockTime   time when user's staked tokens will be unlocked
+     * @param {Integer} t0                current block time
+     * @param {Integer} endTime           time when the rewards scheme will end
+     * @param {Boolean} lockedRewards     true => user will get full rewards for lock time upfront (v3 default mode)
+     * @param {Boolean} lockedRewardsCurrent true => only calculate locked rewards up to t0
+     * @param {Integer} user_stakePeriodRewardFactor is a reward factor for a given lock period option
+     * @returns {Integer} ClaimableRewards rewards user has received / can claim at this block time
+     */
+    userClaimableRewardsCalculation = async ({
+        userStakeAmount,
+        userStakeTime,
+        userUnlockTime,
+        t0,
+        endTime,
+        lockedRewards,
+        lockedRewardsCurrent,
+        userStakePeriodRewardFactor
+    }) => {
+        return await this.params.contract.getContract().methods._userClaimableRewardsCalculation(
+            userStakeAmount,
+            userStakeTime,
+            userUnlockTime,
+            t0,
+            endTime,
+            lockedRewards,
+            lockedRewardsCurrent,
+            userStakePeriodRewardFactor
+        ).call();
+    }
+
+    /**
+     * @function userClaimableRewardsCurrent
+     * @description Calculate current reward for an account
+     * @param {Address} staker account to do the reward calculation for
+     * @param {Boolean} lockedRewardsCurrent true => only calculate locked rewards up to block_timestamp (used for stake update)
+     * @returns {Integer} claimableReward for this stacker account depending of lockedRewardsCurrent
+     */
+    userClaimableRewardsCurrent = async ({staker, lockedRewardsCurrent}) => {
+        return await this.params.contract.getContract().methods.userClaimableRewardsCurrent(staker, lockedRewardsCurrent).call();
+    }
 
     /**
      * @function withdraw
@@ -180,403 +577,6 @@ import Chains from "../../utils/Chains";
         }
     };
 
-    /**
-     * @function claim
-     * @description Claim rewards from the staking V3 contract
-     */
-    claim = async () => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.claim()
-            );
-        } catch (err) {
-            throw err;
-        }
-    };
-
-    /**
-     * @function userAccumulatedRewards
-     * @description Returns the accumulated rewards
-     * @param {Address} address
-     * @returns {Integer} userAccumulatedRewards
-    */
-    userAccumulatedRewards = async ({address}) => {
-        return await this.params.contract.getContract().methods.userAccumulatedRewards(address).call();
-    }
-
-    /**
-     * @function stakeTime
-     * @description Returns the stake time for a wallet
-     * @param {Address} address
-     * @returns {Integer} stakeTime
-    */
-    stakeTime = async ({address}) => {
-        return await this.params.contract.getContract().methods.stakeTime(address).call();
-    }
-
-    /**
-     * @function getUnlockTime
-     * @description Returns the stake time for a wallet
-     * @param {Address} address
-     * @returns {Integer} unlockTime
-    */
-    getUnlockTime = async ({address}) => {
-        return await this.params.contract.getContract().methods.getUnlockTime(address).call();
-    }
-
-    /**
-     * @function stakeAmount
-     * @description Returns the stake amount for a wallet
-     * @param {Address} address
-     * @returns {Integer} stakeAmount
-     */
-    stakeAmount = async ({address}) => {
-        return Numbers.fromDecimals(
-            await this.params.contract.getContract().methods.stakeAmount(address).call(),
-            await this.getDecimals()
-        );
-    }
-
-    getDecimals = async () => {
-        return 18;
-    }
-
-    getTokenContract() {
-        return this.params.erc20TokenContract;
-    }
-
-    /**
-     * @function getLockTimePeriod
-     * @description Returns the default lock time period
-     * @returns {Integer} defaultLockTimePeriod
-    */
-    getLockTimePeriod = async () => {
-        return await this.params.contract.getContract().methods.getLockTimePeriod().call();
-    }
-
-
-    /**
-     * @function setLockTimePeriodDefault
-     * @description Setup time in seconds for default lock time period
-     * @param {Integer} defaultLockTime
-     */
-    setLockTimePeriodDefault = async ({defaultLockTime}) => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.setLockTimePeriodDefault(
-                        defaultLockTime
-                    )
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function remainingLockPeriod
-     * @description Return remaining lock time period
-     * @param {Address} address
-     * @returns {Integer} unlockTime remaining time in seconds
-     */
-    remainingLockPeriod = async ({address}) => {
-        return await this.params.contract.getContract().methods.remainingLockPeriod(address).call();
-    }
-
-    /**
-     * @function getLockTimePeriodOptions
-     * @description Get all the lock time periods available
-     * @returns {Integer[]} array of lock times the user can choose from when staking
-     */
-    getLockTimePeriodOptions = async () => {
-        return await this.params.contract.getContract().methods.getLockTimePeriodOptions().call();
-    }
-
-    /**
-     * @function getLockTimePeriodRewardFactors
-     * @description Get all the reward factors available
-     * @returns {Integer[]} array of reward factors the user can choose from when staking
-     */
-    getLockTimePeriodRewardFactors = async () => {
-        return await this.params.contract.getContract().methods.getLockTimePeriodRewardFactors().call();
-    }
-
-    /**
-     * @function setLockedRewardsEnabled
-     * @description Set lock rewards to true/false
-     * @param {Boolean} lockedRewardsEnabled
-     */
-    setLockedRewardsEnabled = async ({lockedRewardsEnabled}) => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.setLockedRewardsEnabled(
-                        lockedRewardsEnabled
-                    )
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function setUnlockedRewardsFactor
-     * @description Set unlocked rewards factor
-     * @param {Integer} unlockedRewardsFactor
-     */
-    setUnlockedRewardsFactor = async ({unlockedRewardsFactor}) => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.setUnlockedRewardsFactor(
-                        unlockedRewardsFactor
-                    )
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function setLockTimePeriodOptions
-     * @description Set lock time options the user can choose from when staking
-     * @param {Integer[]} lockTimePeriod array of lock times the user can choose from when staking
-     * @param {Integer[]} lockTimePeriodRewardFactor array of reward factors for each option
-     */
-    setLockTimePeriodOptions = async ({lockTimePeriod, lockTimePeriodRewardFactor}) => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.setLockTimePeriodOptions(
-                        lockTimePeriod,
-                        lockTimePeriodRewardFactor
-
-                    )
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function setPrevPolsStaking
-     * @description Set previous staking contract address to migrate to this version
-     * @param {Address} prevPolsStakingAddress
-     */
-    setPrevPolsStaking = async ({prevPolsStakingAddress}) => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.setPrevPolsStaking(
-                        prevPolsStakingAddress
-                    )
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function remainingLockPeriod_msgSender
-     * @description Returns remaining lock time period
-     * @returns {Integer} unlockTime remaining time in seconds
-     */
-    remainingLockPeriod_msgSender = async () => {
-        return await this.params.contract.getContract().methods.remainingLockPeriod_msgSender().call();
-    }
-
-    /**
-     * @function userClaimableRewards
-     * @description Calculate current reward for an account
-     * @param {Address} staker account to do the reward calculation for
-     * @returns {Integer} claimableReward for this stacker account
-     */
-    userClaimableRewards = async ({staker}) => {
-        return await this.params.contract.getContract().methods.userClaimableRewards(staker).call();
-    }
-
-    /**
-     * @function userClaimableRewardsCurrent
-     * @description Calculate current reward for an account
-     * @param {Address} staker account to do the reward calculation for
-     * @param {Boolean} lockedRewardsCurrent true => only calculate locked rewards up to block_timestamp (used for stake update)
-     * @returns {Integer} claimableReward for this stacker account depending of lockedRewardsCurrent
-     */
-    userClaimableRewardsCurrent = async ({staker, lockedRewardsCurrent}) => {
-        return await this.params.contract.getContract().methods.userClaimableRewardsCurrent(staker, lockedRewardsCurrent).call();
-    }
-
-    /**
-     * @function userClaimableRewardsCalculation
-     * @description Calculate current rewards at time t0. This function is for better testing and "what-if" UX scenarios
-     * @param {Integer} user_stakeAmount  amount of staked tokens
-     * @param {Integer} user_stakeTime    time the user has staked
-     * @param {Integer} user_unlockTime   time when user's staked tokens will be unlocked
-     * @param {Integer} t0                current block time
-     * @param {Integer} endTime           time when the rewards scheme will end
-     * @param {Boolean} lockedRewards     true => user will get full rewards for lock time upfront (v3 default mode)
-     * @param {Boolean} lockedRewardsCurrent true => only calculate locked rewards up to t0
-     * @param {Integer} user_stakePeriodRewardFactor is a reward factor for a given lock period option
-     * @returns {Integer} ClaimableRewards rewards user has received / can claim at this block time
-     */
-    userClaimableRewardsCalculation = async ({
-        userStakeAmount,
-        userStakeTime,
-        userUnlockTime,
-        t0,
-        endTime,
-        lockedRewards,
-        lockedRewardsCurrent,
-        userStakePeriodRewardFactor
-    }) => {
-        return await this.params.contract.getContract().methods._userClaimableRewardsCalculation(
-            userStakeAmount,
-            userStakeTime,
-            userUnlockTime,
-            t0,
-            endTime,
-            lockedRewards,
-            lockedRewardsCurrent,
-            userStakePeriodRewardFactor
-        ).call();
-    }
-
-    /**
-     * @function extendLockTime
-     * @description  Extend lock period to get more upfront rewards. Actually just a special case of _stakelockTimeChoice(0, lockTimeIndex)
-     * @param {Integer} lockTimeIndex index to the lockTimePeriod array , if 0 then do not change current unlockTime
-     * @returns {Integer} lockTimeIndex index to the lockTimePeriod array
-     */
-    extendLockTime = async ({lockTimeIndex}) => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.extendLockTime(
-                        lockTimeIndex
-                    )
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function topUp
-     * @description Increase staked amount, but keep unlock time unchanged. Actually just a special case of _stakelockTimeChoice(amount, 0)
-     * @param {Integer} amount of token to be staked
-     * @returns {Integer} Amount of token to be staked
-     */
-    topUp = async ({amount}) => {
-        amount = Numbers.toSmartContractDecimals(
-            amount,
-            await this.getDecimals()
-        )
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.topUp(amount)
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function migrateRewards
-     * @description Migrate rewards from previous (v1/v2) staking contract
-     * @param {Address} staker
-     */
-    migrateRewards = async ({staker}) => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.migrateRewards(staker)
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function migrateRewards_msgSender
-     * @description Migrate msgSender's rewards from previous (v1/v2) staking contract
-     */
-    migrateRewards_msgSender = async () => {
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.migrateRewards_msgSender()
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    /**
-     * @function stakeLockTimeChoice
-     * @description Stake tokens for a lock time choice
-     * @param {Integer} amount Amount of tokens to stake
-     * @param {Integer} lockTimeIndex to choose lock time
-     */
-    stakeLockTimeChoice = async ({amount, lockTimeIndex}) => {
-        amount = Numbers.toSmartContractDecimals(
-            amount,
-            await this.getDecimals()
-        )
-        try {
-            return await this.client.sendTx(
-                this.params.web3,
-                this.acc,
-                this.params.contract,
-                this.params.contract
-                    .getContract()
-                    .methods.stakelockTimeChoice(amount, lockTimeIndex)
-            );
-        } catch (err) {
-            throw err;
-        }
-    }
 }
 
 export default StakingV3;

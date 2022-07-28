@@ -6,7 +6,6 @@ import { mochaAsync } from '../utils';
 import Application from '../../src/models';
 import { ierc20, stakingv3, staking } from "../../src/interfaces";
 import * as ethers from 'ethers';
-import Staking from "../../src/models/base/Staking";
 
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
