@@ -20,29 +20,29 @@
 <dt><a href="#getLockTimePeriod">getLockTimePeriod()</a> ⇒ <code>Integer</code></dt>
 <dd><p>Returns the default lock time period</p>
 </dd>
-<dt><a href="#getUnlockTime">getUnlockTime(address)</a> ⇒ <code>Integer</code></dt>
-<dd><p>Returns the stake time for a wallet</p>
-</dd>
-<dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
-<dd><p>Verify if the address has approved the staking to deposit</p>
-</dd>
-<dt><a href="#remainingLockPeriod">remainingLockPeriod(address)</a> ⇒ <code>Integer</code></dt>
-<dd><p>Return remaining lock time period</p>
-</dd>
 <dt><a href="#getLockTimePeriodOptions">getLockTimePeriodOptions()</a> ⇒ <code>Array.&lt;Integer&gt;</code></dt>
 <dd><p>Get all the lock time periods available</p>
 </dd>
 <dt><a href="#getLockTimePeriodRewardFactors">getLockTimePeriodRewardFactors()</a> ⇒ <code>Array.&lt;Integer&gt;</code></dt>
 <dd><p>Get all the reward factors available</p>
 </dd>
-<dt><a href="#remainingLockPeriod_msgSender">remainingLockPeriod_msgSender()</a> ⇒ <code>Integer</code></dt>
-<dd><p>Returns remaining lock time period</p>
+<dt><a href="#getUnlockTime">getUnlockTime(address)</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns the stake time for a wallet</p>
+</dd>
+<dt><a href="#isApproved">isApproved(tokenAmount, address)</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Verify if the address has approved the staking to deposit</p>
 </dd>
 <dt><a href="#migrateRewards">migrateRewards(staker)</a></dt>
 <dd><p>Migrate rewards from previous (v1/v2) staking contract</p>
 </dd>
 <dt><a href="#migrateRewards_msgSender">migrateRewards_msgSender()</a></dt>
 <dd><p>Migrate msgSender&#39;s rewards from previous (v1/v2) staking contract</p>
+</dd>
+<dt><a href="#remainingLockPeriod">remainingLockPeriod(address)</a> ⇒ <code>Integer</code></dt>
+<dd><p>Return remaining lock time period</p>
+</dd>
+<dt><a href="#remainingLockPeriod_msgSender">remainingLockPeriod_msgSender()</a> ⇒ <code>Integer</code></dt>
+<dd><p>Returns remaining lock time period</p>
 </dd>
 <dt><a href="#setLockTimePeriodDefault">setLockTimePeriodDefault(defaultLockTime)</a></dt>
 <dd><p>Setup time in seconds for default lock time period</p>
@@ -149,6 +149,20 @@ Returns the default lock time period
 
 **Kind**: global function  
 **Returns**: <code>Integer</code> - defaultLockTimePeriod  
+<a name="getLockTimePeriodOptions"></a>
+
+## getLockTimePeriodOptions() ⇒ <code>Array.&lt;Integer&gt;</code>
+Get all the lock time periods available
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Integer&gt;</code> - array of lock times the user can choose from when staking  
+<a name="getLockTimePeriodRewardFactors"></a>
+
+## getLockTimePeriodRewardFactors() ⇒ <code>Array.&lt;Integer&gt;</code>
+Get all the reward factors available
+
+**Kind**: global function  
+**Returns**: <code>Array.&lt;Integer&gt;</code> - array of reward factors the user can choose from when staking  
 <a name="getUnlockTime"></a>
 
 ## getUnlockTime(address) ⇒ <code>Integer</code>
@@ -173,39 +187,6 @@ Verify if the address has approved the staking to deposit
 | tokenAmount | <code>Integer</code> | 
 | address | <code>Address</code> | 
 
-<a name="remainingLockPeriod"></a>
-
-## remainingLockPeriod(address) ⇒ <code>Integer</code>
-Return remaining lock time period
-
-**Kind**: global function  
-**Returns**: <code>Integer</code> - unlockTime remaining time in seconds  
-
-| Param | Type |
-| --- | --- |
-| address | <code>Address</code> | 
-
-<a name="getLockTimePeriodOptions"></a>
-
-## getLockTimePeriodOptions() ⇒ <code>Array.&lt;Integer&gt;</code>
-Get all the lock time periods available
-
-**Kind**: global function  
-**Returns**: <code>Array.&lt;Integer&gt;</code> - array of lock times the user can choose from when staking  
-<a name="getLockTimePeriodRewardFactors"></a>
-
-## getLockTimePeriodRewardFactors() ⇒ <code>Array.&lt;Integer&gt;</code>
-Get all the reward factors available
-
-**Kind**: global function  
-**Returns**: <code>Array.&lt;Integer&gt;</code> - array of reward factors the user can choose from when staking  
-<a name="remainingLockPeriod_msgSender"></a>
-
-## remainingLockPeriod\_msgSender() ⇒ <code>Integer</code>
-Returns remaining lock time period
-
-**Kind**: global function  
-**Returns**: <code>Integer</code> - unlockTime remaining time in seconds  
 <a name="migrateRewards"></a>
 
 ## migrateRewards(staker)
@@ -223,6 +204,25 @@ Migrate rewards from previous (v1/v2) staking contract
 Migrate msgSender's rewards from previous (v1/v2) staking contract
 
 **Kind**: global function  
+<a name="remainingLockPeriod"></a>
+
+## remainingLockPeriod(address) ⇒ <code>Integer</code>
+Return remaining lock time period
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - unlockTime remaining time in seconds  
+
+| Param | Type |
+| --- | --- |
+| address | <code>Address</code> | 
+
+<a name="remainingLockPeriod_msgSender"></a>
+
+## remainingLockPeriod\_msgSender() ⇒ <code>Integer</code>
+Returns remaining lock time period
+
+**Kind**: global function  
+**Returns**: <code>Integer</code> - unlockTime remaining time in seconds  
 <a name="setLockTimePeriodDefault"></a>
 
 ## setLockTimePeriodDefault(defaultLockTime)

@@ -152,6 +152,24 @@ import Chains from "../../utils/Chains";
         return await this.params.contract.getContract().methods.getLockTimePeriod().call();
     }
 
+    /**
+     * @function getLockTimePeriodOptions
+     * @description Get all the lock time periods available
+     * @returns {Integer[]} array of lock times the user can choose from when staking
+     */
+     getLockTimePeriodOptions = async () => {
+        return await this.params.contract.getContract().methods.getLockTimePeriodOptions().call();
+    }
+
+    /**
+     * @function getLockTimePeriodRewardFactors
+     * @description Get all the reward factors available
+     * @returns {Integer[]} array of reward factors the user can choose from when staking
+     */
+     getLockTimePeriodRewardFactors = async () => {
+        return await this.params.contract.getContract().methods.getLockTimePeriodRewardFactors().call();
+    }
+
     getTokenContract() {
         return this.params.erc20TokenContract;
     }
@@ -180,43 +198,6 @@ import Chains from "../../utils/Chains";
             spenderAddress: this.params.contractAddress
         });
     };
-
-    /**
-     * @function remainingLockPeriod
-     * @description Return remaining lock time period
-     * @param {Address} address
-     * @returns {Integer} unlockTime remaining time in seconds
-     */
-    remainingLockPeriod = async ({address}) => {
-        return await this.params.contract.getContract().methods.remainingLockPeriod(address).call();
-    }
-
-    /**
-     * @function getLockTimePeriodOptions
-     * @description Get all the lock time periods available
-     * @returns {Integer[]} array of lock times the user can choose from when staking
-     */
-    getLockTimePeriodOptions = async () => {
-        return await this.params.contract.getContract().methods.getLockTimePeriodOptions().call();
-    }
-
-    /**
-     * @function getLockTimePeriodRewardFactors
-     * @description Get all the reward factors available
-     * @returns {Integer[]} array of reward factors the user can choose from when staking
-     */
-    getLockTimePeriodRewardFactors = async () => {
-        return await this.params.contract.getContract().methods.getLockTimePeriodRewardFactors().call();
-    }
-
-    /**
-     * @function remainingLockPeriod_msgSender
-     * @description Returns remaining lock time period
-     * @returns {Integer} unlockTime remaining time in seconds
-     */
-    remainingLockPeriod_msgSender = async () => {
-        return await this.params.contract.getContract().methods.remainingLockPeriod_msgSender().call();
-    }
 
     /**
      * @function migrateRewards
@@ -258,11 +239,30 @@ import Chains from "../../utils/Chains";
     }
 
     /**
+     * @function remainingLockPeriod
+     * @description Return remaining lock time period
+     * @param {Address} address
+     * @returns {Integer} unlockTime remaining time in seconds
+     */
+    remainingLockPeriod = async ({address}) => {
+        return await this.params.contract.getContract().methods.remainingLockPeriod(address).call();
+    }
+
+    /**
+     * @function remainingLockPeriod_msgSender
+     * @description Returns remaining lock time period
+     * @returns {Integer} unlockTime remaining time in seconds
+     */
+    remainingLockPeriod_msgSender = async () => {
+        return await this.params.contract.getContract().methods.remainingLockPeriod_msgSender().call();
+    }
+
+    /**
      * @function setLockTimePeriodDefault
      * @description Setup time in seconds for default lock time period
      * @param {Integer} defaultLockTime
      */
-     setLockTimePeriodDefault = async ({defaultLockTime}) => {
+    setLockTimePeriodDefault = async ({defaultLockTime}) => {
         try {
             return await this.client.sendTx(
                 this.params.web3,
