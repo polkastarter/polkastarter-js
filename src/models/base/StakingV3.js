@@ -141,7 +141,7 @@ import Chains from "../../utils/Chains";
 
     /**
      * @function getDecimals
-     * @description Return number of decimals of the token
+     * @description Returns number of decimals of the token
      * @returns {Integer}
      */
     getDecimals = async () => {
@@ -250,7 +250,7 @@ import Chains from "../../utils/Chains";
 
     /**
      * @function remainingLockPeriod
-     * @description Return remaining lock time period
+     * @description Returns remaining lock time period
      * @param {Address} address
      * @returns {Integer} unlockTime remaining time in seconds
      */

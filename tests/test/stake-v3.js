@@ -14,6 +14,7 @@ const expect = chai.expect;
 context('Staking Contract V3', async () => {
     var deployerAddress = '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB'
     var ERC20TokenAddress;
+    var contractStakeV3;
     var StakingV3Address;
     var stakeV3Contract;
     var app;
@@ -72,7 +73,7 @@ context('Staking Contract V3', async () => {
                 .on('confirmation', function(confirmationNumber, receipt){
                     ERC20TokenAddress = receipt.contractAddress;
                     // Deploy the stake V3 contract
-                    const contractStakeV3 = new app.web3.eth.Contract(stakingv3.abi, null, {data: stakingv3.bytecode});
+                    contractStakeV3 = new app.web3.eth.Contract(stakingv3.abi, null, {data: stakingv3.bytecode});
                     contractStakeV3.deploy({
                             arguments: [ERC20TokenAddress]
                         })
@@ -226,18 +227,22 @@ context('Staking Contract V3', async () => {
 
         it('setLockedRewardsEnabled()', async () => {
             const lockedRewardsEnabled = true;
-            const tx = await stakeV3Contract.setLockedRewardsEnabled({lockedRewardsEnabled});
+            await stakeV3Contract.setLockedRewardsEnabled({lockedRewardsEnabled});
 
-            //don't have getter for see what is the value after execute setLockedRewardsEnabled()
-            expect(tx.status).to.equal(true);
+            const event = await contractStakeV3.getPastEvents('LockedRewardsEnabledChanged',{fromBlock: 0});
+            const valueEmitted = (event.length>0) ? event[0].returnValues.lockedRewardsEnabled : null;
+
+            expect(valueEmitted).to.equal(lockedRewardsEnabled);
         });
 
         it('setUnlockedRewardsFactor()', async () => {
             const unlockedRewardsFactor = 10;
-            const tx = await stakeV3Contract.setUnlockedRewardsFactor({unlockedRewardsFactor});
+            await stakeV3Contract.setUnlockedRewardsFactor({unlockedRewardsFactor});
 
-            //don't have getter for see what is the value after execute setUnlockedRewardsFactor()
-            expect(tx.status).to.equal(true);
+            const event = await contractStakeV3.getPastEvents('UnlockedRewardsFactorChanged',{fromBlock: 0});
+            const valueEmitted = (event.length>0) ? event[0].returnValues.unlockedRewardsFactor.toString() : null;
+
+            expect(valueEmitted).to.equal(unlockedRewardsFactor.toString());
         });
 
         it('setLockTimePeriodOptions()', async () => {
@@ -256,10 +261,12 @@ context('Staking Contract V3', async () => {
 
         it('setPrevPolsStaking()', async () => {
             const prevPolsStakingAddress = '0x1234567890123456789012345678901234567890';
-            const tx = await stakeV3Contract.setPrevPolsStaking({prevPolsStakingAddress});
+            await stakeV3Contract.setPrevPolsStaking({prevPolsStakingAddress});
 
-            //don't have getter for see what is the address after execute setPrevPolsStaking()
-            expect(tx.status).to.equal(true);
+            const event = await contractStakeV3.getPastEvents('PrevPolsStakingChanged',{fromBlock: 0});
+            const valueEmitted = (event.length>0) ? event[0].returnValues.prevPolsStaking : null;
+
+            expect(valueEmitted).to.equal(prevPolsStakingAddress);
         });
 
         it('remainingLockPeriod_msgSender()', async () => {
@@ -513,5 +520,4 @@ context('Staking Contract V3', async () => {
             expect(stakeAmountAfter).to.equal('1020');
         });
     });
-
 });
