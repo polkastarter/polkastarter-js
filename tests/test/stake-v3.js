@@ -301,8 +301,11 @@ context('Staking Contract V3', async () => {
             await forwardTime(30);
 
             const rewards = ethers.utils.formatUnits(await stakeV3Contract.userClaimableRewards({staker: deployerAddress}));
-            const mockReward = '31000.0';
-            expect(rewards).to.equal(mockReward);
+
+            //It can vary depending on the execution time of userClaimableRewardsCurrent()
+            const mockRewardsMin = 31000;
+            const mockRewardsMax = 36000;
+            expect(parseInt(rewards)).to.to.be.gte(mockRewardsMin).lte(mockRewardsMax);
         });
 
         it('userClaimableRewardsCurrent()', async () => {
@@ -315,13 +318,14 @@ context('Staking Contract V3', async () => {
             await forwardTime(30);
 
             const mockRewardsTrue = 31000;
-            const mockRewardsFalse = '31000.0';
+            const mockRewardsFalseMin = 31000;
+            const mockRewardsFalseMax = 36000;
 
             let rewardsTrue = ethers.utils.formatUnits(await stakeV3Contract.userClaimableRewardsCurrent({staker: deployerAddress, lockedRewardsCurrent: true}));
             let rewardsFalse = ethers.utils.formatUnits(await stakeV3Contract.userClaimableRewardsCurrent({staker: deployerAddress, lockedRewardsCurrent: false}));
-
-            expect(Math.round(rewardsTrue)).to.be.gte(0).lte(mockRewardsTrue);
-            expect(rewardsFalse).to.equal(mockRewardsFalse);
+            //It can vary depending on the execution time of the last two calls to: userClaimableRewardsCurrent()
+            expect(parseInt(rewardsTrue)).to.be.gte(0).lte(mockRewardsTrue);
+            expect(parseInt(rewardsFalse)).to.be.gte(mockRewardsFalseMin).lte(mockRewardsFalseMax);
         });
 
         it('userClaimableRewardsCalculation()', async () => {
