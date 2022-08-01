@@ -35,7 +35,7 @@ context('Staking Contract', async () => {
             // Instance Application using ganache
             const ganacheProvider = require("ganache-core").provider({
                 gasLimit: 10000000000,
-                
+
                 gasPrice: 1,
                 debug: true,
                 accounts: [
@@ -58,7 +58,7 @@ context('Staking Contract', async () => {
                     from: '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB',
                     gas: 4712388,
                 })
-                .on('confirmation', function(confirmationNumber, receipt){ 
+                .on('confirmation', function(confirmationNumber, receipt){
                     ERC20TokenAddress = receipt.contractAddress;
                     // Deploy the stake contract
                     const contractStake = new app.web3.eth.Contract(staking.abi, null, {data: staking.bytecode});
@@ -69,16 +69,16 @@ context('Staking Contract', async () => {
                             from: '0xe797860acFc4e06C1b2B96197a7dB1dFa518d5eB',
                             gas: 4712388,
                         })
-                        .on('confirmation', function(confirmationNumber, receipt){ 
+                        .on('confirmation', function(confirmationNumber, receipt){
                             StakingAddress = receipt.contractAddress;
                             resolve();
-                        }).on('error', console.log);   
+                        }).on('error', console.log);
 
-                }).on('error', console.log);              
+                }).on('error', console.log);
         });
     }));
 
-   
+
     it('should automatically get addresses', mochaAsync(async () => {
         let stakeContract = await app.getStaking({});
         expect(stakeContract).to.not.equal(false);
