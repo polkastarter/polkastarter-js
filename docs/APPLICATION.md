@@ -29,6 +29,9 @@
 <dt><a href="#getStaking">getStaking([contractAddress], [tokenAddress])</a></dt>
 <dd><p>Returns the Staking Model instance.</p>
 </dd>
+<dt><a href="#getStakingV3">getStakingV3([contractAddress], [tokenAddress])</a></dt>
+<dd><p>Returns the Staking Model instance.</p>
+</dd>
 <dt><a href="#getFixedSwapContract">getFixedSwapContract(tokenAddress, [contractAddress])</a></dt>
 <dd><p>Returns Fixed Swap instance</p>
 </dd>
@@ -112,6 +115,18 @@ Returns the Staking Model instance.
 | Param | Type | Description |
 | --- | --- | --- |
 | [contractAddress] | <code>string</code> | The staking contract address. (Default: Predefined addresses depending on the network) |
+| [tokenAddress] | <code>string</code> | The staking token address. (Default: Predefined addresses depending on the network) |
+
+<a name="getStakingV3"></a>
+
+## getStakingV3([contractAddress], [tokenAddress])
+Returns the Staking Model instance.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [contractAddress] | <code>string</code> | The staking V3 contract address. (Default: Predefined addresses depending on the network) |
 | [tokenAddress] | <code>string</code> | The staking token address. (Default: Predefined addresses depending on the network) |
 
 <a name="getFixedSwapContract"></a>

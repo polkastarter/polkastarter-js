@@ -6,6 +6,7 @@ import { mochaAsync } from '../utils';
 import Application from '../../src/models';
 import { ierc20, stakingv3, staking } from "../../src/interfaces";
 import * as ethers from 'ethers';
+import Numbers from "../../src/utils/Numbers";
 
 var userPrivateKey = '0x7f76de05082c4d578219ca35a905f8debe922f1f00b99315ebf0706afc97f132';
 
@@ -127,6 +128,20 @@ context('Staking Contract V3', async () => {
             let unlockTime = parseInt(await stakeV3Contract.stakeTime({address: app.account.getAddress()})) + parseInt(await stakeV3Contract.getLockTimePeriod())
 
             expect(Number(await stakeV3Contract.getUnlockTime({address: app.account.getAddress()})).noExponents()).to.equal(Number(unlockTime).noExponents())
+        }));
+
+        it('should fail if address is not configured for chain', mochaAsync(async () => {
+            let failed = false;
+            try {
+
+            app = new Application({test : true, mainnet : false, network : 'ETH', web3:
+                new Web3(ganacheProvider)
+            });
+                await app.getStakingV3({})
+            } catch (e) {
+                failed = true;
+            }
+            expect(failed).to.equal(true);
         }));
 
         it('should fail withdraw if we didnt reach time', mochaAsync(async () => {
@@ -350,6 +365,42 @@ context('Staking Contract V3', async () => {
             });
 
             expect(rewards.toString()).to.equal('5000000000');
+        });
+
+        it('should fail if claim() if no reward token set', mochaAsync(async () => {
+            let failed = false;
+            try {
+                await stakeV3Contract.claim();
+            } catch (e) {
+                failed = true;
+            }
+            expect(failed).to.equal(true);
+        }));
+
+        it('should fail claim() if no rewards available', async () => {
+            await stakeV3Contract.setRewardToken({tokenAddress: ERC20TokenAddress});
+            let failed = false;
+            try {
+                await stakeV3Contract.claim();
+            } catch (e) {
+                failed = true;
+            }
+            expect(failed).to.equal(true);
+        });
+
+        it('should claim() and deposit balance', async () => {
+            await stakeV3Contract.setRewardToken({tokenAddress: ERC20TokenAddress});
+            await stakeV3Contract.params.erc20TokenContract.transferTokenAmount({ toAddress: StakingV3Address, tokenAmount: 1000})
+            await stakeV3Contract.approveStakeERC20({tokenAmount: 1000});
+            await stakeV3Contract.stake({amount: 1000});
+            const beforeBalance = await stakeV3Contract.params.erc20TokenContract.getTokenAmount(deployerAddress);
+            const oneDay = 24 * 60 * 60;
+            await forwardTime(oneDay);
+            await stakeV3Contract.claim();
+
+            const event = await contractStakeV3.getPastEvents('Claimed',{fromBlock: 0});
+            const valueEmitted = (event.length>0) ? event[0].returnValues.amount : null;
+            expect(parseInt(Numbers.fromDecimals(valueEmitted, 18))).to.equal(1);
         });
 
         it('extendLockTime()', async () => {

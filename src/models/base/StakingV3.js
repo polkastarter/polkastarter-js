@@ -25,7 +25,7 @@ import Chains from "../../utils/Chains";
     stakingTestAddresses = {
         // 'BSC': '0x1621AEC5D5B2e6eC6D9B58399E9D5253AF86DF5f',
         // 'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5'
-        'BSC': '0x48F5EDDA2c6b503C79FF590ed8AAFF54f7463EB9',
+        'BSC': '0x48F5EDDA2c6b503C79FF590ed8AAFF54f7463EB9', // ToDo
         // 'ETH': '0xa297c295aFcac59c749e25A02811a02B2f7D3Ab5' old version
     };
 
@@ -95,6 +95,40 @@ import Chains from "../../utils/Chains";
             amount: tokenAmount,
             callback
         });
+    };
+
+    /**
+     * @function setStakeRewardEndTime
+     * @param {Date} stakeRewardEndTime
+     * @type admin
+     * @description Sets the reward token
+     */
+     setStakeRewardEndTime = async ({stakeRewardEndTime}) => {
+        return await this.client.sendTx(
+            this.params.web3,
+            this.acc,
+            this.params.contract,
+            this.params.contract
+                .getContract()
+                .methods.setStakeRewardEndTime(Numbers.timeToSmartContractTime(stakeRewardEndTime))
+        );
+    };
+
+    /**
+     * @function setRewardToken
+     * @param {Address} tokenAddress
+     * @type admin
+     * @description Sets the reward token
+     */
+     setRewardToken = async ({tokenAddress}) => {
+        return await this.client.sendTx(
+            this.params.web3,
+            this.acc,
+            this.params.contract,
+            this.params.contract
+                .getContract()
+                .methods.setRewardToken(tokenAddress)
+        );
     };
 
     /**
