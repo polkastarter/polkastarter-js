@@ -19,10 +19,14 @@ const CELO_CHAIN_URL =
   "https://forno.celo.org";
 const CELO_CHAIN_TESTNET_URL =
   "https://alfajores-forno.celo-testnet.org";
-const AVAX_CHAIN_URL =
+  const AVAX_CHAIN_URL =
   "https://api.avax.network/ext/bc/C/rpc";
 const AVAX_CHAIN_TESTNET_URL =
   "https://api.avax-test.network/ext/bc/C/rpc";
+const OMNI_CHAIN_URL =
+  "https://testnet.omni.network";
+const OMNI_CHAIN_TESTNET_URL =
+  "https://testnet.omni.network";
 
 const networksEnum = Object.freeze({
   1: "Ethereum Main",
@@ -39,7 +43,8 @@ const networksEnum = Object.freeze({
   43114: "Avalanche",
   43113: "Avalanche Testnet",
   1284: "Moonbeam",
-  1287: "Moonbeam Testnet"
+  1287: "Moonbeam Testnet",
+  165: "Omni Testnet"
 });
 
 /**
@@ -51,12 +56,12 @@ class chains {
 
   checkIfNetworkIsSupported(network)  {
     if(!this.isNetworkSupported(network)) {
-			throw new Error("Network has to be ETH, DOT, BSC, MATIC, CELO or AVAX");
+			throw new Error("Network has to be ETH, DOT, BSC, MATIC, CELO, AVAX or OMNI");
 		}
   }
 
   isNetworkSupported(network) {
-    if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network != 'CELO') && (network != 'AVAX')){
+    if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network != 'CELO') && (network != 'AVAX') && (network != 'OMNI')){
 			return false;
 		}
     return true;
@@ -74,7 +79,9 @@ class chains {
 		} else if(network == 'CELO') {
 			return (mainnet == true) ? CELO_CHAIN_URL : CELO_CHAIN_TESTNET_URL;
 		} else if(network == 'AVAX') {
-			return (mainnet == true) ? AVAX_CHAIN_URL : AVAX_CHAIN_TESTNET_URL;
+			return (mainnet == true) ? AVAX_CHAIN_URL : AVAX_CHAIN_TESTNET_URL; 
+    } else if(network == 'OMNI') {
+        return (mainnet == true) ? OMNI_CHAIN_URL : OMNI_CHAIN_TESTNET_URL;
 		}
   }
 

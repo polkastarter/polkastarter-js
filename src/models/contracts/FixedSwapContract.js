@@ -174,11 +174,6 @@ class FixedSwapContract extends BaseSwapContract {
 			parseInt(feeAmount),
 			(isTokenSwapAtomic ? FLAG_isTokenSwapAtomic : 0) | (hasWhitelisting ? FLAG_hasWhitelisting : 0) | (isPOLSWhitelist ? FLAG_isPOLSWhitelisted : 0), // Flags
 			ERC20TradingAddress,
-			Numbers.timeToSmartContractTime(vestingStart),
-			vestingCliff,
-			vestingDuration,
-			vestingSchedule,
-
 		];
 
 		let res = await new DeploymentService().deploy(
