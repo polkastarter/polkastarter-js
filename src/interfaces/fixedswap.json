@@ -1,408 +1,2111 @@
-{
-  "_format": "hh-sol-artifact-1",
-  "contractName": "LocalETHDeposit",
-  "sourceName": "contracts/LocalETHDeposit.sol",
-  "abi": [
-    {
-      "inputs": [
-        {
-          "internalType": "contract IOmniPortal",
-          "name": "_portal",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_global",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "Paused",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "previousAdminRole",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "newAdminRole",
-          "type": "bytes32"
-        }
-      ],
-      "name": "RoleAdminChanged",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        }
-      ],
-      "name": "RoleGranted",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "sender",
-          "type": "address"
-        }
-      ],
-      "name": "RoleRevoked",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "Unpaused",
-      "type": "event"
-    },
-    {
-      "inputs": [],
-      "name": "DEFAULT_ADMIN_ROLE",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "accountDeposits",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "endDate",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        }
-      ],
-      "name": "getRoleAdmin",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "global",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "grantRole",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "hasRole",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "localETHDeposit",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "omni",
-      "outputs": [
-        {
-          "internalType": "contract IOmniPortal",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "pause",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "paused",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "renounceRole",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes32",
-          "name": "role",
-          "type": "bytes32"
-        },
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "revokeRole",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "safePullETH",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_endDate",
-          "type": "uint256"
-        }
-      ],
-      "name": "setEndDate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_tokenSaleContractOmni",
-          "type": "address"
-        }
-      ],
-      "name": "setGlobal",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_startDate",
-          "type": "uint256"
-        }
-      ],
-      "name": "setStartDate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "startDate",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes4",
-          "name": "interfaceId",
-          "type": "bytes4"
-        }
-      ],
-      "name": "supportsInterface",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "unpause",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ],
-  "bytecode": "0x60803461016957610ea890601f38839003908101601f19168201906001600160401b0382118383101761016e57808391604095869485528339810103126101695780516001600160a01b03808216918290036101695760208093015190811681036101695760018054600580546001600160a01b0319169094179093556001600160a81b031990921660089190911b610100600160a81b0316179055600080805280825282812033825282528281205490919060ff1615610133575b818052818152828220907389b41a6e5ab74fcb9771a3356986185f67f9214c91828452815260ff8484205416156100fb575b8351610d0390816101858239f35b8280528281528383208284529052828220805460ff191660011790553391600080516020610e888339815191528180a43880806100ed565b8180528181528282203383528152828220600160ff19825416179055333383600080516020610e888339815191528180a46100bb565b600080fd5b634e487b7160e01b600052604160045260246000fdfe608060408181526004908136101561001657600080fd5b600092833560e01c90816301ffc9a7146107f5575080630b97bc86146107d6578063248a9ca3146107ac578063268fd6661461074a5780632f2ff15d146106a157806336568abe1461060f5780633784f000146105d757806339acf9f1146105ae5780633f4ba83a146105015780635c975abb146104dd57806382d95df5146104a5578063835dada01461046f5780638456cb591461040057806391d14854146103ba57806396a32bc41461035d578063a05f990614610330578063a217fddf14610315578063c24a0f8b146102f2578063d547741f146102b65763eb7c87ce1461010057600080fd5b826003193601126102b257610113610c66565b600254421061026f576003544211610239576005546001548251631ee5dfcd60e01b6020820152336024820152346044808301919091528152608081019267ffffffffffffffff84119260081c6001600160a01b039081169291169080851084176102265790879291858752813b15610222578386939184926322edc1cf60e01b845260848201528860a4820152607f19906101b260c4820182610ba6565b0301925af18015610218576101f4575b50503383528160205282208054913483018093116101df57505580f35b601190634e487b7160e01b6000525260246000fd5b9391936102055783529138806101c2565b506041602492634e487b7160e01b835252fd5b83513d87823e3d90fd5b8380fd5b634e487b7160e01b885260418752602488fd5b906020606492519162461bcd60e51b8352820152601060248201526f1d1bdad95b881cd85b1948195b99195960821b6044820152fd5b906020606492519162461bcd60e51b8352820152601a60248201527f746f6b656e2073616c65206e6f742079657420737461727465640000000000006044820152fd5b8280fd5b50346102b257806003193601126102b2576102ef91356102ea60016102d9610864565b93838752866020528620015461087a565b610bcb565b80f35b8382346103115781600319360112610311576020906003549051908152f35b5080fd5b83823461031157816003193601126103115751908152602090f35b838234610311578160031936011261031157600154905160089190911c6001600160a01b03168152602090f35b8382346103115781600319360112610311578180528160205280822033835260205261038e60ff8284205416610caa565b81808080478181156103b1575b3390f1156103a7575080f35b51903d90823e3d90fd5b506108fc61039b565b5090346102b257816003193601126102b2578160209360ff926103db610864565b903582528186528282206001600160a01b039091168252855220549151911615158152f35b83823461031157816003193601126103115760207f62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a25891838052838252808420338552825261045360ff8286205416610caa565b61045b610c66565b600160ff198154161760015551338152a180f35b5090346102b25760203660031901126102b25760209282916001600160a01b03610497610849565b168252845220549051908152f35b50346102b25760203660031901126102b25760ff6104d6918480528460205280852033865260205284205416610caa565b3560025580f35b83823461031157816003193601126103115760209060ff6001541690519015158152f35b5090346102b257826003193601126102b2578280528260205281832033845260205261053260ff8385205416610caa565b6001549060ff821615610574575060ff1916600155513381527f5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa90602090a180f35b606490602084519162461bcd60e51b8352820152601460248201527314185d5cd8589b194e881b9bdd081c185d5cd95960621b6044820152fd5b83823461031157816003193601126103115760055490516001600160a01b039091168152602090f35b50346102b25760203660031901126102b25760ff610608918480528460205280852033865260205284205416610caa565b3560035580f35b5091903461031157826003193601126103115761062a610864565b90336001600160a01b0383160361064657906102ef9135610bcb565b608490602085519162461bcd60e51b8352820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152fd5b5090346102b257816003193601126102b25735906106bd610864565b90828452836020526106d46001828620015461087a565b82845260208481528185206001600160a01b039093168086529290528084205460ff1615610700578380f35b828452836020528084208285526020528320600160ff1982541617905533917f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d8480a43880808380f35b8382346103115760203660031901126103115761078460ff61076a610849565b928480528460205280852033865260205284205416610caa565b60018054610100600160a81b03191660089290921b610100600160a81b031691909117905580f35b5090346102b25760203660031901126102b257816020936001923581528085522001549051908152f35b8382346103115781600319360112610311576020906002549051908152f35b849084346102b25760203660031901126102b2573563ffffffff60e01b81168091036102b25760209250637965db0b60e01b8114908115610838575b5015158152f35b6301ffc9a760e01b14905083610831565b600435906001600160a01b038216820361085f57565b600080fd5b602435906001600160a01b038216820361085f57565b600081815260208181526040808320338452825260ff8184205416156108a05750505050565b805167ffffffffffffffff9390336060820186811183821017610b6f578452602a82528482019684368937825115610b5b5760308853825191600192831015610b47576078602185015360295b838111610add5750610a07578451906080820182811089821117610ac957865260428252868201926060368537825115610ab557603084538251811015610ab557607860218401536041905b808211610a49575050610a07576109af610985979886519889957f416363657373436f6e74726f6c3a206163636f756e74200000000000000000008a8801525180926037880190610b83565b8401917001034b99036b4b9b9b4b733903937b6329607d1b60378401525180936048840190610b83565b01036028810185526067601f19910116840194848610908611176109f3575083905262461bcd60e51b8352600483015281906109ef906024830190610ba6565b0390fd5b634e487b7160e01b81526041600452602490fd5b60648686519062461bcd60e51b825280600483015260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152fd5b9091600f81166010811015610aa1576f181899199a1a9b1b9c1cb0b131b232b360811b901a610a788486610c3f565b5360041c918015610a8d576000190190610939565b634e487b7160e01b87526011600452602487fd5b634e487b7160e01b88526032600452602488fd5b634e487b7160e01b86526032600452602486fd5b634e487b7160e01b86526041600452602486fd5b90600f81166010811015610b33576f181899199a1a9b1b9c1cb0b131b232b360811b901a610b0b8387610c3f565b5360041c908015610b1f57600019016108ed565b634e487b7160e01b86526011600452602486fd5b634e487b7160e01b87526032600452602487fd5b634e487b7160e01b85526032600452602485fd5b634e487b7160e01b84526032600452602484fd5b634e487b7160e01b84526041600452602484fd5b60005b838110610b965750506000910152565b8181015183820152602001610b86565b90602091610bbf81518092818552858086019101610b83565b601f01601f1916010190565b9060009180835282602052604083209160018060a01b03169182845260205260ff604084205416610bfb57505050565b80835282602052604083208284526020526040832060ff1981541690557ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b339380a4565b908151811015610c50570160200190565b634e487b7160e01b600052603260045260246000fd5b60ff60015416610c7257565b60405162461bcd60e51b815260206004820152601060248201526f14185d5cd8589b194e881c185d5cd95960821b6044820152606490fd5b15610cb157565b60405162461bcd60e51b815260206004820152601960248201527f63616c6c657220686173206e6f742061646d696e20726f6c65000000000000006044820152606490fdfea164736f6c6343000813000a2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d",
-  "deployedBytecode": "0x608060408181526004908136101561001657600080fd5b600092833560e01c90816301ffc9a7146107f5575080630b97bc86146107d6578063248a9ca3146107ac578063268fd6661461074a5780632f2ff15d146106a157806336568abe1461060f5780633784f000146105d757806339acf9f1146105ae5780633f4ba83a146105015780635c975abb146104dd57806382d95df5146104a5578063835dada01461046f5780638456cb591461040057806391d14854146103ba57806396a32bc41461035d578063a05f990614610330578063a217fddf14610315578063c24a0f8b146102f2578063d547741f146102b65763eb7c87ce1461010057600080fd5b826003193601126102b257610113610c66565b600254421061026f576003544211610239576005546001548251631ee5dfcd60e01b6020820152336024820152346044808301919091528152608081019267ffffffffffffffff84119260081c6001600160a01b039081169291169080851084176102265790879291858752813b15610222578386939184926322edc1cf60e01b845260848201528860a4820152607f19906101b260c4820182610ba6565b0301925af18015610218576101f4575b50503383528160205282208054913483018093116101df57505580f35b601190634e487b7160e01b6000525260246000fd5b9391936102055783529138806101c2565b506041602492634e487b7160e01b835252fd5b83513d87823e3d90fd5b8380fd5b634e487b7160e01b885260418752602488fd5b906020606492519162461bcd60e51b8352820152601060248201526f1d1bdad95b881cd85b1948195b99195960821b6044820152fd5b906020606492519162461bcd60e51b8352820152601a60248201527f746f6b656e2073616c65206e6f742079657420737461727465640000000000006044820152fd5b8280fd5b50346102b257806003193601126102b2576102ef91356102ea60016102d9610864565b93838752866020528620015461087a565b610bcb565b80f35b8382346103115781600319360112610311576020906003549051908152f35b5080fd5b83823461031157816003193601126103115751908152602090f35b838234610311578160031936011261031157600154905160089190911c6001600160a01b03168152602090f35b8382346103115781600319360112610311578180528160205280822033835260205261038e60ff8284205416610caa565b81808080478181156103b1575b3390f1156103a7575080f35b51903d90823e3d90fd5b506108fc61039b565b5090346102b257816003193601126102b2578160209360ff926103db610864565b903582528186528282206001600160a01b039091168252855220549151911615158152f35b83823461031157816003193601126103115760207f62e78cea01bee320cd4e420270b5ea74000d11b0c9f74754ebdbfc544b05a25891838052838252808420338552825261045360ff8286205416610caa565b61045b610c66565b600160ff198154161760015551338152a180f35b5090346102b25760203660031901126102b25760209282916001600160a01b03610497610849565b168252845220549051908152f35b50346102b25760203660031901126102b25760ff6104d6918480528460205280852033865260205284205416610caa565b3560025580f35b83823461031157816003193601126103115760209060ff6001541690519015158152f35b5090346102b257826003193601126102b2578280528260205281832033845260205261053260ff8385205416610caa565b6001549060ff821615610574575060ff1916600155513381527f5db9ee0a495bf2e6ff9c91a7834c1ba4fdd244a5e8aa4e537bd38aeae4b073aa90602090a180f35b606490602084519162461bcd60e51b8352820152601460248201527314185d5cd8589b194e881b9bdd081c185d5cd95960621b6044820152fd5b83823461031157816003193601126103115760055490516001600160a01b039091168152602090f35b50346102b25760203660031901126102b25760ff610608918480528460205280852033865260205284205416610caa565b3560035580f35b5091903461031157826003193601126103115761062a610864565b90336001600160a01b0383160361064657906102ef9135610bcb565b608490602085519162461bcd60e51b8352820152602f60248201527f416363657373436f6e74726f6c3a2063616e206f6e6c792072656e6f756e636560448201526e103937b632b9903337b91039b2b63360891b6064820152fd5b5090346102b257816003193601126102b25735906106bd610864565b90828452836020526106d46001828620015461087a565b82845260208481528185206001600160a01b039093168086529290528084205460ff1615610700578380f35b828452836020528084208285526020528320600160ff1982541617905533917f2f8788117e7eff1d82e926ec794901d17c78024a50270940304540a733656f0d8480a43880808380f35b8382346103115760203660031901126103115761078460ff61076a610849565b928480528460205280852033865260205284205416610caa565b60018054610100600160a81b03191660089290921b610100600160a81b031691909117905580f35b5090346102b25760203660031901126102b257816020936001923581528085522001549051908152f35b8382346103115781600319360112610311576020906002549051908152f35b849084346102b25760203660031901126102b2573563ffffffff60e01b81168091036102b25760209250637965db0b60e01b8114908115610838575b5015158152f35b6301ffc9a760e01b14905083610831565b600435906001600160a01b038216820361085f57565b600080fd5b602435906001600160a01b038216820361085f57565b600081815260208181526040808320338452825260ff8184205416156108a05750505050565b805167ffffffffffffffff9390336060820186811183821017610b6f578452602a82528482019684368937825115610b5b5760308853825191600192831015610b47576078602185015360295b838111610add5750610a07578451906080820182811089821117610ac957865260428252868201926060368537825115610ab557603084538251811015610ab557607860218401536041905b808211610a49575050610a07576109af610985979886519889957f416363657373436f6e74726f6c3a206163636f756e74200000000000000000008a8801525180926037880190610b83565b8401917001034b99036b4b9b9b4b733903937b6329607d1b60378401525180936048840190610b83565b01036028810185526067601f19910116840194848610908611176109f3575083905262461bcd60e51b8352600483015281906109ef906024830190610ba6565b0390fd5b634e487b7160e01b81526041600452602490fd5b60648686519062461bcd60e51b825280600483015260248201527f537472696e67733a20686578206c656e67746820696e73756666696369656e746044820152fd5b9091600f81166010811015610aa1576f181899199a1a9b1b9c1cb0b131b232b360811b901a610a788486610c3f565b5360041c918015610a8d576000190190610939565b634e487b7160e01b87526011600452602487fd5b634e487b7160e01b88526032600452602488fd5b634e487b7160e01b86526032600452602486fd5b634e487b7160e01b86526041600452602486fd5b90600f81166010811015610b33576f181899199a1a9b1b9c1cb0b131b232b360811b901a610b0b8387610c3f565b5360041c908015610b1f57600019016108ed565b634e487b7160e01b86526011600452602486fd5b634e487b7160e01b87526032600452602487fd5b634e487b7160e01b85526032600452602485fd5b634e487b7160e01b84526032600452602484fd5b634e487b7160e01b84526041600452602484fd5b60005b838110610b965750506000910152565b8181015183820152602001610b86565b90602091610bbf81518092818552858086019101610b83565b601f01601f1916010190565b9060009180835282602052604083209160018060a01b03169182845260205260ff604084205416610bfb57505050565b80835282602052604083208284526020526040832060ff1981541690557ff6391f5c32d9c69d2a47ea670b442974b53935d1edc7fd64eb21e047a839171b339380a4565b908151811015610c50570160200190565b634e487b7160e01b600052603260045260246000fd5b60ff60015416610c7257565b60405162461bcd60e51b815260206004820152601060248201526f14185d5cd8589b194e881c185d5cd95960821b6044820152606490fd5b15610cb157565b60405162461bcd60e51b815260206004820152601960248201527f63616c6c657220686173206e6f742061646d696e20726f6c65000000000000006044820152606490fdfea164736f6c6343000813000a",
-  "linkReferences": {},
-  "deployedLinkReferences": {}
-}
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tradeValue",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokensForSale",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_startDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_endDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_individualMinimumAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_individualMaximumAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_ignored",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minimumRaise",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_feePercentage",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint32",
+        "name": "_flags",
+        "type": "uint32"
+      },
+      {
+        "internalType": "address",
+        "name": "_erc20TradeAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "count",
+        "type": "uint256"
+      }
+    ],
+    "name": "AddedArrayToBlacklist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "count",
+        "type": "uint256"
+      }
+    ],
+    "name": "AddedArrayToWhitelist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "AddedToBlacklist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "AddedToWhitelist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Paused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "purchaser",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "PurchaseEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "RemovedFromBlacklist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "RemovedFromWhitelist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "previousAdminRole",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "newAdminRole",
+        "type": "bytes32"
+      }
+    ],
+    "name": "RoleAdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "hasWhitelisting",
+        "type": "bool"
+      }
+    ],
+    "name": "SetHasWhitelisting",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Unpaused",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DECIMALS_PERCENT_MUL",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "FEE_ADDRESS",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PolsStakeAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PolsStakeAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PolsStakeRewards",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WHITELIST_OWNER_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_addresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "addArrayToBlacklist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_addresses",
+        "type": "address[]"
+      }
+    ],
+    "name": "addArrayToWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "addToBlacklist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "addToWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "availableTokens",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "buyers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "cost",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_accountMaximunAllocation",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "determineAccountMaximunAllocation",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "endDate",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "erc20",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "erc20TradeIn",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feePercentage",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "fund",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAPIVersion",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "API_VERSION",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBlacklistedAddresses",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBuyers",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCurrentSchedule",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "schedule",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "getMyPurchases",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMyPurchases_msgSender",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "purchase_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPurchase",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "purchaser",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "costAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint48",
+        "name": "timestamp",
+        "type": "uint48"
+      },
+      {
+        "internalType": "bool",
+        "name": "wasFinalized",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "reverted",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountRedeemed",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPurchasesCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "count",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "purchase_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRedeemStatus",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountRedeemed",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "vestAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "message",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "purchase_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRedeemableTokensAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "message",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRoleAdmin",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTokenAmountForETH",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getWhitelistedAddresses",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hasFinalized",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hasMinimumAmount",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hasMinimumRaise",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "hasRole",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hasStarted",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "hasWhitelisting",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "individualMaximumAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "individualMinimumAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_account",
+        "type": "address"
+      }
+    ],
+    "name": "isAddressPOLSWhitelisted",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "isBlacklisted",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "purchase_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "isBuyer",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isETHTrade",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isOpen",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isPOLSWhitelisted",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isPreStart",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isSaleFunded",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_userAccountAaddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_accountMaximunAllocation",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "isSignerForAddressMaxAlloc",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "hash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "isSignerFromBytes32",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isTokenSwapAtomic",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "isWhitelisted",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "localETHDepositArbitrum",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "localETHDepositOptimism",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "minimumRaise",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "minimumRaiseAchieved",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "minimumRaiseNotAchieved",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "myPurchases",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceTxHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "sourceChain",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "destChain",
+            "type": "string"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "paid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "gasLimit",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct OmniCodec.Tx",
+        "name": "_xtx",
+        "type": "tuple"
+      },
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_gasSpent",
+        "type": "uint256"
+      }
+    ],
+    "name": "onXChainTxReverted",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "sourceTxHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "sourceChain",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "destChain",
+            "type": "string"
+          },
+          {
+            "internalType": "uint64",
+            "name": "nonce",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "paid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "gasLimit",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct OmniCodec.Tx",
+        "name": "_xtx",
+        "type": "tuple"
+      },
+      {
+        "internalType": "address",
+        "name": "_sender",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_returnValue",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_gasSpent",
+        "type": "uint256"
+      }
+    ],
+    "name": "onXChainTxSuccess",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "paused",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "purchase_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "purchaseExists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "purchases",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "purchaser",
+        "type": "address"
+      },
+      {
+        "internalType": "uint48",
+        "name": "timestamp",
+        "type": "uint48"
+      },
+      {
+        "internalType": "bool",
+        "name": "wasFinalized",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "reverted",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "costAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountRedeemed",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "hash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "recoverSignerAddressFromBytes32",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "purchase_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "redeemGivenMinimumGoalNotAchieved",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "purchase_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "redeemTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "removeFromBlacklist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "removeFromWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_tokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      }
+    ],
+    "name": "removeOtherERC20Tokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "safePullETH",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "safePullSaleToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "safePullTradeToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_endDate",
+        "type": "uint256"
+      }
+    ],
+    "name": "setEndDate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "_hasWhitelisting",
+        "type": "bool"
+      }
+    ],
+    "name": "setHasWhitelisting",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_individualMaximumAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "setIndividualMaximumAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_localETHDepositArbitrum",
+        "type": "address"
+      }
+    ],
+    "name": "setLocalETHDepositArbitrum",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_localETHDepositOptimism",
+        "type": "address"
+      }
+    ],
+    "name": "setLocalETHDepositOptimism",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_PolsStakeAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_PolsStakeAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_PolsStakeRewards",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPolsStakingRequirement",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_signerPublicAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setSignerPublicAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_stakingRewardsAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setStakingRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_startDate",
+        "type": "uint256"
+      }
+    ],
+    "name": "setStartDate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_vestingStart",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_vestingCliff",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_vestingDuration",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_vestingSchedule",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setVesting",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "signerPublicAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "stakingRewardsAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "startDate",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "swap",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_accountMaxAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "swapWithSig",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "userAccount",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "swapXchain",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tokensAllocated",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tokensForSale",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tokensLeft",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalRaiseCost",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tradeValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "purchase_id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "stake",
+        "type": "bool"
+      }
+    ],
+    "name": "transferTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unpause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unsoldTokensRedeemed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vestingCliff",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vestingDuration",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "vestingSchedule",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vestingStart",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vestingTime",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawFunds",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawUnsoldTokens",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
