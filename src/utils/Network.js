@@ -51,6 +51,8 @@ class Network {
             await this.switchToCelo();
         } else if (this.network == 'AVAX') {
             await this.switchToAvalanche();
+        } else if (this.network == 'OMNI') {
+            await this.switchToOmni();
         }
     }
 
@@ -289,6 +291,50 @@ class Network {
                         },
                         rpcUrls: ['https://bsc-dataseed.binance.org/'],
                         blockExplorerUrls: ['https://bscscan.com/'],
+                    },
+                    ],
+                });
+            }
+        }
+    }
+
+    /**
+	 * @function switchToOmni
+	 * @description Request switch to the Avalanche chain
+	 */
+    async switchToOmni() {
+        if (window.ethereum) {
+            if (this.test) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0xA5',
+                        chainName: 'Omni Testnet',
+                        nativeCurrency: {
+                            name: 'Omni',
+                            symbol: 'OMNI',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://testnet.omni.network'],
+                        blockExplorerUrls: ['https://testnet.explorer.omni.network/']
+                    },
+                    ],
+                });
+            } else {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0xA5',
+                        chainName: 'Omni Testnet',
+                        nativeCurrency: {
+                            name: 'Omni',
+                            symbol: 'OMNI',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://testnet.omni.network'],
+                        blockExplorerUrls: ['https://testnet.explorer.omni.network/']
                     },
                     ],
                 });
