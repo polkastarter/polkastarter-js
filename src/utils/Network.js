@@ -131,7 +131,7 @@ class Network {
                     method: 'wallet_addEthereumChain',
                     params: [
                     {
-                        chainId: '0x66EED',
+                        chainId: '0x66EEE',
                         chainName: 'Arbitrum Sepolia',
                         nativeCurrency: {
                             name: 'Arbitrum',
