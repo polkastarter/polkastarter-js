@@ -24,9 +24,9 @@ const AVAX_CHAIN_URL =
 const AVAX_CHAIN_TESTNET_URL =
   "https://api.avax-test.network/ext/bc/C/rpc";
 const ARBITRUM_CHAIN_URL =
-  "https://arbitrum.llamarpc.com";
+  "https://arb1.arbitrum.io/rpc";
 const ARBITRUM_CHAIN_TESTNET_URL =
-  "https://arbitrum-goerli.blockpi.network/v1/rpc/public  ";
+  "https://sepolia-rollup.arbitrum.io/rpc";
 
 const networksEnum = Object.freeze({
   1: "Ethereum Main",
@@ -43,7 +43,7 @@ const networksEnum = Object.freeze({
   43114: "Avalanche",
   43113: "Avalanche Testnet",
   42161: "Arbitrum",
-  421613: "Arbitrum Goerli",
+  421613: "Arbitrum Sepolia",
   1284: "Moonbeam",
   1287: "Moonbeam Testnet"
 });
