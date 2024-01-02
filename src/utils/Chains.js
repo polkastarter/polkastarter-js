@@ -43,7 +43,7 @@ const networksEnum = Object.freeze({
   43114: "Avalanche",
   43113: "Avalanche Testnet",
   42161: "Arbitrum",
-  421613: "Arbitrum Sepolia",
+  421614: "Arbitrum Sepolia",
   1284: "Moonbeam",
   1287: "Moonbeam Testnet"
 });
