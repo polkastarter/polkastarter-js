@@ -51,6 +51,8 @@ class Network {
             await this.switchToCelo();
         } else if (this.network == 'AVAX') {
             await this.switchToAvalanche();
+        } else if (this.network == 'AETH') {
+            await this.switchToArbitrum();
         }
     }
 
@@ -75,9 +77,9 @@ class Network {
     }
 
     /**
-	 * @function switchToAvalanche
-	 * @description Request switch to the Avalanche chain
-	 */
+     * @function switchToAvalanche
+     * @description Request switch to the Avalanche chain
+     */
      async switchToAvalanche() {
         if (window.ethereum) {
             if (this.test) {
@@ -111,6 +113,50 @@ class Network {
                         },
                         rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
                         blockExplorerUrls: ['https://snowtrace.io/']
+                    },
+                    ],
+                });
+            }
+        }
+    }    
+
+    /**
+     * @function switchToArbitrum
+     * @description Request switch to the Arbitrum chain
+     */
+     async switchToArbitrum() {
+        if (window.ethereum) {
+            if (this.test) {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0x66EED',
+                        chainName: 'Arbitrum Goerli',
+                        nativeCurrency: {
+                            name: 'Arbitrum',
+                            symbol: 'AETH',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://arbitrum-goerli.blockpi.network/v1/rpc/public'],
+                        blockExplorerUrls: ['https://explorer.bitquery.io/goerli']
+                    },
+                    ],
+                });
+            } else {
+                 await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [
+                    {
+                        chainId: '0xA4B1',
+                        chainName: 'Arbitrum',
+                        nativeCurrency: {
+                            name: 'Arbitrum',
+                            symbol: 'AETH',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://arbitrum.llamarpc.com'],
+                        blockExplorerUrls: ['https://arbiscan.io/']
                     },
                     ],
                 });
