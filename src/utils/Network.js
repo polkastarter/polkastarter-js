@@ -132,14 +132,14 @@ class Network {
                     params: [
                     {
                         chainId: '0x66EED',
-                        chainName: 'Arbitrum Goerli',
+                        chainName: 'Arbitrum Sepolia',
                         nativeCurrency: {
                             name: 'Arbitrum',
                             symbol: 'AETH',
                             decimals: 18
                         },
-                        rpcUrls: ['https://arbitrum-goerli.blockpi.network/v1/rpc/public'],
-                        blockExplorerUrls: ['https://explorer.bitquery.io/goerli']
+                        rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
+                        blockExplorerUrls: ['https://sepolia.arbiscan.io/']
                     },
                     ],
                 });
@@ -155,7 +155,7 @@ class Network {
                             symbol: 'AETH',
                             decimals: 18
                         },
-                        rpcUrls: ['https://arbitrum.llamarpc.com'],
+                        rpcUrls: ['https://arb1.arbitrum.io/rpc'],
                         blockExplorerUrls: ['https://arbiscan.io/']
                     },
                     ],
