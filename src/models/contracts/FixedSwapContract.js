@@ -60,10 +60,6 @@ class FixedSwapContract extends BaseSwapContract {
 	* @param {Number=} tradingDecimals To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) (Default: 0)
 	* @param {Boolean=} hasWhitelisting Has White Listing. (Default: false)
 	* @param {Boolean=} isPOLSWhitelist Has White Listing. (Default: false)
-	* @param {Array<Integer>=} vestingSchedule Vesting schedule in %
-	* @param {String=} vestingStart Vesting start date (Default: endDate)
-	* @param {Number=} vestingCliff Seconds to wait for the first unlock after the vesting start (Default: 0)
-	* @param {Number=} vestingDuration Seconds to wait between every unlock (Default: 0)
 	*/
 	deploy = async ({
 		tradeValue,
@@ -80,11 +76,7 @@ class FixedSwapContract extends BaseSwapContract {
 		callback,
 		ERC20TradingAddress = '0x0000000000000000000000000000000000000000',
 		isPOLSWhitelist = false,
-		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
-		vestingSchedule = [],
-		vestingStart,
-		vestingCliff = 0,
-		vestingDuration = 0
+		tradingDecimals = 0 /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
 	}) => {
 
 		if (_.isEmpty(this.getTokenAddress())) {
@@ -137,23 +129,9 @@ class FixedSwapContract extends BaseSwapContract {
 			individualMaximumAmount = tokensForSale; /* Set Max Amount to Unlimited if 0 */
 		}
 
-		if (vestingSchedule.length > 0 && vestingSchedule.reduce((a, b) => a + b, 0) != 100) {
-			throw new Error("'vestingSchedule' sum has to be equal to 100")
-		}
-
-		const DECIMALS_PERCENT_MUL = 10 ** 12;
-		vestingSchedule = vestingSchedule.map(a => String(new Decimal(a).mul(DECIMALS_PERCENT_MUL)).toString());
-
 		const FLAG_isTokenSwapAtomic = 1; // Bit 0
 		const FLAG_hasWhitelisting = 2; // Bit 1
 		const FLAG_isPOLSWhitelisted = 4; // Bit 2 - true => user must have a certain amount of POLS staked to participate
-
-		if (vestingSchedule.length == 0) {
-			vestingCliff = 0;
-		}
-		if (!vestingStart) {
-			vestingStart = endDate;
-		}
 
 		let params = [
 			this.getTokenAddress(),
@@ -174,11 +152,6 @@ class FixedSwapContract extends BaseSwapContract {
 			parseInt(feeAmount),
 			(isTokenSwapAtomic ? FLAG_isTokenSwapAtomic : 0) | (hasWhitelisting ? FLAG_hasWhitelisting : 0) | (isPOLSWhitelist ? FLAG_isPOLSWhitelisted : 0), // Flags
 			ERC20TradingAddress,
-			Numbers.timeToSmartContractTime(vestingStart),
-			vestingCliff,
-			vestingDuration,
-			vestingSchedule,
-
 		];
 
 		let res = await new DeploymentService().deploy(
@@ -843,6 +816,8 @@ class FixedSwapContract extends BaseSwapContract {
 	/**
 	 * @function setVesting
 	 * @type admin
+   * @param {Number=} tgeAllocation % of allocation (12 fixed point decimals) at tgeTime (only linear vesting)
+   * @param {Number=} tgeTime time of TGE (Token Generation Event) (only linear vesting)
 	 * @param {Array<Integer>=} vestingSchedule Vesting schedule in %
 	 * @param {String=} vestingStart Vesting start date (Default: endDate)
 	 * @param {Number=} vestingCliff Seconds between every vesting schedule (Default: 0)
@@ -850,6 +825,8 @@ class FixedSwapContract extends BaseSwapContract {
 	 * @description Modifies the current vesting config
 	 */
 	setVesting = async ({
+		tgeAllocation = 0,
+		tgeTime,
 		vestingSchedule = [],
 		vestingStart,
 		vestingCliff = 0,
@@ -865,7 +842,12 @@ class FixedSwapContract extends BaseSwapContract {
 
 		return await this.executeContractMethod(
 			this.getContractMethods().setVesting(
-				Numbers.timeToSmartContractTime(vestingStart), vestingCliff, vestingDuration, vestingSchedule
+				tgeAllocation, 
+				Numbers.timeToSmartContractTime(tgeTime), 
+				Numbers.timeToSmartContractTime(vestingStart),
+				vestingCliff, 
+				vestingDuration,
+				vestingSchedule
 			)
 		);
 	}
