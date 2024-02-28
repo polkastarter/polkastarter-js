@@ -849,9 +849,10 @@ class FixedSwapContract extends BaseSwapContract {
 				Numbers.timeToSmartContractTime(vestingStart),	
 				vestingCliff, 
 				vestingDuration,
-				vestingSchedule,
+				vestingSchedule),
+				null,
+				null,
 				callback
-			)
 		);
 	}
 
