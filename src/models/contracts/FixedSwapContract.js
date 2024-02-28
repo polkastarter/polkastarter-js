@@ -830,7 +830,8 @@ class FixedSwapContract extends BaseSwapContract {
 		vestingSchedule = [],
 		vestingStart,
 		vestingCliff = 0,
-		vestingDuration = 0
+		vestingDuration = 0,
+		callback
 	}) => {
 
 		if (vestingSchedule.length > 0 && vestingSchedule.reduce((a, b) => a + b, 0) != 100) {
@@ -839,15 +840,17 @@ class FixedSwapContract extends BaseSwapContract {
 
 		const DECIMALS_PERCENT_MUL = 10 ** 12;
 		vestingSchedule = vestingSchedule.map(a => String(new Decimal(a).mul(DECIMALS_PERCENT_MUL)).toString());
+		tgeAllocation =  String(new Decimal(tgeAllocation).mul(DECIMALS_PERCENT_MUL)).toString();
 
 		return await this.executeContractMethod(
 			this.getContractMethods().setVesting(
 				tgeAllocation, 
 				Numbers.timeToSmartContractTime(tgeTime), 
-				Numbers.timeToSmartContractTime(vestingStart),
+				Numbers.timeToSmartContractTime(vestingStart),	
 				vestingCliff, 
 				vestingDuration,
-				vestingSchedule
+				vestingSchedule,
+				callback
 			)
 		);
 	}
