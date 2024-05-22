@@ -13,6 +13,8 @@ const networks = [
   { name: 'Arbitrum Sepolia',  chain: 'AETH',  chainId: 421614,   testnet: true,  rpc: "https://sepolia-rollup.arbitrum.io/rpc",                        explorer: "https://sepolia.arbiscan.io/" },
   { name: 'Mode',              chain: 'METH',  chainId: 34443,    testnet: false, rpc: "https://mainnet.mode.network",                                  explorer: "https://explorer.mode.network/" },
   { name: 'Mode Sepolia',      chain: 'METH',  chainId: 919,      testnet: true,  rpc: "https://sepolia.mode.network",                                  explorer: "https://sepolia.explorer.mode.network/" },
+  { name: 'Base',              chain: 'BETH',  chainId: 8453,     testnet: false, rpc: "https://mainnet.base.org",                                      explorer: "https://basescan.org/" },
+  { name: 'Base Sepoloa',      chain: 'BETH',  chainId: 84532,    testnet: true,  rpc: "https://sepolia.base.org",                                      explorer: "https://sepolia.basescan.org/" },
 ]
 
 /**
