@@ -60,7 +60,7 @@ class Network {
                         chainName: chain.name,
                         nativeCurrency: {
                             name: chain.name,
-                            symbol: chain.chain,
+                            symbol: chain.currency,
                             decimals: 18
                         },
                         rpcUrls: [chain.rpc],
