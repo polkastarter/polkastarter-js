@@ -118,9 +118,9 @@ class FixedSwapContract extends BaseSwapContract {
 			}
 		}
 
-		if (ERC20TradingAddress != '0x0000000000000000000000000000000000000000' && (tradingDecimals == 0)) {
+		if (ERC20TradingAddress != '0x0000000000000000000000000000000000000000' && tradingDecimals == 0) {
 			throw new Error("If an ERC20 Trading Address please add the 'tradingDecimals' field to the trading address (Ex : USDT -> 6)");
-		} else {
+		} else if (ERC20TradingAddress == '0x0000000000000000000000000000000000000000'){
 			/* is ETH Trade */
 			tradingDecimals = 18;
 		}
