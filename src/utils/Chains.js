@@ -1,46 +1,21 @@
-
-const ETH_URL_MAINNET =
-  "https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
-const ETH_URL_TESTNET =
-  "https://kovan.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8";
-const MOONBEAM_URL =
-  "https://rpc.api.moonbeam.network";
-const MOONBEAM_TESTNET_URL =
-  "https://rpc.api.moonbase.moonbeam.network";
-const BINANCE_CHAIN_TESTNET_URL =
-  "https://data-seed-prebsc-1-s1.binance.org:8545";
-const BINANCE_CHAIN_URL = 
-  "https://bsc-dataseed1.binance.org:443";
-const POLYGON_CHAIN_TESTNET_URL =
-  "https://rpc-mumbai.maticvigil.com/";
-const POLYGON_CHAIN_URL =
-  "https://polygon-rpc.com";
-const CELO_CHAIN_URL =
-  "https://forno.celo.org";
-const CELO_CHAIN_TESTNET_URL =
-  "https://alfajores-forno.celo-testnet.org";
-const AVAX_CHAIN_URL =
-  "https://api.avax.network/ext/bc/C/rpc";
-const AVAX_CHAIN_TESTNET_URL =
-  "https://api.avax-test.network/ext/bc/C/rpc";
-
-const networksEnum = Object.freeze({
-  1: "Ethereum Main",
-  2: "Morden",
-  3: "Ropsten",
-  4: "Rinkeby",
-  56: "BSC Main",
-  97: "BSC Test",
-  42: "Kovan",
-  137: "Polygon",
-  80001: "Mumbai",
-  44787: "Celo Testnet",
-  42220: "Celo",
-  43114: "Avalanche",
-  43113: "Avalanche Testnet",
-  1284: "Moonbeam",
-  1287: "Moonbeam Testnet"
-});
+const networks = [
+  { name: 'Ethereum Main',     chain: 'ETH',   currency: 'ETH',   chainId: 1,        testnet: false, rpc: "https://mainnet.infura.io/v3/40e2d4f67005468a83e2bcace6427bc8", explorer: "https://etherscan.io/" },
+  { name: 'Ethereum Sepolia',  chain: 'ETH',   currency: 'ETH',   chainId: 11155111, testnet: true,  rpc: "https://ethereum-sepolia.publicnode.com",                       explorer: "https://sepolia.etherscan.io/" },
+  { name: 'BSC Main',          chain: 'BSC',   currency: 'BSC',   chainId: 56,       testnet: false, rpc: "https://bsc-dataseed1.binance.org:443",                         explorer: "https://bscscan.com/" },
+  { name: 'BSC Test',          chain: 'BSC',   currency: 'BSC',   chainId: 97,       testnet: true,  rpc: "https://data-seed-prebsc-1-s1.binance.org:8545",                explorer: "https://testnet.bscscan.com/" },
+  { name: 'Polygon',           chain: 'MATIC', currency: 'MATIC', chainId: 137,      testnet: false, rpc: "https://polygon-rpc.com",                                       explorer: "https://polygonscan.com/" },
+  { name: 'Mumbai',            chain: 'MATIC', currency: 'MATIC', chainId: 80001,    testnet: true,  rpc: "https://rpc-mumbai.maticvigil.com",                             explorer: "https://mumbai.polygonscan.com/" },
+  { name: 'Celo',              chain: 'CELO',  currency: 'CELO',  chainId: 42220,    testnet: false, rpc: "https://forno.celo.org",                                        explorer: "https://explorer.celo.org" },
+  { name: 'Celo Testnet',      chain: 'CELO',  currency: 'CELO',  chainId: 44787,    testnet: true,  rpc: "hhttps://alfajores-forno.celo-testnet.org",                     explorer: "https://alfajores-blockscout.celo-testnet.org" },
+  { name: 'Avalanche',         chain: 'AVAX',  currency: 'AVAX',  chainId: 43114,    testnet: false, rpc: "https://api.avax.network/ext/bc/C/rpc",                         explorer: "https://snowtrace.io/" },
+  { name: 'Avalanche Testnet', chain: 'AVAX',  currency: 'AVAX',  chainId: 43113,    testnet: true,  rpc: "https://api.avax-test.network/ext/bc/C/rpc",                    explorer: "https://testnet.snowtrace.io/" },
+  { name: 'Arbitrum',          chain: 'AETH',  currency: 'ETH',  chainId: 42161,    testnet: false, rpc: "https://arb1.arbitrum.io/rpc",                                  explorer: "https://arbiscan.io/" },
+  { name: 'Arbitrum Sepolia',  chain: 'AETH',  currency: 'ETH',  chainId: 421614,   testnet: true,  rpc: "https://sepolia-rollup.arbitrum.io/rpc",                        explorer: "https://sepolia.arbiscan.io/" },
+  { name: 'Mode',              chain: 'METH',  currency: 'ETH',  chainId: 34443,    testnet: false, rpc: "https://mainnet.mode.network",                                  explorer: "https://explorer.mode.network/" },
+  { name: 'Mode Sepolia',      chain: 'METH',  currency: 'ETH',  chainId: 919,      testnet: true,  rpc: "https://sepolia.mode.network",                                  explorer: "https://sepolia.explorer.mode.network/" },
+  { name: 'Base',              chain: 'BETH',  currency: 'ETH',  chainId: 8453,     testnet: false, rpc: "https://mainnet.base.org",                                      explorer: "https://basescan.org/" },
+  { name: 'Base Sepolia',      chain: 'BETH',  currency: 'ETH',  chainId: 84532,    testnet: true,  rpc: "https://sepolia.base.org",                                      explorer: "https://sepolia.basescan.org/" },
+]
 
 /**
  * Chains object
@@ -51,35 +26,28 @@ class chains {
 
   checkIfNetworkIsSupported(network)  {
     if(!this.isNetworkSupported(network)) {
-			throw new Error("Network has to be ETH, DOT, BSC, MATIC, CELO or AVAX");
+			throw new Error("Network unsupported");
 		}
   }
 
-  isNetworkSupported(network) {
-    if((network != 'ETH') && (network != 'DOT') && (network != 'BSC') && (network !='MATIC') && (network != 'CELO') && (network != 'AVAX')){
-			return false;
-		}
-    return true;
+  isNetworkSupported(chain) {
+    return networks.map((network) => network.chain).includes(chain)
   }
 
-  getRpcUrl(network, mainnet = true) {
-    if(network == 'DOT') {
-      return (mainnet == true) ? MOONBEAM_URL : MOONBEAM_TESTNET_URL;
-		} else if(network == 'BSC') {
-			return (mainnet == true) ? BINANCE_CHAIN_URL : BINANCE_CHAIN_TESTNET_URL;
-		} else if(network == 'ETH') {
-			return (mainnet == true) ? ETH_URL_MAINNET : ETH_URL_TESTNET;
-		} else if(network == 'MATIC') {
-			return (mainnet == true) ? POLYGON_CHAIN_URL : POLYGON_CHAIN_TESTNET_URL;
-		} else if(network == 'CELO') {
-			return (mainnet == true) ? CELO_CHAIN_URL : CELO_CHAIN_TESTNET_URL;
-		} else if(network == 'AVAX') {
-			return (mainnet == true) ? AVAX_CHAIN_URL : AVAX_CHAIN_TESTNET_URL;
-		}
+  getChainData(chain, mainnet = true) {
+    return networks.find((network) => network.chain == chain && network.testnet !== mainnet)
+  }
+
+  getRpcUrl(chain, mainnet = true) {
+    return networks.find((network) => network.chain == chain && network.testnet !== mainnet).rpc
+  }
+
+  getExplorercUrl(chain, mainnet = true) {
+    return networks.find((network) => network.chain == chain && network.testnet !== mainnet).explorer
   }
 
   getNetworksEnum() {
-    return networksEnum;
+    return networks.reduce((hash, network) => { hash[network.chainId] = network.name; return hash; }, {});
   }
 }
 
