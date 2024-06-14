@@ -58,6 +58,8 @@ class FixedSwapContract extends BaseSwapContract {
 	* @param {Number=} tradingDecimals To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) (Default: 0)
 	* @param {Boolean=} hasWhitelisting Has White Listing. (Default: false)
 	* @param {Boolean=} isPOLSWhitelist Has White Listing. (Default: false)
+	* @param {Boolean=} allowSaleStartWithoutFunding Allow Funding after sale starts. (Default: false)
+	* @param {Boolean=} allowLateVestingChange Allow vesting changes after sale starts. (Default: false)
 	*/
 	deploy = async ({
 		tradeValue,
@@ -74,11 +76,14 @@ class FixedSwapContract extends BaseSwapContract {
 		callback,
 		ERC20TradingAddress = '0x0000000000000000000000000000000000000000',
 		isPOLSWhitelist = false,
-		tradingDecimals = 0 /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
+		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
 		allowSaleStartWithoutFunding = false,
 		allowLateVestingChange = false,
 	}) => {
 
+		if (_.isEmpty(this.getTokenAddress())) {
+			throw new Error("Token Address not provided");
+		}
 		if (tradeValue <= 0) {
 			throw new Error("Trade Value has to be > 0");
 		}
@@ -267,9 +272,6 @@ class FixedSwapContract extends BaseSwapContract {
 	 */
 	async vestingStart() {
 		try {
-				return Numbers.fromSmartContractTimeToMinutes(
-			await this.getContractMethods().startDate().call()
-		);
 			return Numbers.fromSmartContractTimeToMinutes(
 				await this.getContractMethods().vestingStart().call()
 			);

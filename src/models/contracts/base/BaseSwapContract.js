@@ -655,11 +655,7 @@ class BaseSwapContract {
 	}
 
 	getTokenAddress() {
-		if (this.getTokenContract()) {
-			return this.getTokenContract().getAddress();
-		}
-
-		return null;
+		return this.getTokenContract().getAddress();
 	}
 
 	getTokenContract() {
