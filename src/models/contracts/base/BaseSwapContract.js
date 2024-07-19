@@ -184,7 +184,11 @@ class BaseSwapContract {
 			let wei = await this.web3.eth.getBalance(this.getAddress());
 			return this.web3.utils.fromWei(wei, 'ether');
 		} else {
-			return await this.getTokenContract().getTokenAmount(this.getAddress());
+			return await new ERC20TokenContract({
+				web3: this.web3,
+				contractAddress: await this.getTradingERC20Address(),
+				acc: this.acc
+			}).getTokenAmount(this.getAddress());
 		}
 	}
 
