@@ -266,6 +266,28 @@ class FixedSwapContract extends BaseSwapContract {
 	}
 
 	/**
+	 * @function refundPeriodStart
+	 * @description Get Refund Start Date
+	 * @returns {Date}
+	 */
+	async refundPeriodStart() {
+		return Numbers.fromSmartContractTimeToMinutes(
+			await this.getContractMethods().refundPeriodStart().call()
+		);
+	}
+
+	/**
+	 * @function refundPeriodEnd
+	 * @description Get Refund Start Date
+	 * @returns {Date}
+	 */
+	async refundPeriodEnd() {
+		return Numbers.fromSmartContractTimeToMinutes(
+			await this.getContractMethods().refundPeriodEnd().call()
+		);
+	}
+
+	/**
 	 * @function vestingStart
 	 * @description Get Start Date of the Vesting
 	 * @returns {Date}
@@ -893,6 +915,23 @@ class FixedSwapContract extends BaseSwapContract {
 	setTokenAddress = async ({ tokenAddress }) => {
 		return await this.executeContractMethod(
 			this.getContractMethods().setSaleTokenAddress(tokenAddress)
+		);
+	};
+
+	/**
+	 * @function setRefundPeriod
+	 * @type admin
+	 * @param {Date} refundPeriodStart
+	 * @param {Date} refundPeriodEnd
+	 * @description Sets (and enables) the refund period between 2 dates. Dates must be after Sale End Date.
+	 */
+	setRefundPeriod = async ({ periodStart, periodEnd }) => {
+		console.log('setRefundPeriod')
+		return await this.executeContractMethod(
+			this.getContractMethods().setRefundPeriod(
+				Numbers.timeToSmartContractTime(refundPeriodStart),
+				Numbers.timeToSmartContractTime(refundPeriodEnd)
+			)
 		);
 	};
 
