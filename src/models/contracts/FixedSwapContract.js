@@ -925,8 +925,7 @@ class FixedSwapContract extends BaseSwapContract {
 	 * @param {Date} refundPeriodEnd
 	 * @description Sets (and enables) the refund period between 2 dates. Dates must be after Sale End Date.
 	 */
-	setRefundPeriod = async ({ periodStart, periodEnd }) => {
-		console.log('setRefundPeriod')
+	setRefundPeriod = async ({ refundPeriodStart, refundPeriodEnd }) => {
 		return await this.executeContractMethod(
 			this.getContractMethods().setRefundPeriod(
 				Numbers.timeToSmartContractTime(refundPeriodStart),
