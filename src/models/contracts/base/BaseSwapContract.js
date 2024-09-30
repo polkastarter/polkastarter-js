@@ -287,6 +287,16 @@ class BaseSwapContract {
 	}
 
 	/**
+	 * @function withdrawRefundedTokens
+	 * @description Withdraw all funds from refunds
+	 */
+	withdrawRefundedTokens = async () => {
+		return await this.executeContractMethod(
+			this.getContractMethods().withdrawRefundedTokens()
+		);
+	};
+
+	/**
 	 * @function wereUnsoldTokensReedemed
 	 * @description Verify if the admin already reemeded unsold tokens
 	 * @returns {Boolean}

@@ -288,6 +288,15 @@ class FixedSwapContract extends BaseSwapContract {
 	}
 
 	/**
+	 * @function refundPercentage
+	 * @description Get Penalty Percentage
+	 * @returns {Integer}
+	 */
+	async refundPercentage() {
+		return await this.getContractMethods().refundPercentage().call()
+	}
+
+	/**
 	 * @function vestingStart
 	 * @description Get Start Date of the Vesting
 	 * @returns {Date}
@@ -923,13 +932,15 @@ class FixedSwapContract extends BaseSwapContract {
 	 * @type admin
 	 * @param {Date} refundPeriodStart
 	 * @param {Date} refundPeriodEnd
-	 * @description Sets (and enables) the refund period between 2 dates. Dates must be after Sale End Date.
+	 * @param {Integer} refundPercentage
+	 * @description Sets (and enables) the refund period between 2 dates. Dates must be after Sale End Date. Prcentage should be between 0 and 100.
 	 */
-	setRefundPeriod = async ({ refundPeriodStart, refundPeriodEnd }) => {
+	setRefundPeriod = async ({ refundPeriodStart, refundPeriodEnd, refundPercentage }) => {
 		return await this.executeContractMethod(
 			this.getContractMethods().setRefundPeriod(
 				Numbers.timeToSmartContractTime(refundPeriodStart),
-				Numbers.timeToSmartContractTime(refundPeriodEnd)
+				Numbers.timeToSmartContractTime(refundPeriodEnd),
+				refundPercentage
 			)
 		);
 	};
