@@ -936,11 +936,13 @@ class FixedSwapContract extends BaseSwapContract {
 	 * @description Sets (and enables) the refund period between 2 dates. Dates must be after Sale End Date. Prcentage should be between 0 and 100.
 	 */
 	setRefundPeriod = async ({ refundPeriodStart, refundPeriodEnd, refundPercentage }) => {
+		let percentageWithDecimals = Numbers.toSmartContractDecimals(refundPercentage, 12);
+
 		return await this.executeContractMethod(
 			this.getContractMethods().setRefundPeriod(
 				Numbers.timeToSmartContractTime(refundPeriodStart),
 				Numbers.timeToSmartContractTime(refundPeriodEnd),
-				refundPercentage
+				percentageWithDecimals
 			)
 		);
 	};
