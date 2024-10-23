@@ -250,12 +250,36 @@ class BaseSwapContract {
 	}
 
 	/**
-	 * @function safePull
+	 * @function safePullETH
 	 * @description Safe Pull all tokens & ETH
 	 */
-	safePull = async () => {
+	safePullETH = async () => {
 		return await this.executeContractMethod(
-			this.getContractMethods().safePull(),
+			this.getContractMethods().safePullETH(),
+			null,
+			0
+		);
+	};
+
+	/**
+	 * @function safePullSaleToken
+	 * @description Safe Pull all tokens & ETH
+	 */
+	safePullSaleToken = async () => {
+		return await this.executeContractMethod(
+			this.getContractMethods().safePullSaleToken(),
+			null,
+			0
+		);
+	};
+
+	/**
+	 * @function safePullTradeToken
+	 * @description Safe Pull all tokens & ETH
+	 */
+	safePullTradeToken = async () => {
+		return await this.executeContractMethod(
+			this.getContractMethods().safePullTradeToken(),
 			null,
 			0
 		);
