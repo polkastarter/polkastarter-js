@@ -35,8 +35,6 @@ class FixedSwapContract extends BaseSwapContract {
 					contractAddress: tokenAddress,
 					acc
 				});
-			} else {
-				if (!contractAddress) { throw new Error("Please provide a contractAddress if already deployed") }
 			}
 		} catch (err) {
 			throw err;
@@ -60,6 +58,8 @@ class FixedSwapContract extends BaseSwapContract {
 	* @param {Number=} tradingDecimals To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) (Default: 0)
 	* @param {Boolean=} hasWhitelisting Has White Listing. (Default: false)
 	* @param {Boolean=} isPOLSWhitelist Has White Listing. (Default: false)
+	* @param {Boolean=} allowSaleStartWithoutFunding Allow Funding after sale starts. (Default: false)
+	* @param {Boolean=} allowLateVestingChange Allow vesting changes after sale starts. (Default: false)
 	*/
 	deploy = async ({
 		tradeValue,
@@ -76,13 +76,14 @@ class FixedSwapContract extends BaseSwapContract {
 		callback,
 		ERC20TradingAddress = '0x0000000000000000000000000000000000000000',
 		isPOLSWhitelist = false,
-		tradingDecimals = 0 /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
+		tradingDecimals = 0, /* To be the decimals of the currency in case (ex : USDT -> 9; ETH -> 18) */
+		allowSaleStartWithoutFunding = false,
+		allowLateVestingChange = false,
 	}) => {
 
 		if (_.isEmpty(this.getTokenAddress())) {
 			throw new Error("Token Address not provided");
 		}
-
 		if (tradeValue <= 0) {
 			throw new Error("Trade Value has to be > 0");
 		}
@@ -129,9 +130,17 @@ class FixedSwapContract extends BaseSwapContract {
 			individualMaximumAmount = tokensForSale; /* Set Max Amount to Unlimited if 0 */
 		}
 
-		const FLAG_isTokenSwapAtomic = 1; // Bit 0
-		const FLAG_hasWhitelisting = 2; // Bit 1
-		const FLAG_isPOLSWhitelisted = 4; // Bit 2 - true => user must have a certain amount of POLS staked to participate
+		const FLAG_isTokenSwapAtomic = 1;            // Bit 0
+		const FLAG_hasWhitelisting = 2;              // Bit 1
+		const FLAG_isPOLSWhitelisted = 4;            // Bit 2 - true => user must have a certain amount of POLS staked to participate
+		const FLAG_allowSaleStartWithoutFunding = 8; // Bit 3 - true => sale can start before the contract is funded
+		const FLAG_allowLateVestingChanged = 16;     // Bit 4 - true => vesting can be changed after sale start
+
+		const flags = (isTokenSwapAtomic ? FLAG_isTokenSwapAtomic : 0) | 
+									(hasWhitelisting ? FLAG_hasWhitelisting : 0) | 
+									(isPOLSWhitelist ? FLAG_isPOLSWhitelisted : 0) |
+									(allowSaleStartWithoutFunding ? FLAG_allowSaleStartWithoutFunding : 0) |
+									(allowLateVestingChange ? FLAG_allowLateVestingChanged : 0)
 
 		let params = [
 			this.getTokenAddress(),
@@ -150,7 +159,7 @@ class FixedSwapContract extends BaseSwapContract {
 			true, // ignored
 			Numbers.toSmartContractDecimals(minimumRaise, await this.getDecimals()),
 			parseInt(feeAmount),
-			(isTokenSwapAtomic ? FLAG_isTokenSwapAtomic : 0) | (hasWhitelisting ? FLAG_hasWhitelisting : 0) | (isPOLSWhitelist ? FLAG_isPOLSWhitelisted : 0), // Flags
+			flags,
 			ERC20TradingAddress,
 		];
 
@@ -254,6 +263,37 @@ class FixedSwapContract extends BaseSwapContract {
 				.call()),
 			await this.getTradingDecimals()
 		));
+	}
+
+	/**
+	 * @function refundPeriodStart
+	 * @description Get Refund Start Date
+	 * @returns {Date}
+	 */
+	async refundPeriodStart() {
+		return Numbers.fromSmartContractTimeToMinutes(
+			await this.getContractMethods().refundPeriodStart().call()
+		);
+	}
+
+	/**
+	 * @function refundPeriodEnd
+	 * @description Get Refund Start Date
+	 * @returns {Date}
+	 */
+	async refundPeriodEnd() {
+		return Numbers.fromSmartContractTimeToMinutes(
+			await this.getContractMethods().refundPeriodEnd().call()
+		);
+	}
+
+	/**
+	 * @function refundPercentage
+	 * @description Get Penalty Percentage
+	 * @returns {Integer}
+	 */
+	async refundPercentage() {
+		return await this.getContractMethods().refundPercentage().call()
 	}
 
 	/**
@@ -874,6 +914,39 @@ class FixedSwapContract extends BaseSwapContract {
 			callback
 		);
 	};
+
+	/**
+	 * @function setTokenAddress
+	 * @type admin
+	 * @param {String} tokenAddress
+	 * @description Sets a new token address
+	 */
+	setTokenAddress = async ({ tokenAddress }) => {
+		return await this.executeContractMethod(
+			this.getContractMethods().setSaleTokenAddress(tokenAddress)
+		);
+	};
+
+	/**
+	 * @function setRefundPeriod
+	 * @type admin
+	 * @param {Date} refundPeriodStart
+	 * @param {Date} refundPeriodEnd
+	 * @param {Integer} refundPercentage
+	 * @description Sets (and enables) the refund period between 2 dates. Dates must be after Sale End Date. Prcentage should be between 0 and 100.
+	 */
+	setRefundPeriod = async ({ refundPeriodStart, refundPeriodEnd, refundPercentage }) => {
+		let percentageWithDecimals = Numbers.toSmartContractDecimals(refundPercentage, 12);
+
+		return await this.executeContractMethod(
+			this.getContractMethods().setRefundPeriod(
+				Numbers.timeToSmartContractTime(refundPeriodStart),
+				Numbers.timeToSmartContractTime(refundPeriodEnd),
+				percentageWithDecimals
+			)
+		);
+	};
+
 
 }
 

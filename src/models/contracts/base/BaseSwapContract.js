@@ -184,7 +184,11 @@ class BaseSwapContract {
 			let wei = await this.web3.eth.getBalance(this.getAddress());
 			return this.web3.utils.fromWei(wei, 'ether');
 		} else {
-			return await this.getTokenContract().getTokenAmount(this.getAddress());
+			return await new ERC20TokenContract({
+				web3: this.web3,
+				contractAddress: await this.getTradingERC20Address(),
+				acc: this.acc
+			}).getTokenAmount(this.getAddress());
 		}
 	}
 
@@ -246,12 +250,36 @@ class BaseSwapContract {
 	}
 
 	/**
-	 * @function safePull
+	 * @function safePullETH
 	 * @description Safe Pull all tokens & ETH
 	 */
-	safePull = async () => {
+	safePullETH = async () => {
 		return await this.executeContractMethod(
-			this.getContractMethods().safePull(),
+			this.getContractMethods().safePullETH(),
+			null,
+			0
+		);
+	};
+
+	/**
+	 * @function safePullSaleToken
+	 * @description Safe Pull all tokens & ETH
+	 */
+	safePullSaleToken = async () => {
+		return await this.executeContractMethod(
+			this.getContractMethods().safePullSaleToken(),
+			null,
+			0
+		);
+	};
+
+	/**
+	 * @function safePullTradeToken
+	 * @description Safe Pull all tokens & ETH
+	 */
+	safePullTradeToken = async () => {
+		return await this.executeContractMethod(
+			this.getContractMethods().safePullTradeToken(),
 			null,
 			0
 		);
@@ -281,6 +309,16 @@ class BaseSwapContract {
 		}
 		return res;
 	}
+
+	/**
+	 * @function withdrawRefundedTokens
+	 * @description Withdraw all funds from refunds
+	 */
+	withdrawRefundedTokens = async () => {
+		return await this.executeContractMethod(
+			this.getContractMethods().withdrawRefundedTokens()
+		);
+	};
 
 	/**
 	 * @function wereUnsoldTokensReedemed
