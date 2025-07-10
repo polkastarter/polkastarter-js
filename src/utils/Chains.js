@@ -15,6 +15,8 @@ const networks = [
   { name: 'Mode Sepolia',      chain: 'METH',  currency: 'ETH',  chainId: 919,      testnet: true,  rpc: "https://sepolia.mode.network",                                  explorer: "https://sepolia.explorer.mode.network/" },
   { name: 'Base',              chain: 'BETH',  currency: 'ETH',  chainId: 8453,     testnet: false, rpc: "https://mainnet.base.org",                                      explorer: "https://basescan.org/" },
   { name: 'Base Sepolia',      chain: 'BETH',  currency: 'ETH',  chainId: 84532,    testnet: true,  rpc: "https://sepolia.base.org",                                      explorer: "https://sepolia.basescan.org/" },
+  { name: 'Sei',               chain: 'SEI',   currency: 'SEI',  chainId: 1329,     testnet: false, rpc: "https://evm-rpc.sei-apis.com",                                  explorer: "https://seitrace.com/" },
+  { name: 'Sei Testnet',       chain: 'SEI',   currency: 'SEI',  chainId: 1328,     testnet: true,  rpc: "https://evm-rpc-testnet.sei-apis.com",                          explorer: "https://seitrace.com/" },
 ]
 
 /**
