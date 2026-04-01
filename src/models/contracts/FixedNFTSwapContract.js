@@ -327,15 +327,12 @@ class FixedNFTSwapContract extends BaseSwapContract {
 			.methods
 			.getMyPurchases(address)
 			.call();
-		let purchases = [];
 
-		for (let id of purchaseIds) {
-			if (id != undefined) {
-				purchases.push(
-					await this.getPurchase({ purchaseId: Number(id) })
-				);
-			}
-		};
+		let purchases = await Promise.all(
+			purchaseIds
+				.filter(id => id != undefined)
+				.map(id => this.getPurchase({ purchaseId: Number(id) }))
+		);
 		return purchases;
 	};
 

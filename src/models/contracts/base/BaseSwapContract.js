@@ -184,11 +184,14 @@ class BaseSwapContract {
 			let wei = await this.web3.eth.getBalance(this.getAddress());
 			return this.web3.utils.fromWei(wei, 'ether');
 		} else {
-			return await new ERC20TokenContract({
-				web3: this.web3,
-				contractAddress: await this.getTradingERC20Address(),
-				acc: this.acc
-			}).getTokenAmount(this.getAddress());
+			if (!this._tradingTokenContract) {
+				this._tradingTokenContract = new ERC20TokenContract({
+					web3: this.web3,
+					contractAddress: await this.getTradingERC20Address(),
+					acc: this.acc
+				});
+			}
+			return await this._tradingTokenContract.getTokenAmount(this.getAddress());
 		}
 	}
 
@@ -227,10 +230,12 @@ class BaseSwapContract {
 	 * @returns {Boolean} 
 	 */
 	async hasMinimumRaise() {
-		return await this.params.contract
+		if (this._hasMinimumRaise !== undefined) return this._hasMinimumRaise;
+		this._hasMinimumRaise = await this.params.contract
 			.getContract()
 			.methods.hasMinimumRaise()
 			.call();
+		return this._hasMinimumRaise;
 	}
 
 	/**
@@ -241,8 +246,10 @@ class BaseSwapContract {
 	async minimumReached() {
 		let hasMinimumRaise = await this.hasMinimumRaise();
 		if (hasMinimumRaise) {
-			let tokensAllocated = await this.tokensAllocated();
-			let minimumRaise = await this.minimumRaise();
+			let [tokensAllocated, minimumRaise] = await Promise.all([
+				this.tokensAllocated(),
+				this.minimumRaise()
+			]);
 			return parseFloat(tokensAllocated) > parseFloat(minimumRaise);
 		} else {
 			return true;
@@ -302,8 +309,10 @@ class BaseSwapContract {
 	 */
 	async withdrawableFunds() {
 		var res = 0;
-		var hasFinalized = await this.hasFinalized();
-		var wasMinimumRaiseReached = await this.minimumReached();
+		var [hasFinalized, wasMinimumRaiseReached] = await Promise.all([
+			this.hasFinalized(),
+			this.minimumReached()
+		]);
 		if (hasFinalized && wasMinimumRaiseReached) {
 			res = await this.getBalance();
 		}
@@ -434,15 +443,17 @@ class BaseSwapContract {
 	 * @returns {Address}
 	 */
 	async getTradingERC20Address() {
+		if (this._tradingERC20Address !== undefined) return this._tradingERC20Address;
 		try {
-			return await this.params.contract
+			this._tradingERC20Address = await this.params.contract
 				.getContract()
 				.methods.erc20TradeIn()
 				.call();
 		} catch (e) {
 			// Swap v2
-			return '0x0000000000000000000000000000000000000000';
+			this._tradingERC20Address = '0x0000000000000000000000000000000000000000';
 		}
+		return this._tradingERC20Address;
 	}
 
 	/**
@@ -451,10 +462,12 @@ class BaseSwapContract {
 	 * @returns {Boolean}
 	 */
 	async isETHTrade() {
-		return await this.params.contract
+		if (this._isETHTrade !== undefined) return this._isETHTrade;
+		this._isETHTrade = await this.params.contract
 			.getContract()
 			.methods.isETHTrade()
 			.call();
+		return this._isETHTrade;
 	}
 
 	/**
@@ -463,16 +476,21 @@ class BaseSwapContract {
 	 * @returns {Integer}
 	 */
 	async getTradingDecimals() {
+		if (this._tradingDecimals !== undefined) return this._tradingDecimals;
 		const tradeAddress = await this.getTradingERC20Address();
 		if (tradeAddress == '0x0000000000000000000000000000000000000000') {
+			this._tradingDecimals = 18;
 			return 18;
 		}
-		const contract = new ERC20TokenContract({
-			web3: this.web3,
-			contractAddress: tradeAddress,
-			acc: this.acc
-		});
-		return await contract.getDecimals();
+		if (!this._tradingTokenContract) {
+			this._tradingTokenContract = new ERC20TokenContract({
+				web3: this.web3,
+				contractAddress: tradeAddress,
+				acc: this.acc
+			});
+		}
+		this._tradingDecimals = await this._tradingTokenContract.getDecimals();
+		return this._tradingDecimals;
 	}
 
 	/**************************************

@@ -375,8 +375,10 @@ class FixedSwapContractLegacy {
 	async minimumReached() {
 		let hasMinimumRaise = await this.hasMinimumRaise();
 		if(hasMinimumRaise){
-			let tokensAllocated = await this.tokensAllocated();
-			let minimumRaise = await this.minimumRaise();
+			let [tokensAllocated, minimumRaise] = await Promise.all([
+				this.tokensAllocated(),
+				this.minimumRaise()
+			]);
 			return parseFloat(tokensAllocated) > parseFloat(minimumRaise);
 		}else{
 			return true;
@@ -420,14 +422,20 @@ class FixedSwapContractLegacy {
 	 */
 	async withdrawableUnsoldTokens() {
 		var res = 0;
-		if(await this.hasFinalized()
-		&& (!await this.wereUnsoldTokensReedemed())
-		){
+		var [hasFinalized, wereRedeemed] = await Promise.all([
+			this.hasFinalized(),
+			this.wereUnsoldTokensReedemed()
+		]);
+		if(hasFinalized && !wereRedeemed){
 			if(await this.minimumReached()){
 				/* Minimum reached */
-				res = (await this.tokensForSale()) - (await this.tokensAllocated());
+				let [tokensForSale, tokensAllocated] = await Promise.all([
+					this.tokensForSale(),
+					this.tokensAllocated()
+				]);
+				res = tokensForSale - tokensAllocated;
 			}else{
-				/* Minimum reached */
+				/* Minimum not reached */
 				res = await this.tokensForSale();
 			}
 		}
@@ -441,10 +449,11 @@ class FixedSwapContractLegacy {
 	 */
 	async withdrawableFunds() {
 		var res = 0;
-		if(
-			await this.hasFinalized() &&
-			await this.minimumReached()
-			){
+		var [hasFinalized, wasMinimumRaiseReached] = await Promise.all([
+			this.hasFinalized(),
+			this.minimumReached()
+		]);
+		if(hasFinalized && wasMinimumRaiseReached){
 			res = await this.getBalance();
 		}
 		return res;

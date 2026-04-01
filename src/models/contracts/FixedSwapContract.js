@@ -394,14 +394,20 @@ class FixedSwapContract extends BaseSwapContract {
 	 */
 	async withdrawableUnsoldTokens() {
 		var res = 0;
-		if (await this.hasFinalized()
-			&& !(await this.wereUnsoldTokensReedemed())
-		) {
+		var [hasFinalized, wereRedeemed] = await Promise.all([
+			this.hasFinalized(),
+			this.wereUnsoldTokensReedemed()
+		]);
+		if (hasFinalized && !wereRedeemed) {
 			if (await this.minimumReached()) {
 				/* Minimum reached */
-				res = (await this.tokensForSale()) - (await this.tokensAllocated());
+				let [tokensForSale, tokensAllocated] = await Promise.all([
+					this.tokensForSale(),
+					this.tokensAllocated()
+				]);
+				res = tokensForSale - tokensAllocated;
 			} else {
-				/* Minimum reached */
+				/* Minimum not reached */
 				res = await this.tokensForSale();
 			}
 		}
@@ -511,22 +517,23 @@ class FixedSwapContract extends BaseSwapContract {
 	 */
 
 	getPurchase = async ({ purchase_id }) => {
-		let res = await this.params.contract
-			.getContract()
-			.methods.getPurchase(purchase_id)
-			.call();
+		let [res, decimals, tradingDecimals, isFinalized] = await Promise.all([
+			this.params.contract.getContract().methods.getPurchase(purchase_id).call(),
+			this.getDecimals(),
+			this.getTradingDecimals(),
+			this.hasFinalized()
+		]);
 
-		let amount = Numbers.fromDecimals(res.amount, await this.getDecimals());
-		let costAmount = Numbers.fromDecimals(res.costAmount, await this.getTradingDecimals());
-		let amountReedemed = Numbers.fromDecimals(res.amountRedeemed, await this.getDecimals());
+		let amount = Numbers.fromDecimals(res.amount, decimals);
+		let costAmount = Numbers.fromDecimals(res.costAmount, tradingDecimals);
+		let amountReedemed = Numbers.fromDecimals(res.amountRedeemed, decimals);
 		let amountLeftToRedeem = amount - amountReedemed;
 
-		let isFinalized = await this.hasFinalized();
 		let amountToReedemNow = 0;
 		try {
 			amountToReedemNow = isFinalized ? Numbers.fromDecimals((await this.params.contract
 				.getContract()
-				.methods.getRedeemableTokensAmount(purchase_id).call()).amount, await this.getDecimals()) : 0
+				.methods.getRedeemableTokensAmount(purchase_id).call()).amount, decimals) : 0
 		} catch (e) {
 			// Swap v2
 			const abi = JSON.parse('[{ "inputs": [ { "internalType": "uint256", "name": "purchase_id", "type": "uint256" } ], "name": "getPurchase", "outputs": [ { "name": "", "type": "uint256" }, { "name": "", "type": "address" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "uint256" }, { "name": "", "type": "bool" }, { "name": "", "type": "bool" } ], "stateMutability": "view", "type": "function" }]');
@@ -536,16 +543,20 @@ class FixedSwapContract extends BaseSwapContract {
 				.methods.getPurchase(purchase_id)
 				.call();
 
-			lastTrancheSent = parseInt(res[5]);
-			amount = Numbers.fromDecimals(res[0], await this.getDecimals());
-			costAmount = Numbers.fromDecimals(res[2], await this.getTradingDecimals());
-			amountReedemed = Numbers.fromDecimals(res[4], await this.getDecimals());
+			let lastTrancheSent = parseInt(res[5]);
+			amount = Numbers.fromDecimals(res[0], decimals);
+			costAmount = Numbers.fromDecimals(res[2], tradingDecimals);
+			amountReedemed = Numbers.fromDecimals(res[4], decimals);
 			amountLeftToRedeem = amount - amountReedemed;
 
 			let currentSchedule = await this.getCurrentSchedule();
-			let lastTrancheSent = parseInt(res[5]);
+			let vestingPromises = [];
 			for (var i = lastTrancheSent + 1; i <= currentSchedule; i++) {
-				amountToReedemNow = amountToReedemNow + amount * (await this.getVestingSchedule({ position: i })) / 10000
+				vestingPromises.push(this.getVestingSchedule({ position: i }));
+			}
+			let vestingResults = await Promise.all(vestingPromises);
+			for (let vest of vestingResults) {
+				amountToReedemNow = amountToReedemNow + amount * vest / 10000;
 			}
 			return {
 				_id: purchase_id,
@@ -670,33 +681,33 @@ class FixedSwapContract extends BaseSwapContract {
 	getDistributionInformation = async () => {
 
 		let currentSchedule = 0;
-		if (await this.hasStarted()) {
+		let [hasStarted, vestingTime, legacy] = await Promise.all([
+			this.hasStarted(),
+			this.getContractMethods().vestingTime().call().then(v => parseInt(v)),
+			this.getSmartContractVersion().then(() => false).catch(() => true)
+		]);
+
+		if (hasStarted) {
 			currentSchedule = parseInt(await this.getCurrentSchedule());
 		}
-		let vestingTime = parseInt(await this.getContractMethods().vestingTime().call());
-		let legacy = false;
-		try {
-			await this.getSmartContractVersion();
-		} catch (e) {
-			legacy = true;
-		}
 
-		let vestingSchedule = [];
-
+		let vestingPromises = [];
 		if (legacy) {
 			for (var i = 1; i <= vestingTime; i++) {
-				let a = parseInt(await this.getVestingSchedule({ position: i }));
-				vestingSchedule.push(a);
+				vestingPromises.push(this.getVestingSchedule({ position: i }));
 			}
 		} else {
 			for (var i = 1; i < vestingTime; i++) {
-				let a = parseInt(await this.getVestingSchedule({ position: i - 1 }));
-				vestingSchedule.push(a);
+				vestingPromises.push(this.getVestingSchedule({ position: i - 1 }));
 			}
 		}
 
-		const vestingStart = await this.vestingStart();
+		let [vestingResults, vestingStart] = await Promise.all([
+			Promise.all(vestingPromises),
+			this.vestingStart()
+		]);
 
+		let vestingSchedule = vestingResults.map(a => parseInt(a));
 
 		return {
 			currentSchedule,
